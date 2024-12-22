@@ -11,15 +11,16 @@ import io.kestra.core.models.flows.State;
 import org.junit.jupiter.api.Test;
 
 @KestraTest(startRunner = true)
-public class TaskWithRunIfTest {
+class TaskWithRunIfTest {
 
     @Test
     @ExecuteFlow("flows/valids/task-runif.yml")
     void runnableTask(Execution execution) {
         assertThat(execution.getState().getCurrent(), is(State.Type.FAILED));
-        assertThat(execution.getTaskRunList(), hasSize(4));
+        assertThat(execution.getTaskRunList(), hasSize(5));
         assertThat(execution.findTaskRunsByTaskId("executed").getFirst().getState().getCurrent(), is(State.Type.SUCCESS));
         assertThat(execution.findTaskRunsByTaskId("notexecuted").getFirst().getState().getCurrent(), is(State.Type.SKIPPED));
+        assertThat(execution.findTaskRunsByTaskId("notexecutedflowable").getFirst().getState().getCurrent(), is(State.Type.SKIPPED));
         assertThat(execution.findTaskRunsByTaskId("willfailedtheflow").getFirst().getState().getCurrent(), is(State.Type.FAILED));
     }
 

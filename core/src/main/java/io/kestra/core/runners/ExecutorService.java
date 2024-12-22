@@ -15,6 +15,7 @@ import io.kestra.core.queues.QueueFactoryInterface;
 import io.kestra.core.queues.QueueInterface;
 import io.kestra.core.services.*;
 import io.kestra.core.utils.ListUtils;
+import io.kestra.core.utils.TruthUtils;
 import io.kestra.plugin.core.flow.Pause;
 import io.kestra.plugin.core.flow.Subflow;
 import io.kestra.plugin.core.flow.WaitFor;
@@ -831,6 +832,17 @@ public class ExecutorService {
                             .withTaskRun(executableTaskRun.withState(State.Type.RUNNING)),
                         "handleExecutableTaskRunning"
                     );
+
+                    // handle runIf
+                    if (!TruthUtils.isTruthy(workerTask.getRunContext().render(workerTask.getTask().getRunIf()))) {
+                        executor.withExecution(
+                            executor
+                                .getExecution()
+                                .withTaskRun(executableTaskRun.withState(State.Type.SKIPPED)),
+                            "handleExecutableTaskSkipped"
+                        );
+                        return false;
+                    }
 
                     RunContext runContext = runContextFactory.of(
                         executor.getFlow(),
