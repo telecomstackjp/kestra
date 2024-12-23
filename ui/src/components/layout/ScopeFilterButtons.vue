@@ -1,53 +1,71 @@
 <template>
-    <el-select
-        v-model="scope"
-        @update:model-value="onInput"
-        collapse-tags
-        multiple
-        :placeholder="$t('scope_filter.all', {label})"
-    >
-        <el-option
-            v-for="item in options"
-            :key="item.key"
-            :label="item.name"
-            :value="item.key"
-        />
-    </el-select>
+    <div>
+        <el-select
+            v-model="scope"
+            @update:model-value="onInput"
+            collapse-tags
+            multiple
+            :placeholder="$t('scope_filter.all', {label})"
+        >
+            <el-option
+                v-for="item in options"
+                :key="item.key"
+                :label="item.name"
+                :value="item.key"
+            />
+        </el-select>
+        <!-- Rename button -->
+        <div v-for="(item, index) in options" :key="item.key" class="rename-container">
+            <span>{{ item.name }}</span>
+            <el-button size="mini" type="text" @click="renameFilter(index)">
+                Rename
+            </el-button>
+        </div>
+    </div>
 </template>
 <script>
-    export default {
-        props: {
-            label: {type: String, required: true},
-            system: {type: Boolean, default: false},
+export default {
+    props: {
+        label: {type: String, required: true},
+        system: {type: Boolean, default: false},
+    },
+    emits: ["update:modelValue"],
+    data() {
+        return {
+            scope: [],
+            options: [
+                {
+                    name: this.$t("scope_filter.user", {label: this.label}),
+                    key: "USER",
+                },
+                {
+                    name: this.$t("scope_filter.system", {label: this.label}),
+                    key: "SYSTEM",
+                },
+            ],
+        };
+    },
+    methods: {
+        onInput(value) {
+            this.$emit("update:modelValue", value);
         },
-        emits: ["update:modelValue"],
-        data() {
-            return {
-                scope: [],
-                options: [
-                    {
-                        name: this.$t("scope_filter.user", {label: this.label}),
-                        key: "USER",
-                    },
-                    {
-                        name: this.$t("scope_filter.system", {label: this.label}),
-                        key: "SYSTEM",
-                    },
-                ],
-            };
+        renameFilter(index) {
+            const newName = prompt(
+                `Rename filter "${this.options[index].name}" to:`,
+                this.options[index].name
+            );
+            if (newName) {
+                this.options[index].name = newName;
+            }
         },
-        methods: {
-            onInput(value) {
-                this.$emit("update:modelValue", value);
-            },
-        },
-        created() {
-            const QUERY = this.$route.query.scope;
-            this.scope = this.system
-                ? ["SYSTEM"]
-                : QUERY
-                    ? [].concat(QUERY)
-                    : ["USER"];
-        },
-    };
+    },
+    created() {
+        const QUERY = this.$route.query.scope;
+        this.scope = this.system
+            ? ["SYSTEM"]
+            : QUERY
+            ? [].concat(QUERY)
+            : ["USER"];
+    },
+};
 </script>
