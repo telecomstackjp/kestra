@@ -585,5 +585,4 @@
     .flows-table  .el-table__cell {
         vertical-align: middle;
     }
-
 </style>
