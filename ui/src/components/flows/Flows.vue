@@ -51,11 +51,7 @@
                             refresh: {shown: false},
                             settings: {shown: true, charts: {shown: true, value: showChart, callback: onShowChartChange}}
                         }"
-                       />
-                       <scope-filter-button
-                         label="Flow"
-                         @update:modelValue="handleScopeUpdate"
-                       />
+                    />
                 </template>
 
                 <template #top>
@@ -239,7 +235,6 @@
     import Upload from "vue-material-design-icons/Upload.vue";
     import ExecutionsBar from "../../components/dashboard/components/charts/executions/Bar.vue"
     import {storageKeys} from "../../utils/constants";
-    import ScopeFilterButton from './ScopeFilterButton.vue';
 
     export default {
         mixins: [RouteContext, RestoreUrl, DataTableActions, SelectTableActions],
@@ -256,7 +251,6 @@
             Upload,
             TopNavBar,
             ExecutionsBar,
-            ScopeFilterButton,
         },
         props: {
             topbar: {
@@ -572,9 +566,6 @@
             },
             rowClasses(row) {
                 return row && row.row && row.row.disabled ? "disabled" : "";
-            },
-            handleScopeUpdate(value) {
-                // Handle the updated scope value
             },
         }
     };
