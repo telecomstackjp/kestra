@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-    import {onMounted, computed} from "vue";
+    import {onMounted, watch, computed} from "vue";
     import {useStore} from "vuex";
     import {ElTree} from "element-plus";
 
@@ -89,6 +89,7 @@
     };
 
     onMounted(() => loadData());
+    watch(() => route.query, () => loadData());
 
     const hierarchy = (data: Namespace[]): Node[] => {
         if (!data) return [];
