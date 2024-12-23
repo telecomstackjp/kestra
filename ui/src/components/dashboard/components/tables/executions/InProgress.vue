@@ -4,7 +4,18 @@
             <span class="fs-6 fw-bold">
                 {{ t("dashboard.executions_in_progress") }}
             </span>
-            <RouterLink :to="{name: 'executions/list'}">
+            <RouterLink
+                :to="{name: 'executions/list',
+                      query:{state:[
+                          'RUNNING',
+                          'RESTARTED',
+                          'CREATED',
+                          'PAUSED',
+                          'RETRYING',
+                          'QUEUED',
+                          'KILLING'
+                      ]}}"
+            >
                 <el-button type="primary" size="small" text>
                     {{ t("dashboard.see_all") }}
                 </el-button>
