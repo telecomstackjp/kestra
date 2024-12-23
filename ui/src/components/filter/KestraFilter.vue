@@ -164,6 +164,7 @@
         prefix: {type: String, default: undefined},
         include: {type: Array, default: () => []},
         values: {type: Object, default: undefined},
+        decode: {type: Boolean, default: true},
         buttons: {
             type: Object as () => Buttons,
             default: () => ({
@@ -488,10 +489,10 @@
     };
 
     // Include parameters from URL directly to filter
-    current.value = decodeParams(route.query, props.include, OPTIONS);
+    if (props.decode) current.value = decodeParams(route.query, props.include, OPTIONS);
 
     const addNamespaceFilter = (namespace) => {
-        if (!namespace) return;
+        if (!props.decode || !namespace) return;
         current.value.push({
             label: "namespace",
             value: [namespace],
@@ -506,7 +507,7 @@
         // Single flow page
         addNamespaceFilter(params?.namespace);
 
-        if (params.id) {
+        if (props.decode && params.id) {
             current.value.push({
                 label: "flow",
                 value: [`${params.id}`],
