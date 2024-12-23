@@ -13,6 +13,7 @@
                                 id="importFlows"
                                 class="el-input__inner"
                                 type="file"
+                                accept=".zip, .yml, .yaml"
                                 @change="importFlows()"
                                 ref="file"
                             >
