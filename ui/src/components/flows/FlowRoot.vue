@@ -7,6 +7,11 @@
             ref="currentTab"
             :tabs="tabs"
         />
+        <!-- Add the ScopeFilterButton component here -->
+        <scope-filter-button
+            label="Flow"
+            @update:modelValue="handleScopeUpdate"
+        />
     </template>
 </template>
 
@@ -29,12 +34,24 @@
     import {apiUrl} from "override/utils/route";
     import FlowRootTopBar from "./FlowRootTopBar.vue";
     import FlowConcurrency from "./FlowConcurrency.vue";
+    import ScopeFilterButton from './ScopeFilterButton.vue';
 
     export default {
         mixins: [RouteContext],
         components: {
             Tabs,
+            Topology,
+            FlowRevisions,
+            LogsWrapper,
+            FlowExecutions,
+            Overview,
+            FlowDependencies,
+            FlowNoDependencies,
+            FlowMetrics,
+            FlowEditor,
+            FlowTriggers,
             FlowRootTopBar,
+            ScopeFilterButton,
         },
         data() {
             return {
@@ -282,12 +299,15 @@
             },
             activeTabName() {
                 return this.$refs.currentTab?.activeTab?.name ?? "home";
-            }
+            },
+            handleScopeUpdate(value) {
+            },
         },
         computed: {
             ...mapState("flow", ["flow"]),
             ...mapState("auth", ["user"]),
             ...mapState("core", ["guidedProperties"]),
+            ...mapState("flow", ["ready", "routeInfo", "deleted", "isAllowedEdit"]),
             routeInfo() {
                 return {
                     title: this.$route.params.id,

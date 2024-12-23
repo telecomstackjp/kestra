@@ -23,6 +23,11 @@
             settings: {shown: false}
         }"
     />
+     <!-- Add the ScopeFilterButton component here -->
+        <scope-filter-button
+            label="Metric"
+            @update:modelValue="handleScopeUpdate"
+        />
 
     <div v-bind="$attrs" v-loading="isLoading">
         <el-card>
@@ -63,12 +68,14 @@
     import {defaultConfig, getFormat, tooltip} from "../../utils/charts";
     import {cssVariable} from "@kestra-io/ui-libs/src/utils/global";
     import KestraFilter from "../filter/KestraFilter.vue";
+    import ScopeFilterButton from './ScopeFilterButton.vue';
 
     export default {
         name: "FlowMetrics",
         components: {
             Bar,
             KestraFilter,
+            ScopeFilterButton,
         },
         created() {
             this.loadMetrics();
@@ -265,6 +272,8 @@
                 } else {
                     this.loadAggregatedMetrics();
                 }
+            },
+            handleScopeUpdate(value) {
             },
         },
         watch: {

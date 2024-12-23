@@ -572,7 +572,7 @@
             },
             rowClasses(row) {
                 return row && row.row && row.row.disabled ? "disabled" : "";
-            }
+            },
             handleScopeUpdate(value) {
                 // Handle the updated scope value
             },
