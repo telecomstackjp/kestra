@@ -265,7 +265,7 @@
                 } else {
                     this.loadAggregatedMetrics();
                 }
-            }
+            },
         },
         watch: {
             "$route.query": {
@@ -275,7 +275,7 @@
                     } else {
                         this.loadAggregatedMetrics();
                     }
-                }
+                },
             },
         },
     };
