@@ -28,6 +28,10 @@
                 dashboards: dashboards.shown,
             }"
         >
+            <!--
+                TODO: Possible approach to solving https://github.com/kestra-io/kestra/issues/6238 might
+                be custom tag slot https://element-plus.org/en-US/component/select.html#custom-tag
+            -->
             <template #label="{value}">
                 <Label :option="value" />
             </template>
