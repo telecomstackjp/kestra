@@ -910,7 +910,6 @@
       "user": "User {label}",
       "system": "System {label}"
     },
-    "rename_filter": "Rename filter \"{name}\" to:",
     "data": "Data",
     "webhook link copied": "Webhook link copied.",
     "copy url": "Copy URL",

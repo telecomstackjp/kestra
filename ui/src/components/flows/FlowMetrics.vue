@@ -275,7 +275,7 @@
                     } else {
                         this.loadAggregatedMetrics();
                     }
-                },
+                }
             },
         },
     };

@@ -40,15 +40,6 @@
             onInput(value) {
                 this.$emit("update:modelValue", value);
             },
-            renameFilter(index) {
-                const newName = prompt(
-                    `Rename filter "${this.options[index].name}" to:`,
-                    this.options[index].name
-                );
-                if (newName) {
-                    this.options[index].name = newName;
-                }
-            },
         },
         created() {
             const QUERY = this.$route.query.scope;

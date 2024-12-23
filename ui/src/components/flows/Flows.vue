@@ -250,7 +250,7 @@
             Labels,
             Upload,
             TopNavBar,
-            ExecutionsBar,
+            ExecutionsBar
         },
         props: {
             topbar: {
@@ -566,7 +566,7 @@
             },
             rowClasses(row) {
                 return row && row.row && row.row.disabled ? "disabled" : "";
-            },
+            }
         }
     };
 </script>
