@@ -173,6 +173,12 @@ public abstract class AbstractRunnerTest {
         restartCaseTest.restartMultiple();
     }
 
+    @Test
+    @LoadFlows({"flows/valids/restart-parent.yaml", "flows/valids/restart-child.yaml"})
+    void restartSubflow() throws Exception {
+        restartCaseTest.restartSubflow();
+    }
+
     @RetryingTest(5)
     @LoadFlows({"flows/valids/trigger-flow-listener-no-inputs.yaml",
         "flows/valids/trigger-flow-listener.yaml",

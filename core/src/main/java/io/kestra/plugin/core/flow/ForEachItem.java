@@ -65,7 +65,9 @@ import static io.kestra.core.utils.Rethrow.throwFunction;
         The `items` value must be Kestra's internal storage URI e.g. an output file from a previous task, or a file from inputs of FILE type.
         Two special variables are available to pass as inputs to the subflow:
         - `taskrun.items` which is the URI of internal storage file containing the batch of items to process
-        - `taskrun.iteration` which is the iteration or batch number"""
+        - `taskrun.iteration` which is the iteration or batch number
+
+        Restarting a parent flow will restart any subflows that has previously been executed."""
 )
 @Plugin(
     examples = {
@@ -315,6 +317,17 @@ public class ForEachItem extends Task implements FlowableTask<VoidOutput>, Child
     @Valid
     private List<Task> errors;
 
+    @Schema(
+        title = "What to do when a failed execution is restarting.",
+        description = """
+            - RETRY_FAILED (default): will restart the each subflow executions that are failed.
+            - NEW_EXECUTION: will create a new subflow execution for each batch of items.""
+            """
+    )
+    @NotNull
+    @Builder.Default
+    private ExecutableTask.RestartBehavior restartBehavior = ExecutableTask.RestartBehavior.RETRY_FAILED;
+
     @Override
     public GraphCluster tasksTree(Execution execution, TaskRun taskRun, List<String> parentValues) throws IllegalVariableEvaluationException {
         GraphCluster subGraph = new GraphCluster(this, taskRun, parentValues, RelationType.SEQUENTIAL);
@@ -359,7 +372,7 @@ public class ForEachItem extends Task implements FlowableTask<VoidOutput>, Child
         return List.of(
             new ForEachItemSplit(this.getId(), this.items, this.batch),
             new ForEachItemExecutable(this.getId(), this.inputs, this.inheritLabels, this.labels, this.wait, this.transmitFailed, this.scheduleDate,
-                new ExecutableTask.SubflowId(this.namespace, this.flowId, Optional.ofNullable(this.revision))
+                new ExecutableTask.SubflowId(this.namespace, this.flowId, Optional.ofNullable(this.revision)), this.restartBehavior
             ),
             new ForEachItemMergeOutputs(this.getId())
         );
@@ -424,8 +437,9 @@ public class ForEachItem extends Task implements FlowableTask<VoidOutput>, Child
         private Boolean transmitFailed;
         private Property<ZonedDateTime> scheduleOn;
         private SubflowId subflowId;
+        private RestartBehavior restartBehavior;
 
-        private ForEachItemExecutable(String parentId, Map<String, Object> inputs, Boolean inheritLabels, List<Label> labels, Boolean wait, Boolean transmitFailed, Property<ZonedDateTime> scheduleOn, SubflowId subflowId) {
+        private ForEachItemExecutable(String parentId, Map<String, Object> inputs, Boolean inheritLabels, List<Label> labels, Boolean wait, Boolean transmitFailed, Property<ZonedDateTime> scheduleOn, SubflowId subflowId, RestartBehavior restartBehavior) {
             this.inputs = inputs;
             this.inheritLabels = inheritLabels;
             this.labels = labels;
@@ -433,6 +447,7 @@ public class ForEachItem extends Task implements FlowableTask<VoidOutput>, Child
             this.transmitFailed = transmitFailed;
             this.scheduleOn = scheduleOn;
             this.subflowId = subflowId;
+            this.restartBehavior = restartBehavior;
 
             this.id = parentId + SUFFIX;
             this.type = ForEachItemExecutable.class.getName();
@@ -458,7 +473,7 @@ public class ForEachItem extends Task implements FlowableTask<VoidOutput>, Child
 
                 return splits
                     .stream()
-                    .<SubflowExecution<?>>map(throwFunction(
+                    .map(throwFunction(
                         split -> {
                             int iteration = currentIteration.getAndIncrement();
                             // these are special variable that can be passed to the subflow
@@ -492,6 +507,8 @@ public class ForEachItem extends Task implements FlowableTask<VoidOutput>, Child
                                 );
                         }
                     ))
+                    .filter(Optional::isPresent)
+                    .<SubflowExecution<?>>map(Optional::get)
                     .toList();
             } catch (IOException e) {
                 throw new InternalException(e);
