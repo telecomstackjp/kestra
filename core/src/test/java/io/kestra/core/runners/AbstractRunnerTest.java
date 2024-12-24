@@ -76,7 +76,7 @@ public abstract class AbstractRunnerTest {
     protected ForEachItemCaseTest forEachItemCaseTest;
 
     @Inject
-    private WaitForCaseTest waitForTestCaseTest;
+    protected WaitForCaseTest waitForTestCaseTest;
 
     @Inject
     private FlowConcurrencyCaseTest flowConcurrencyCaseTest;

@@ -38,6 +38,12 @@ public abstract class JdbcRunnerTest extends AbstractRunnerTest {
     private JdbcTestUtils jdbcTestUtils;
 
     @Test
+    @LoadFlows({"flows/valids/waitfor-child-task-warning.yaml"})
+    void waitForChildTaskWarning() throws Exception {
+        waitForTestCaseTest.waitForChildTaskWarning();
+    }
+
+    @Test
     @LoadFlows({"flows/valids/inputs-large.yaml"})
     void flowTooLarge() throws Exception {
         char[] chars = new char[200000];
