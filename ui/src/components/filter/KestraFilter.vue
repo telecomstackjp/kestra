@@ -79,12 +79,14 @@
                     :key="filter.value"
                     :value="filter"
                     :label="filter.label"
+                    :disabled="isOptionDisabled(filter)"
                     :class="{
                         selected: current.some((c) =>
                             c.value.includes(filter.value),
                         ),
+                        'disabled': isOptionDisabled(filter)
                     }"
-                    @click="() => valueCallback(filter)"
+                    @click="() => !isOptionDisabled(filter) && valueCallback(filter)"
                 />
             </template>
         </el-select>
@@ -297,7 +299,20 @@
             updateHoveringIndex(index);
         }
     };
+    const isOptionDisabled = (filter) => {
+        const currentFilter = current.value[dropdowns.value.third.index];
+        if (!currentFilter) return false;
+
+        // Check if this filter value is already selected in any current filter
+        return current.value.some(item => 
+            item.label === currentFilter.label && 
+            item.value.includes(filter.value)
+        );
+    };
     const valueCallback = (filter, isDate = false) => {
+        if (!isDate && isOptionDisabled(filter)) {
+            return; // Don't do anything if the option is disabled
+        }
         if (!isDate) {
             const values = current.value[dropdowns.value.third.index].value;
             const index = values.indexOf(filter.value);
@@ -612,5 +627,25 @@ $dashboards: 52px;
     & .el-select-dropdown__item .material-design-icon {
         bottom: -0.15rem;
     }
+    .filters-select {
+    .el-select-dropdown__item {
+        &.disabled {
+            cursor: not-allowed !important; // Added !important to override any default behaviors
+            opacity: 0.6;
+            pointer-events: none; // This will prevent any hover effects including the loading cursor
+            
+            &:hover {
+                background-color: transparent;
+                cursor: not-allowed !important;
+            }
+        }
+        
+        &.selected {
+            
+            color: #606266;  // Default text color
+            
+        }
+    }
+}
 }
 </style>
