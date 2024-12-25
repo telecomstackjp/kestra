@@ -112,7 +112,7 @@
   },
   "optionalDependencies": {
     "@esbuild/darwin-arm64": "^0.24.0",
-    "@esbuild/darwin-x64": "^0.24.0",
+    "@esbuild/darwin-x64": "^0.24.2",
     "@esbuild/linux-x64": "^0.24.0",
     "@rollup/rollup-darwin-arm64": "^4.28.1",
     "@rollup/rollup-darwin-x64": "^4.28.1",
