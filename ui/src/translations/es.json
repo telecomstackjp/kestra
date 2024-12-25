@@ -877,7 +877,7 @@
     "docs": "Documentos",
     "behavior": "Comportamiento",
     "concurrency-view": {
-      "desc_no_limit": "Lee más sobre los <a href=\"https://kestra.io/docs/workflow-components/concurrency\" target=\"_blank\">Límites de Concurrencia</a> en nuestra documentación.",
+      "desc_no_limit": "Lea más sobre los <strong><a href=\"https://kestra.io/docs/workflow-components/concurrency\" target=\"_blank\">Límites de Concurrency</a></strong> en nuestra documentación.",
       "title_no_limit": "No se han establecido límites para este Flow."
     },
     "active-slots": "Ranuras activas",
@@ -903,7 +903,7 @@
     "no_data": "Parece que no hay nada aquí... ¡todavía!<br/>Ajusta tus filtros o inténtalo de nuevo.",
     "informative notice": "Nota(s)",
     "triggers-view": {
-      "desc_no_triggers": "Lee más sobre <a href=\"https://kestra.io/docs/workflow-components/triggers\" target=\"_blank\">Triggers</a> en nuestra documentación.",
+      "desc_no_triggers": "Lea más sobre <strong><a href=\"https://kestra.io/docs/workflow-components/triggers\" target=\"_blank\">Triggers</a></strong> en nuestra documentación.",
       "title_no_triggers": "Tu flow no tiene ningún trigger."
     },
     "dependency-view": {

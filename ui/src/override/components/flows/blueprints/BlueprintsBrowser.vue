@@ -32,7 +32,7 @@
                 </nav>
             </template>
             <template #top>
-                <KestraFilter :prefix="`blueprintsBrowser${tab}`" :placeholder="$t('search')" />
+                <KestraFilter :prefix="`blueprintsBrowser${tab}`" :placeholder="$t('search')" :decode="false" />
             </template>
             <template #table>
                 <el-alert type="info" v-if="ready && (!blueprints || blueprints.length === 0)" :closable="false">

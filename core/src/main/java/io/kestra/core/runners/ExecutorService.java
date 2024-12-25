@@ -15,6 +15,7 @@ import io.kestra.core.queues.QueueFactoryInterface;
 import io.kestra.core.queues.QueueInterface;
 import io.kestra.core.services.*;
 import io.kestra.core.utils.ListUtils;
+import io.kestra.core.utils.TruthUtils;
 import io.kestra.plugin.core.flow.Pause;
 import io.kestra.plugin.core.flow.Subflow;
 import io.kestra.plugin.core.flow.WaitFor;
@@ -832,6 +833,17 @@ public class ExecutorService {
                         "handleExecutableTaskRunning"
                     );
 
+                    // handle runIf
+                    if (!TruthUtils.isTruthy(workerTask.getRunContext().render(workerTask.getTask().getRunIf()))) {
+                        executor.withExecution(
+                            executor
+                                .getExecution()
+                                .withTaskRun(executableTaskRun.withState(State.Type.SKIPPED)),
+                            "handleExecutableTaskSkipped"
+                        );
+                        return false;
+                    }
+
                     RunContext runContext = runContextFactory.of(
                         executor.getFlow(),
                         executableTask,
@@ -904,12 +916,13 @@ public class ExecutorService {
                         "handleExecutionUpdatingTask.updateExecution"
                     );
 
+                    var taskState = executionUpdatingTask.resolveState(workerTask.getRunContext(), executor.getExecution()).orElse(State.Type.SUCCESS);
                     workerTaskResults.add(
                         WorkerTaskResult.builder()
                             .taskRun(workerTask.getTaskRun().withAttempts(
-                                        Collections.singletonList(TaskRunAttempt.builder().state(new State().withState(State.Type.SUCCESS)).build())
+                                        Collections.singletonList(TaskRunAttempt.builder().state(new State().withState(taskState)).build())
                                     )
-                                    .withState(State.Type.SUCCESS)
+                                    .withState(taskState)
                             )
                             .build()
                     );
