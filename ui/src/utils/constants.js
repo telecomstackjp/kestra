@@ -36,9 +36,6 @@ export const storageKeys = {
     DEFAULT_NAMESPACE: "defaultNamespace",
     LATEST_NAMESPACE: "latestNamespace",
     PAGINATION_SIZE: "paginationSize",
-    EXECUTIONS_FILTERS: "executionsSavedFilters",
-    FLOWS_FILTERS: "flowsSavedFilters",
-    LOGS_FILTERS: "logsSavedFilters",
     IMPERSONATE: "impersonate"
 }
 
