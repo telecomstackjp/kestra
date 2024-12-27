@@ -50,7 +50,7 @@ class ExitTest {
         AtomicReference<Execution> killedExecution = new AtomicReference<>();
         Flux<Execution> receive = TestsUtils.receive(executionQueue, either -> {
             Execution execution = either.getLeft();
-            if (execution.getFlowId().equals("exit-killed") && execution.getState().getCurrent().isTerminated()) {
+            if (execution.getFlowId().equals("exit-killed") && execution.getState().getCurrent().isKilled()) {
                 killedExecution.set(execution);
                 countDownLatch.countDown();
             }
