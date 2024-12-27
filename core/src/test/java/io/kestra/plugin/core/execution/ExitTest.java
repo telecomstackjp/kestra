@@ -12,6 +12,7 @@ import io.kestra.core.runners.RunnerUtils;
 import io.kestra.core.utils.TestsUtils;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 
@@ -26,6 +27,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Slf4j
 @KestraTest(startRunner = true)
 class ExitTest {
     @Inject
@@ -46,7 +48,7 @@ class ExitTest {
     @Test
     @LoadFlows("flows/valids/exit-killed.yaml")
     void shouldExitAndKillTheExecution() throws TimeoutException, QueueException, InterruptedException {
-        CountDownLatch countDownLatch = new CountDownLatch(2);// Only the second reception of the execution will move all tasks to KILLED
+        CountDownLatch countDownLatch = new CountDownLatch(3);// Only the second reception of the execution will move all tasks to KILLED
         AtomicReference<Execution> killedExecution = new AtomicReference<>();
         Flux<Execution> receive = TestsUtils.receive(executionQueue, either -> {
             Execution execution = either.getLeft();
