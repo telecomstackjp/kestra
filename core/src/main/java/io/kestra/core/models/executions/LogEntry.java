@@ -128,4 +128,27 @@ public class LogEntry implements DeletedInterface, TenantInterface {
             .filter(e -> e.getValue() != null)
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
+
+    public String toJson(){
+        return "{"
+            + "\"tenantId\":" + addNullableString(this.tenantId) + ","
+            + "\"namespace\":" + addNullableString(this.namespace) + ","
+            + "\"flowId\":" + addNullableString(this.flowId) + ","
+            + "\"taskId\":" + addNullableString(this.taskId) + ","
+            + "\"executionId\":" + addNullableString(this.executionId) + ","
+            + "\"taskRunId\":" + addNullableString(this.taskRunId) + ","
+            + "\"attemptNumber\":" + this.attemptNumber + ","
+            + "\"triggerId\":" + addNullableString(this.triggerId) + ","
+            + "\"thread\":" + addNullableString(this.thread) + ","
+            + "\"message\":" + addNullableString(this.message)
+            + "}";
+    }
+
+    public static String addNullableString(String value){
+        if (value != null){
+            return "\"" + value + "\"";
+        }
+        return null;
+    }
+
 }
