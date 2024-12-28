@@ -1089,10 +1089,10 @@
         --el-tree-node-content-height: 36px;
         --el-tree-node-hover-bg-color: transparent;
         line-height: 36px;
+    }
 
-        .el-tree-node__content {
-            width: 100%;
-        }
+    .el-tree-node.is-current > .el-tree-node__content {
+            min-width: fit-content;
     }
 }
 </style>
@@ -1104,6 +1104,7 @@
     background: var(--card-bg);
     border-right: 1px solid var(--bs-border-color);
     overflow-x: hidden;
+    min-width: calc(30% - 8px);
 
     .empty {
         position: relative;
@@ -1152,7 +1153,7 @@
         color: var(--el-text-color-regular);
 
         &:hover {
-            color: var(--el-text-color-primary);
+            color: var(--el-text-color-secondary);
         }
     }
 
