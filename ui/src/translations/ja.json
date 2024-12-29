@@ -686,6 +686,7 @@
             "mode": "テーマモード",
             "editor_theme": "エディタテーマ",
             "editor_font_size": "エディタフォントサイズ",
+            "logs_font_size": "ログのフォントサイズ",
             "editor_font_family": "エディタフォントファミリー",
             "editor_folding_stratgy": "エディタでの自動コード折りたたみ",
             "environment_name": "環境名",

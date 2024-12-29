@@ -686,6 +686,7 @@
             "mode": "Tryb Motywu",
             "editor_theme": "Motyw Edytora",
             "editor_font_size": "Rozmiar Czcionki Edytora",
+            "logs_font_size": "Rozmiar czcionki logów",
             "editor_font_family": "Rodzina Czcionki Edytora",
             "editor_folding_stratgy": "Automatyczne Zwijanie Kodu w Edytorze",
             "environment_name": "Nazwa Środowiska",

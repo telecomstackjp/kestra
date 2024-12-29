@@ -686,6 +686,7 @@
             "mode": "Modo de Tema",
             "editor_theme": "Tema do Editor",
             "editor_font_size": "Tamanho da Fonte do Editor",
+            "logs_font_size": "Tamanho da fonte dos logs",
             "editor_font_family": "Família de Fonte do Editor",
             "editor_folding_stratgy": "Dobramento Automático de Código no Editor",
             "environment_name": "Nome do Ambiente",
