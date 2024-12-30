@@ -105,7 +105,7 @@
 
 :deep(.markdown) {
 	font-size: var(--el-font-size-extra-small) !important;
-	color: var(--bs-tertiary-color);
+	color: var(--ks-content-tertiary);
 }
 
 </style>

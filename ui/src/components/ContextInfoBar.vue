@@ -259,7 +259,7 @@
             position: fixed;
             top: var(--spacer);
             right: var(--spacer);
-            color: var(--bs-tertiary-color);
+            color: var(--ks-content-tertiary);
             background: none;
             border: none;
         }

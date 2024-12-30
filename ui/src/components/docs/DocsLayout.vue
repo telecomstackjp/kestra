@@ -126,7 +126,7 @@
 
         :deep(.code-block) {
             .language {
-                color: var(--bs-tertiary-color);
+                color: var(--ks-content-tertiary);
             }
         }
 

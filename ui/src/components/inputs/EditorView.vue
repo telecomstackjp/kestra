@@ -1346,7 +1346,7 @@
         user-select: none; /* disable selection */
 
         &:hover {
-            background-color: var(--bs-secondary);
+            background-color: var(--ks-border-active);
         }
     }
 

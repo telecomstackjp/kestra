@@ -504,7 +504,7 @@
 </script>
 <style>
     .trigger-issue-icon {
-        color: var(--bs-warning);
+        color: var(--ks-content-warning);
         font-size: 1.4em;
     }
     .el-table__expanded-cell[class*=cell]{
