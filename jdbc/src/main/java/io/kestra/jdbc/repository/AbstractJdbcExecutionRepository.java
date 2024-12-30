@@ -4,6 +4,7 @@ import io.kestra.core.events.CrudEvent;
 import io.kestra.core.events.CrudEventType;
 import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
+import io.kestra.core.models.dashboards.Order;
 import io.kestra.core.models.executions.Execution;
 import io.kestra.core.models.executions.TaskRun;
 import io.kestra.core.models.executions.statistics.*;
@@ -20,14 +21,15 @@ import io.kestra.core.utils.ListUtils;
 import io.kestra.core.utils.NamespaceUtils;
 import io.kestra.jdbc.runner.AbstractJdbcExecutorStateStorage;
 import io.kestra.jdbc.runner.JdbcQueueIndexerInterface;
+import io.kestra.jdbc.services.JdbcFilterService;
 import io.kestra.plugin.core.dashboard.data.Executions;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.data.model.Pageable;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import jakarta.annotation.Nullable;
+import lombok.Getter;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jooq.Record;
 import org.jooq.*;
@@ -35,7 +37,6 @@ import org.jooq.impl.DSL;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -61,11 +62,28 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
     private QueueInterface<Execution> executionQueue;
     private NamespaceUtils namespaceUtils;
 
+    @Getter
+    private final JdbcFilterService filterService;
+
+    @Getter
+    private final Map<Executions.Fields, String> fieldsMapping = Map.of(
+        Executions.Fields.ID, "key",
+        Executions.Fields.NAMESPACE, "namespace",
+        Executions.Fields.FLOW_ID, "flow_id",
+        Executions.Fields.STATE, "state_current",
+        Executions.Fields.DURATION, "state_duration",
+        Executions.Fields.LABELS, "labels",
+        Executions.Fields.START_DATE, "start_date",
+        Executions.Fields.END_DATE, "end_date",
+        Executions.Fields.TRIGGER_EXECUTION_ID, "trigger_execution_id"
+    );
+
     @SuppressWarnings("unchecked")
     public AbstractJdbcExecutionRepository(
         io.kestra.jdbc.AbstractJdbcRepository<Execution> jdbcRepository,
         ApplicationContext applicationContext,
-        AbstractJdbcExecutorStateStorage executorStateStorage
+        AbstractJdbcExecutorStateStorage executorStateStorage,
+        JdbcFilterService filterService
     ) {
         this.jdbcRepository = jdbcRepository;
         this.executorStateStorage = executorStateStorage;
@@ -74,6 +92,8 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
 
         // we inject ApplicationContext in order to get the ExecutionQueue lazy to avoid StackOverflowError
         this.applicationContext = applicationContext;
+
+        this.filterService = filterService;
     }
 
     @SuppressWarnings("unchecked")
@@ -117,6 +137,7 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
             FluxSink.OverflowStrategy.BUFFER
         );
     }
+
     /**
      * {@inheritDoc}
      **/
@@ -1088,7 +1109,88 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
     }
 
     @Override
-    public ArrayListTotal<Map<String, Object>> fetchData(String tenantId, DataFilter<Executions.Fields, ? extends ColumnDescriptor<Executions.Fields>> filter, ZonedDateTime startDate, ZonedDateTime endDate, Pageable pageable) throws IOException {
-        throw new NotImplementedException();
+    public ArrayListTotal<Map<String, Object>> fetchData(
+        String tenantId,
+        DataFilter<Executions.Fields, ? extends ColumnDescriptor<Executions.Fields>> descriptors,
+        ZonedDateTime startDate,
+        ZonedDateTime endDate,
+        Pageable pageable
+    ) {
+        return this.jdbcRepository
+            .getDslContextWrapper()
+            .transactionResult(configuration -> {
+                DSLContext context = DSL.using(configuration);
+                SelectConditionStep<Record> selectConditionStep = context
+                    .select(
+                        descriptors.getColumns().entrySet().stream()
+                            .map(entry -> {
+                                ColumnDescriptor<Executions.Fields> col = entry.getValue();
+                                String key = entry.getKey();
+                                Field<?> field = columnToField(col, fieldsMapping);
+                                if (col.getAgg() != null) {
+                                    AggregateFunction<?> aggField = this.getFilterService().buildAggregation(field, col.getAgg());
+                                    field = aggField;
+                                }
+                                return field.as(key);
+                            })
+                            .toList()
+                    )
+                    .from(this.jdbcRepository.getTable())
+                    .where(this.defaultFilter(tenantId));
+
+                // Apply Where filter
+                selectConditionStep = this.getFilterService().addFilters(selectConditionStep, this.getFieldsMapping(), descriptors.getWhere());
+
+                // Apply GroupBy for aggregation
+                SelectHavingStep<Record> selectHavingStep = selectConditionStep.groupBy(
+                    descriptors.getColumns().values().stream()
+                        .filter(col -> col.getAgg() == null)
+                        .map(col -> field(fieldsMapping.get(col.getField())))
+                        .toList()
+                );
+
+                // Apply OrderBy
+                List<SortField<?>> orderFields = new ArrayList<>();
+                if (descriptors.getOrderBy() != null && !descriptors.getOrderBy().isEmpty()) {
+                    orderFields = descriptors.getOrderBy().stream()
+                        .map(orderBy -> {
+                            Field<?> field = field(orderBy.getColumn());
+                            return orderBy.getOrder() == Order.ASC ? field.asc() : field.desc();
+                        })
+                        .toList();
+
+                }
+
+                SelectSeekStepN<Record> selectSeekStep = selectHavingStep.orderBy(orderFields);
+                // Apply pagination
+                List<Map<String, Object>> results =
+                    (pageable != null ?
+                        selectSeekStep.limit(pageable.getSize()).offset(pageable.getOffset()) :
+                        selectSeekStep
+                    ).fetch()
+                    .intoMaps();
+
+                // Fetch total count for pagination
+                int total = context.fetchCount(selectConditionStep);
+
+                return new ArrayListTotal<>(results, total);
+            });
     }
+
+    @Override
+    protected <F extends Enum<F>> Field<?> columnToField(ColumnDescriptor<?> column, Map<F, String> fieldsMapping) {
+        if (column.getField() == null) {
+            return null;
+        }
+        Field<?> field = field(fieldsMapping.get(column.getField()));
+        if (field.getName().equals(STATE_CURRENT_FIELD.getName())) {
+            return STATE_CURRENT_FIELD;
+        } else if (field.getName().equals(NAMESPACE_FIELD.getName())) {
+            return NAMESPACE_FIELD;
+        } else if (field.getName().equals(START_DATE_FIELD.getName())) {
+            return START_DATE_FIELD;
+        }
+        return field;
+    }
+
 }

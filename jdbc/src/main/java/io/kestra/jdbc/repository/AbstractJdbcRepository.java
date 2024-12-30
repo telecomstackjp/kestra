@@ -1,17 +1,28 @@
 package io.kestra.jdbc.repository;
 
+import io.kestra.core.models.dashboards.ColumnDescriptor;
+import io.kestra.core.models.dashboards.DataFilter;
+import io.kestra.core.models.dashboards.Order;
+import io.kestra.core.repositories.ArrayListTotal;
 import io.kestra.core.utils.DateUtils;
+import io.kestra.jdbc.services.JdbcFilterService;
+import io.kestra.plugin.core.dashboard.data.Executions;
 import io.micronaut.core.annotation.Nullable;
-import org.jooq.Condition;
-import org.jooq.Field;
+import io.micronaut.data.model.Pageable;
+import org.jooq.*;
+import org.jooq.Record;
 import org.jooq.impl.DSL;
 
 import java.sql.Timestamp;
 import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractJdbcRepository {
+
     protected Condition defaultFilter() {
         return field("deleted", Boolean.class).eq(false);
     }
@@ -86,5 +97,9 @@ public abstract class AbstractJdbcRepository {
         } else {
             return List.of(year, month, day, hour, minute);
         }
+    }
+
+    protected <F extends Enum<F>> Field<?> columnToField(ColumnDescriptor<?> column, Map<F, String> fieldsMapping) {
+        return field(fieldsMapping.get(column.getField()));
     }
 }

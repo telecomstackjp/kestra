@@ -2,6 +2,7 @@ package io.kestra.jdbc.repository;
 
 import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
+import io.kestra.core.models.dashboards.Order;
 import io.kestra.core.models.executions.Execution;
 import io.kestra.core.models.executions.MetricEntry;
 import io.kestra.core.models.executions.metrics.MetricAggregation;
@@ -10,11 +11,15 @@ import io.kestra.core.repositories.ArrayListTotal;
 import io.kestra.core.repositories.MetricRepositoryInterface;
 import io.kestra.core.utils.DateUtils;
 import io.kestra.core.utils.ListUtils;
+import io.kestra.jdbc.services.JdbcFilterService;
+import io.kestra.plugin.core.dashboard.data.Executions;
 import io.kestra.plugin.core.dashboard.data.Metrics;
 import io.micrometer.common.lang.Nullable;
 import io.micronaut.data.model.Pageable;
+import lombok.Getter;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jooq.*;
+import org.jooq.Record;
 import org.jooq.impl.DSL;
 
 import java.io.IOException;
@@ -31,9 +36,27 @@ import java.util.function.Function;
 public abstract class AbstractJdbcMetricRepository extends AbstractJdbcRepository implements MetricRepositoryInterface {
     protected io.kestra.jdbc.AbstractJdbcRepository<MetricEntry> jdbcRepository;
 
-    public AbstractJdbcMetricRepository(io.kestra.jdbc.AbstractJdbcRepository<MetricEntry> jdbcRepository) {
+    public AbstractJdbcMetricRepository(io.kestra.jdbc.AbstractJdbcRepository<MetricEntry> jdbcRepository,
+                                        JdbcFilterService filterService) {
         this.jdbcRepository = jdbcRepository;
+
+        this.filterService = filterService;
     }
+
+    @Getter
+    private final JdbcFilterService filterService;
+
+    @Getter
+    private final Map<Metrics.Fields, String> fieldsMapping = Map.of(
+        Metrics.Fields.NAMESPACE, "namespace",
+        Metrics.Fields.FLOW_ID, "flow_id",
+        Metrics.Fields.TASK_ID, "task_id",
+        Metrics.Fields.EXECUTION_ID, "execution_d",
+        Metrics.Fields.TASK_RUN_ID, "taskrun_id",
+        Metrics.Fields.NAME, "metric_name",
+        Metrics.Fields.VALUE, "metric_value",
+        Metrics.Fields.DATE, "timestamp"
+    );
 
     @Override
     public ArrayListTotal<MetricEntry> findByExecutionId(String tenantId, String executionId, Pageable pageable) {
@@ -317,7 +340,70 @@ public abstract class AbstractJdbcMetricRepository extends AbstractJdbcRepositor
     }
 
     @Override
-    public ArrayListTotal<Map<String, Object>> fetchData(String tenantId, DataFilter<Metrics.Fields, ? extends ColumnDescriptor<Metrics.Fields>> filter, ZonedDateTime startDate, ZonedDateTime endDate, Pageable pageable) throws IOException {
-        throw new NotImplementedException();
+    public ArrayListTotal<Map<String, Object>> fetchData(
+        String tenantId,
+        DataFilter<Metrics.Fields, ? extends ColumnDescriptor<Metrics.Fields>> descriptors,
+        ZonedDateTime startDate,
+        ZonedDateTime endDate,
+        Pageable pageable
+    ) {
+        return this.jdbcRepository
+            .getDslContextWrapper()
+            .transactionResult(configuration -> {
+                DSLContext context = DSL.using(configuration);
+                SelectConditionStep<org.jooq.Record> selectConditionStep = context
+                    .select(
+                        descriptors.getColumns().entrySet().stream()
+                            .map(entry -> {
+                                ColumnDescriptor<Metrics.Fields> col = entry.getValue();
+                                String key = entry.getKey();
+                                Field<?> field = columnToField(col, fieldsMapping);
+                                if (col.getAgg() != null) {
+                                    AggregateFunction<?> aggField = this.getFilterService().buildAggregation(field, col.getAgg());
+                                    field = aggField;
+                                }
+                                return field.as(key);
+                            })
+                            .toList()
+                    )
+                    .from(this.jdbcRepository.getTable())
+                    .where(this.defaultFilter(tenantId));
+
+                // Apply Where filter
+                selectConditionStep = this.getFilterService().addFilters(selectConditionStep, this.getFieldsMapping(), descriptors.getWhere());
+
+                // Apply GroupBy for aggregation
+                SelectHavingStep<org.jooq.Record> selectHavingStep = selectConditionStep.groupBy(
+                    descriptors.getColumns().values().stream()
+                        .filter(col -> col.getAgg() == null)
+                        .map(col -> field(fieldsMapping.get(col.getField())))
+                        .toList()
+                );
+
+                // Apply OrderBy
+                List<SortField<?>> orderFields = new ArrayList<>();
+                if (descriptors.getOrderBy() != null && !descriptors.getOrderBy().isEmpty()) {
+                    orderFields = descriptors.getOrderBy().stream()
+                        .map(orderBy -> {
+                            Field<?> field = field(orderBy.getColumn());
+                            return orderBy.getOrder() == Order.ASC ? field.asc() : field.desc();
+                        })
+                        .toList();
+                }
+
+                SelectSeekStepN<Record> selectSeekStep = selectHavingStep.orderBy(orderFields);
+                // Apply pagination
+                List<Map<String, Object>> results =
+                    (pageable != null ?
+                        selectSeekStep.limit(pageable.getSize()).offset(pageable.getOffset()) :
+                        selectSeekStep
+                    ).fetch()
+                        .intoMaps();
+
+                // Fetch total count for pagination
+                int total = context.fetchCount(selectConditionStep);
+
+                return new ArrayListTotal<>(results, total);
+            });
     }
 }

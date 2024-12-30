@@ -40,7 +40,6 @@ import java.util.Optional;
 @Validated
 @Controller("/api/v1/dashboards")
 @Slf4j
-@Requires(property = "kestra.repository.type", value = "elasticsearch")
 public class DashboardController {
     protected static final YamlParser YAML_PARSER = new YamlParser();
 
