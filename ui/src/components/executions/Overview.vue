@@ -414,7 +414,7 @@
     .el-button{
         color: var(--ks-log-content-error);
         background-color: var(--ks-log-background-error);
-        border-color: var(--log-border-error);
+        border-color: var(--ks-log-border-error);
     }
     .el-alert__title {
         cursor: pointer;
