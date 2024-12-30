@@ -4,7 +4,7 @@
 
         <hr class="m-0">
 
-        <Editor :metadata />
+        <Editor :creation="!props.flow.id" :metadata />
     </div>
 </template>
 

@@ -13,6 +13,7 @@
     "theme": "Theme",
     "flows": "Flows",
     "flow": "Flow",
+    "flow_id": "Flow ID",
     "invalid source": "Invalid source code",
     "update": "Update",
     "update ok": "is updated",

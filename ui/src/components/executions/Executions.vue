@@ -935,7 +935,7 @@
                     name: "flows/update", params: {
                         namespace: this.flow.namespace,
                         id: this.flow.id,
-                        tab: "editor",
+                        tab: "edit",
                         tenant: this.$route.params.tenant
                     }
                 })
