@@ -117,7 +117,7 @@ class DownloadTest {
             () -> task.run(runContext)
         );
 
-        assertThat(exception.getMessage(), is("Failed http request with response 500"));
+        assertThat(exception.getMessage(), containsString("Failed http request with response code '500'"));
     }
 
     @Test

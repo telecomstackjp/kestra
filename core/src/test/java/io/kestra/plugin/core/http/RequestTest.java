@@ -3,6 +3,7 @@ package io.kestra.plugin.core.http;
 import com.devskiller.friendly_id.FriendlyId;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
+import io.kestra.core.http.client.HttpClientResponseException;
 import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
@@ -176,7 +177,7 @@ class RequestTest {
             );
 
             assertThat(exception.getCause(), instanceOf(HttpClientResponseException.class));
-            assertThat(((HttpClientResponseException) exception.getCause()).getResponse().getCode(), is(417));
+            assertThat(((HttpClientResponseException) exception.getCause()).getResponse().getStatus().getCode(), is(417));
         }
     }
 
