@@ -78,7 +78,7 @@
         data() {
             return {
                 markdownRenderer: undefined,
-                logsFontSize: parseInt(localStorage.getItem("logsFontSize") || "12"), // Initialize ref
+                logsFontSize: parseInt(localStorage.getItem("logsFontSize") || "12"),
             };
         },
         async created() {
