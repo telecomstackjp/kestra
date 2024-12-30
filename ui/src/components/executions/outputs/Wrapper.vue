@@ -441,7 +441,7 @@
     }
 
     .debug {
-        background: var(--bs-gray-100);
+        background: var(--ks-background-body);
     }
 
     .bordered {

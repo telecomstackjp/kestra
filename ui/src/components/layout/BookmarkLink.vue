@@ -74,7 +74,7 @@
             right: calc(.15 * var(--spacer));
             display: none;
             gap: calc(.5 * var(--spacer));
-            background-color: var(--el-bg-color);
+            background-color: var(--ks-background-button-secondary-hover);
             padding: calc(.35 * var(--spacer));
             > span{
                 cursor: pointer;
@@ -119,7 +119,7 @@
         border-radius: 4px;
         &:hover{
             color: var(--ks-content-link);
-            background-color: var(--el-bg-color);
+            background-color: var(--ks-background-button-secondary-hover);
         }
     }
 

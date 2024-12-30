@@ -163,7 +163,7 @@
         }
 
         &:hover, &:focus {
-            background-color: var(--el-button-bg-color);
+            background-color: var(--ks-background-button-secondary);
         }
 
         &.success {
@@ -176,11 +176,11 @@
         }
 
         &.warning {
-            border-color: rgb(var(--bs-warning-rgb));
+            border-color: var(--ks-border-warning);
         }
 
         &.error {
-            border-color: rgb(var(--bs-danger-rgb));
+            border-color: var(--ks-border-failed);
         }
     }
 
@@ -203,14 +203,10 @@
 
         .el-header {
             padding: $spacer;
-            background-color: var(--bs-gray-200);
+            background-color: var(--ks-background-table-header);
             border-radius: $border-radius-lg $border-radius-lg 0 0;
             font-size: $font-size-sm;
             font-weight: $font-weight-bold;
-
-            html.dark & {
-                background-color: var(--bs-gray-500);
-            }
 
             .material-design-icon {
                 font-size: 1.5rem;
@@ -219,7 +215,7 @@
         }
 
         .el-main {
-            padding: calc(2 * var(--spacer)) $spacer !important;
+            padding: 2rem 1rem !important;
             font-family: $font-family-monospace;
             background-color: white;
             white-space: normal;

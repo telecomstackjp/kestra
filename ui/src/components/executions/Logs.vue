@@ -307,10 +307,6 @@
             border-top: 1px solid var(--ks-border-primary);
         }
 
-        html.dark & {
-            background-color: var(--bs-gray-100);
-        }
-
         .attempt-wrapper & {
             border-radius: .25rem;
         }
@@ -323,10 +319,6 @@
 
         .line {
             padding: .5rem;
-
-            &.cursor {
-                background-color: var(--bs-gray-300)
-            }
         }
 
         &::-webkit-scrollbar {

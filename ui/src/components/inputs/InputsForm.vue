@@ -483,7 +483,7 @@
                 .el-radio-button__original-radio:not(:disabled) + .el-radio-button__inner {
                     color: var(--ks-content-primary);
                     background-color: var(--bs-gray-100);
-                    box-shadow: 0 0 0 0 var(--el-color-primary);
+                    box-shadow: 0 0 0 0 var(--ks-border-active);
                 }
             }
 

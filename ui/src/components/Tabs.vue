@@ -201,7 +201,7 @@
             }
 
             a {
-                color: var(--el-text-color-disabled);
+                color: var(--ks-content-inactive);
             }
         }
     }

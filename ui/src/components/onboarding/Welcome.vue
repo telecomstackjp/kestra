@@ -153,7 +153,7 @@
 
     .watch {
         font-weight: 500;
-        background-color: var(--el-bg-color);
+        background-color: var(--ks-background-button-secondary-hover);
         color: var(--ks-content-primary);
         font-size: var(--el-font-size-small);
     }
