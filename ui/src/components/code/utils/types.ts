@@ -1,3 +1,5 @@
+import {defineComponent} from "vue";
+
 type Field = {
     value: string | number | boolean | undefined;
     label: string;
@@ -13,4 +15,16 @@ type Main = {
 
 export type Fields = {
     main: Main;
+};
+
+export type Breadcrumb = {
+    label: string;
+    to: {
+        name?: string;
+    };
+};
+
+export type CollapseItem = {
+    title: string;
+    component: ReturnType<typeof defineComponent>;
 };

@@ -8,6 +8,8 @@
             :required="field.required"
             :disabled="field.disabled"
         />
+
+        <Collapse />
     </div>
 </template>
 
@@ -16,6 +18,7 @@
 
     import {Fields} from "../utils/types";
 
+    import Collapse from "../components/Collapse.vue";
     import InputText from "../components/inputs/InputText.vue";
 
     import {useI18n} from "vue-i18n";

@@ -1053,6 +1053,9 @@
         "show_chart": "Show main chart"
       }
     },
-    "custom value": "Custom value"
+    "custom value": "Custom value",
+    "no_code": {
+      "general": "General properties"
+    }
   }
 }
