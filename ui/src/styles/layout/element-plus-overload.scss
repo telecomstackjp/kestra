@@ -2,6 +2,7 @@
 @use "sass:map";
 @use 'element-plus/theme-chalk/src/mixins/mixins' as *;
 @import "@kestra-io/ui-libs/src/scss/variables.scss";
+@import "../color-palette.scss";
 
 // button
 .el-button {
@@ -198,7 +199,7 @@
 
 .el-date-editor {
     .el-input__icon {
-        margin-right: calc(var(--spacer) / 4);
+        margin-right: .25rem;
     }
 }
 
@@ -402,12 +403,12 @@ form.ks-horizontal {
         transition: all 0.3s ease;
 
         > * {
-            padding: var(--spacer) calc(var(--spacer) * 1.5);
+            padding: 1rem 1.5rem;
 
         }
 
         a {
-            color: var(--bs-gray-700);
+            color: var(--ks-content-secondary);
             transition: 0.3s ease;
         }
 
@@ -417,7 +418,7 @@ form.ks-horizontal {
         }
 
         &.is-disabled a {
-            color: var(--bs-gray-600) !important;
+            color: var(--ks-content-inactive) !important;
         }
     }
 
@@ -491,12 +492,12 @@ form.ks-horizontal {
 
         .el-tabs__item {
             > * {
-                padding: .5rem calc(var(--spacer));
+                padding: .5rem 1rem;
             }
 
             &.is-active > a {
                 font-weight: bold;
-                background: var(--bs-gray-100);
+                background: var(--ks-background-button-secondary-active);
                 border-radius: var(--bs-border-radius);
             }
         }
@@ -703,10 +704,7 @@ form.ks-horizontal {
 
     .el-input {
         height: 100%;
-    }
-
-    .el-input__prefix, .el-input__inner, .el-input__inner::placeholder {
-        background-color: var(--ks-background-body);
+        --el-input-bg-color: var(--ks-background-body);
     }
 
     .el-input__suffix-inner {
@@ -723,11 +721,12 @@ form.ks-horizontal {
         max-height: 40vh;
     }
     li {
-        --el-fill-color-light: var(--bs-gray-300);
-        padding: 0 var(--spacer);
+        // highlight of keyboard selection
+        --el-fill-color-light: var(--ks-select-active);
+        padding: 0 1rem;
 
         a {
-            color: var(--ks-content-primary);
+            color: var(--ks-select-active);
             justify-content: space-between;
         }
     }
@@ -797,7 +796,7 @@ form.ks-horizontal {
     }
 
     .el-drawer__header {
-        padding: var(--spacer);
+        padding: 1rem;
         margin-bottom: 0;
         background-color: var(--bs-gray-300);
         border-bottom: 1px solid var(--ks-border-primary);
@@ -900,9 +899,9 @@ form.ks-horizontal {
 
 // tags
 .el-tag {
-    --el-tag-bg-color: var(--bs-gray-600);
+    --el-tag-bg-color: var(--ks-tag-background);
     --el-tag-hover-color: var(--bs-gray-600-darken-2);
-    --el-tag-text-color: var(--bs-black);
+    --el-tag-text-color: var(--ks-tag-content);
     border: 0;
 
     @each $i in ($types) {
@@ -932,14 +931,14 @@ form.ks-horizontal {
 // avatar
 .el-avatar {
     --el-avatar-bg-color: var(--bs-gray-400);
-    --el-avatar-text-color: var(--bs-black);
+    --el-avatar-text-color: var(--ks-content-primary);
 
     &.el-avatar--small {
         font-size: 65%;
     }
 
     html.dark & {
-        --el-avatar-text-color: var(--bs-white);
+        --el-avatar-text-color: $base-white;
     }
 }
 
@@ -950,16 +949,12 @@ form.ks-horizontal {
     background-color: var(--ks-background-card);
 
     .el-dialog__header {
-        padding: var(--spacer);
-        margin: calc(var(--spacer) * -1) calc(var(--spacer) * -1) var(--spacer);
+        padding: 1rem;
+        margin: -1rem -1rem 1rem;
         border-top-right-radius: var(--bs-border-radius-lg);
         border-top-left-radius: var(--bs-border-radius-lg);
-        background: var(--bs-gray-300);
+        background: var(--ks-dialog-header);
         font-size: var(--font-size-lg);
-
-        html.dark & {
-            background: var(--bs-gray-200);
-        }
 
         .el-dialog__headerbtn {
             height: 62px;
@@ -969,7 +964,7 @@ form.ks-horizontal {
 
     .el-dialog__title {
         html.dark & {
-            color: var(--bs-white)
+            color: $base-white
         }
     }
 
@@ -977,7 +972,7 @@ form.ks-horizontal {
         background-color: var(--ks-content-link);
 
         html.dark & {
-            color: var(--bs-white)
+            color: $base-white
         }
     }
 
@@ -995,7 +990,7 @@ form.ks-horizontal {
 
         .left-align {
             &, & div {
-                gap: $spacer;
+                gap: 1rem;
                 display: flex;
                 flex-direction: row
             }
@@ -1003,7 +998,7 @@ form.ks-horizontal {
 
         .right-align {
             &, & div {
-                gap: $spacer;
+                gap: 1rem;
                 display: flex;
                 flex-direction: row-reverse;
             }
@@ -1026,13 +1021,13 @@ form.ks-horizontal {
 
     a {
         font-weight: normal;
-        color: var(--bs-gray-500) !important;
+        color: var(--ks-content-tertiary) !important;
         white-space: nowrap;
         cursor: pointer !important;
     }
 
     .el-breadcrumb__separator {
-        color: var(--bs-gray-500);
+        color: var(--ks-content-tertiary);
     }
 
     .el-breadcrumb__item {
@@ -1049,19 +1044,19 @@ form.ks-horizontal {
 
     html.dark & {
         a, .el-breadcrumb__separator {
-            color: var(--bs-gray-700) !important;
+            color: var(--ks-content-secondary) !important;
         }
     }
 }
 
 .el-steps {
     .is-process {
-        color: var(--bs-white);
+        color: $base-white;
     }
 
     .el-step__head {
         &.is-process .el-step__icon {
-            border-color: var(--bs-white);
+            border-color: $base-white;
         }
         .el-step__icon {
             border: 1px solid var(--ks-border-primary);
@@ -1121,7 +1116,7 @@ form.ks-horizontal {
 
     .el-radio-button__original-radio:checked + .el-radio-button__inner {
         box-shadow: none;
-        background: var(--bs-gray-500);
+        background: $base-gray-500;
     }
 }
 
