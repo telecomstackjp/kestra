@@ -171,10 +171,10 @@
             position: relative;
             margin: calc(var(--spacer) * 2) 0;
             padding-top: 35.25%;
-            background-color: var(--bs-gray-100);
+            background-color: var(--ks-background-body);
             height: 28.351rem;
             border-radius: calc($spacer / 2);
-            border: 1px solid var(--bs-border-secondary-color);
+            border: 1px solid var(--ks-border-secondary);
 
             @media only screen and (max-width: 1919px) {
                 padding-top: 56.25%;
