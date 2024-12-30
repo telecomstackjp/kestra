@@ -686,7 +686,6 @@
             "mode": "Modus",
             "editor_theme": "Editor-Thema",
             "editor_font_size": "Editor-Schriftgröße",
-            "logs_font_size": "Protokoll-Schriftgröße",
             "editor_font_family": "Editor-Schriftfamilie",
             "editor_folding_stratgy": "Automatisch Code im Editor zusammenklappen",
             "environment_name": "Umgebungsname",

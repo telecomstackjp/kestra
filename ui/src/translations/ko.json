@@ -686,7 +686,6 @@
             "mode": "테마 모드",
             "editor_theme": "편집기 테마",
             "editor_font_size": "편집기 글꼴 크기",
-            "logs_font_size": "로그 글꼴 크기",
             "editor_font_family": "편집기 글꼴 패밀리",
             "editor_folding_stratgy": "편집기에서 자동 코드 접기",
             "environment_name": "환경 이름",

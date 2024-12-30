@@ -686,7 +686,6 @@
             "mode": "Modo de Tema",
             "editor_theme": "Tema del Editor",
             "editor_font_size": "Tamaño de Fuente del Editor",
-            "logs_font_size": "Tamaño de fuente de los registros",
             "editor_font_family": "Familia de Fuente del Editor",
             "editor_folding_stratgy": "Plegado Automático de Código en el Editor",
             "environment_name": "Nombre del Entorno",
