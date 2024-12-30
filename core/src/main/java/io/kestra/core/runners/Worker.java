@@ -14,14 +14,12 @@ import io.kestra.core.models.tasks.Task;
 import io.kestra.core.models.triggers.*;
 import io.kestra.core.queues.*;
 import io.kestra.core.serializers.JacksonMapper;
-import io.kestra.core.server.Metric;
-import io.kestra.core.server.ServerConfig;
-import io.kestra.core.server.Service;
-import io.kestra.core.server.ServiceStateChangeEvent;
+import io.kestra.core.server.*;
 import io.kestra.core.services.LabelService;
 import io.kestra.core.services.LogService;
 import io.kestra.core.services.WorkerGroupService;
 import io.kestra.core.utils.Await;
+import io.kestra.core.utils.Either;
 import io.kestra.core.utils.ExecutorsUtils;
 import io.kestra.core.utils.Hashing;
 import io.kestra.plugin.core.flow.WorkingDirectory;
@@ -90,6 +88,10 @@ public class Worker implements Service, Runnable, AutoCloseable {
     @Inject
     @Named(QueueFactoryInterface.TRIGGER_NAMED)
     private QueueInterface<Trigger> triggerQueue;
+
+    @Inject
+    @Named(QueueFactoryInterface.CLUSTER_EVENT_NAMED)
+    private Optional<QueueInterface<ClusterEvent>> clusterEventQueue;
 
     @Inject
     private MetricRegistry metricRegistry;
@@ -257,7 +259,34 @@ public class Worker implements Service, Runnable, AutoCloseable {
                 });
             }
         ));
+
+        this.clusterEventQueue.ifPresent(clusterEventQueueInterface -> this.receiveCancellations.addFirst(clusterEventQueueInterface.receive(this::clusterEventQueue)));
+
         setState(ServiceState.RUNNING);
+    }
+
+    private void clusterEventQueue(Either<ClusterEvent, DeserializationException> either) {
+        if (either.isRight()) {
+            log.error("Unable to deserialize a cluster event: {}", either.getRight().getMessage());
+            return;
+        }
+
+        ClusterEvent clusterEvent = either.getLeft();
+        log.info("Cluster event received: {}", clusterEvent);
+        switch (clusterEvent.eventType()) {
+            case MAINTENANCE_ENTER -> {
+                this.executionKilledQueue.pause();
+                this.workerJobQueue.pause();
+
+                this.setState(ServiceState.MAINTENANCE);
+            }
+            case MAINTENANCE_EXIT -> {
+                this.executionKilledQueue.resume();
+                this.workerJobQueue.resume();
+
+                this.setState(ServiceState.RUNNING);
+            }
+        }
     }
 
     private void setState(final ServiceState state) {
