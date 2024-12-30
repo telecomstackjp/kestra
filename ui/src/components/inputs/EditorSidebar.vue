@@ -1,7 +1,7 @@
 <template>
     <div
         v-show="explorerVisible"
-        class="p-3 sidebar"
+        class="p-2 sidebar"
         @click="$refs.tree.setCurrentKey(undefined)"
         @contextmenu.prevent="onTabContextMenu"
     >
@@ -960,7 +960,7 @@
                                 Array.isArray(item.children)
                             ) {
                                 // find the first node that is not present in the current tree and then add it.
-                                
+
                                 const paths = NEW.fileName.split("/");
                                 let index = 0;
                                 let UNCOMMON_NODE = item;
@@ -1070,33 +1070,29 @@
 
 .el-tree {
     height: calc(100% - 64px);
-    overflow: hidden auto;
+    overflow: auto;
 
     .el-tree__empty-block {
         height: auto;
     }
 
-    &::-webkit-scrollbar {
-        width: 2px;
-    }
-
-    &::-webkit-scrollbar-track {
-        background: var(--ks-background-card);
-    }
-
     &::-webkit-scrollbar-thumb {
         background: var(--ks-background-button-primary);
-        border-radius: 0px;
+        border-radius: 5px;
+
+        html.dark & {
+            background:  var(--ks-background-button-primary);
+        }
     }
 
     .node {
         --el-tree-node-content-height: 36px;
         --el-tree-node-hover-bg-color: transparent;
         line-height: 36px;
+    }
 
-        .el-tree-node__content {
-            width: 100%;
-        }
+    .el-tree-node.is-current > .el-tree-node__content {
+            min-width: fit-content;
     }
 }
 </style>
@@ -1106,7 +1102,9 @@
 
 .sidebar {
     background: var(--ks-background-card);
-    border-right: 1px solid var(--ks-border-primary);
+    border-right: 1px solid var(--bs-border-color);
+    overflow-x: hidden;
+    min-width: calc(30% - 8px);
 
     .empty {
         position: relative;

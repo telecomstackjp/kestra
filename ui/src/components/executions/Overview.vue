@@ -412,8 +412,8 @@
     padding: 0.5rem;
 
     .el-button{
-        color: var(--log-content-error);
-        background-color: var(--log-background-error);
+        color: var(--ks-log-content-error);
+        background-color: var(--ks-log-background-error);
         border-color: var(--log-border-error);
     }
     .el-alert__title {
@@ -429,7 +429,7 @@
         }
 
         code{
-            color: var(--log-content-error) !important;
+            color: var(--ks-log-content-error) !important;
         }
 
         > div {
@@ -468,7 +468,7 @@
         }
 
         .text-end {
-            border-top: 1px solid var(--ks-border-primary);
+            border-top: 1px solid var(--ks-log-background-error);
         }
     }
 }
