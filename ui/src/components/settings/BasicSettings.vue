@@ -132,7 +132,7 @@
                             :placeholder="$t('name')"
                             clearable
                             show-word-limit
-                            maxlength="15"
+                            maxlength="30"
                         />
                     </Column>
 
