@@ -378,8 +378,6 @@
                 this.pendingSettings.executeDefaultTab = value;
             },
             saveAllSettings() {
-                let newlang = Utils.getLang();
-
                 Object.keys(this.pendingSettings).forEach((key) => {
                     const storedKey = this.settingsKeyMapping[key]
                     switch(key) {
@@ -408,13 +406,18 @@
                         localStorage.setItem(key, Utils.getTheme())
                         break
                     case "lang":
-                        if(this.pendingSettings[key])
+                    {
+                        if(this.pendingSettings[key]) {
                             localStorage.setItem(key, this.pendingSettings[key])
+                        }
 
+                        let newlang = Utils.getLang();
                         this.$moment.locale(newlang);
                         this.$i18n.locale = newlang;
                         this.localeKey = this.$moment.locale();
-                        break
+
+                        break;
+                    }
                     default:
                         if (storedKey) {
                             if(this.pendingSettings[key])

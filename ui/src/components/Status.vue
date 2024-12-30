@@ -13,7 +13,8 @@
         props: {
             status: {
                 type: String,
-                required: true
+                required: true,
+                default: undefined
             },
             size: {
                 type: String,
@@ -32,9 +33,9 @@
         computed: {
             style() {
                 return {
-                    color: `var(--ks-content-${this.status.toLowerCase()}) !important`,
-                    "border-color": `var(--ks-border-${this.status.toLowerCase()}) !important`,
-                    "background-color": `var(--ks-background-${this.status.toLowerCase()}) !important`
+                    color: `var(--ks-content-${this.status?.toLowerCase()}) !important`,
+                    "border-color": `var(--ks-border-${this.status?.toLowerCase()}) !important`,
+                    "background-color": `var(--ks-background-${this.status?.toLowerCase()}) !important`
                 };
             },
             icon() {

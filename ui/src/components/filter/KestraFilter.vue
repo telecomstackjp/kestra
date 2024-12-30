@@ -28,6 +28,10 @@
                 dashboards: dashboards.shown,
             }"
         >
+            <!--
+                TODO: Possible approach to solving https://github.com/kestra-io/kestra/issues/6238 might
+                be custom tag slot https://element-plus.org/en-US/component/select.html#custom-tag
+            -->
             <template #label="{value}">
                 <Label :option="value" />
             </template>
@@ -75,12 +79,16 @@
                     :key="filter.value"
                     :value="filter"
                     :label="filter.label"
+                    :disabled="isOptionDisabled(filter)"
                     :class="{
                         selected: current.some((c) =>
                             c.value.includes(filter.value),
                         ),
+                        disabled: isOptionDisabled(filter),
                     }"
-                    @click="() => valueCallback(filter)"
+                    @click="
+                        () => !isOptionDisabled(filter) && valueCallback(filter)
+                    "
                 />
             </template>
         </el-select>
@@ -160,6 +168,7 @@
         prefix: {type: String, default: undefined},
         include: {type: Array, default: () => []},
         values: {type: Object, default: undefined},
+        decode: {type: Boolean, default: true},
         buttons: {
             type: Object as () => Buttons,
             default: () => ({
@@ -293,7 +302,21 @@
             updateHoveringIndex(index);
         }
     };
+    const isOptionDisabled = (filter) => {
+        const currentFilter = current.value[dropdowns.value.third.index];
+        if (!currentFilter) return false;
+
+        // Check if this filter value is already selected in any current filter
+        return current.value.some(
+            (item) =>
+                item.label === currentFilter.label &&
+                item.value.includes(filter.value),
+        );
+    };
     const valueCallback = (filter, isDate = false) => {
+        // Don't do anything if the option is disabled
+        if (isOptionDisabled(filter)) return;
+
         if (!isDate) {
             const values = current.value[dropdowns.value.third.index].value;
             const index = values.indexOf(filter.value);
@@ -484,10 +507,11 @@
     };
 
     // Include parameters from URL directly to filter
-    current.value = decodeParams(route.query, props.include, OPTIONS);
+    if (props.decode)
+        current.value = decodeParams(route.query, props.include, OPTIONS);
 
     const addNamespaceFilter = (namespace) => {
-        if (!namespace) return;
+        if (!props.decode || !namespace) return;
         current.value.push({
             label: "namespace",
             value: [namespace],
@@ -502,7 +526,7 @@
         // Single flow page
         addNamespaceFilter(params?.namespace);
 
-        if (params.id) {
+        if (props.decode && params.id) {
             current.value.push({
                 label: "flow",
                 value: [`${params.id}`],
@@ -607,6 +631,17 @@ $dashboards: 52px;
 
     & .el-select-dropdown__item .material-design-icon {
         bottom: -0.15rem;
+    }
+
+    .el-select-dropdown__item {
+        &.disabled {
+            opacity: 0.6;
+
+            &:hover {
+                cursor: not-allowed;
+                background-color: transparent;
+            }
+        }
     }
 }
 </style>

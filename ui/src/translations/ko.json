@@ -877,7 +877,7 @@
     "docs": "문서",
     "behavior": "동작",
     "concurrency-view": {
-      "desc_no_limit": "<a href=\"https://kestra.io/docs/workflow-components/concurrency\" target=\"_blank\">동시성 제한</a>에 대해 자세히 알아보려면 문서를 참조하십시오.",
+      "desc_no_limit": "우리 문서에서 <strong><a href=\"https://kestra.io/docs/workflow-components/concurrency\" target=\"_blank\">Concurrency Limits</a></strong>에 대해 더 읽어보세요.",
       "title_no_limit": "이 Flow에 대한 제한이 설정되지 않았습니다."
     },
     "active-slots": "활성 슬롯",
@@ -903,7 +903,7 @@
     "no_data": "여기에는 아직 아무것도 없는 것 같아요…<br/>필터를 조정하거나 다시 시도해 보세요!",
     "informative notice": "노트(s)",
     "triggers-view": {
-      "desc_no_triggers": "<a href=\"https://kestra.io/docs/workflow-components/triggers\" target=\"_blank\">Triggers</a>에 대한 자세한 내용은 문서를 참조하세요.",
+      "desc_no_triggers": "<strong><a href=\"https://kestra.io/docs/workflow-components/triggers\" target=\"_blank\">Triggers</a></strong>에 대한 자세한 내용은 문서를 참조하세요.",
       "title_no_triggers": "당신의 flow에는 Trigger가 없습니다."
     },
     "dependency-view": {
