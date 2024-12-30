@@ -212,11 +212,9 @@
         }
 
         .versionNumber {
-            color: var(--bs-gray-400);
-            html.dark & {
-                color: var(--bs-gray-600);
-            }
-            margin-top: var(--spacer);
+            color: var(--ks-content-tertiary);
+            opacity: .4;
+            margin-top: 1rem;
         }
 
         .context-button-icon {

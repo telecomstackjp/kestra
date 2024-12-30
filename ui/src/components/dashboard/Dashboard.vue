@@ -582,12 +582,8 @@ $spacing: 20px;
 
             & div {
                 background: var(--ks-background-card);
-                border: 1px solid var(--bs-gray-300);
+                border: 1px solid var(--ks-border-primary);
                 border-radius: $border-radius;
-
-                html.dark & {
-                    border-color: var(--bs-gray-600);
-                }
             }
         }
     }
@@ -622,7 +618,7 @@ $spacing: 20px;
 .description {
     padding: 0px 32px;
     margin: 0;
-    color: var(--bs-gray-700);
+    color: var(--ks-content-secondary);
 }
 
 .custom {
@@ -641,12 +637,8 @@ $spacing: 20px;
             & > div {
                 height: 100%;
                 background: var(--ks-background-card);
-                border: 1px solid var(--bs-gray-300);
+                border: 1px solid var(--ks-border-primary);
                 border-radius: $border-radius;
-
-                html.dark & {
-                    border-color: var(--bs-gray-600);
-                }
             }
         }
     }
