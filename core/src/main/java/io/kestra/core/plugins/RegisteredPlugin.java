@@ -340,7 +340,7 @@ public class RegisteredPlugin {
             b.append("] ");
         }
 
-        if (!this.getTaskRunners().isEmpty()) {
+        if (!this.getLogShippers().isEmpty()) {
             b.append("[Log Shippers: ");
             b.append(this.getLogShippers().stream().map(Class::getName).collect(Collectors.joining(", ")));
             b.append("] ");

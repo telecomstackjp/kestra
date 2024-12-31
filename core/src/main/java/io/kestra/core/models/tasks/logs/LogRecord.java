@@ -30,7 +30,6 @@ public class LogRecord implements LogRecordData {
     Attributes attributes;
     int totalAttributeCount;
 
-    @Deprecated
     public Body getBody(){
         throw new UnsupportedOperationException();
     }
