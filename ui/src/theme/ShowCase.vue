@@ -101,17 +101,15 @@
         </div>
 
         <div>
-            <el-tag type="success" class="m-1">
-                Tag 1
+            <span>Light</span>&nbsp;
+            <el-tag v-for="t of ['success', 'warning', 'danger', 'info']" :key="t" :type="t" class="m-1">
+                {{ t }}
             </el-tag>
-            <el-tag type="warning" class="m-1">
-                Tag 1
-            </el-tag>
-            <el-tag type="danger" class="m-1">
-                Tag 1
-            </el-tag>
-            <el-tag type="info" class="m-1">
-                Tag 1
+        </div>
+        <div>
+            <span>Dark</span>&nbsp;
+            <el-tag v-for="t of ['success', 'warning', 'danger', 'info']" :key="t" :type="t" effect="dark" class="m-1">
+                {{ t }}
             </el-tag>
         </div>
 

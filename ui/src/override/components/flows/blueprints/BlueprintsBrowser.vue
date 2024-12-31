@@ -57,7 +57,7 @@
                                 </div>
                                 <div v-if="!system" class="tags text-uppercase">
                                     <div v-for="(tag, index) in blueprint.tags" :key="index" class="tag-box">
-                                        <el-tag type="info" size="small">
+                                        <el-tag size="small">
                                             {{ tag }}
                                         </el-tag>
                                     </div>
@@ -368,14 +368,9 @@
 
         .blueprint-card {
             cursor: pointer;
-            margin: 0 0 1px 0;
             border-radius: 0;
             border: 0;
-            border-bottom: 1px solid var(--el-border-color-darker);
-
-            html.dark &.blueprint-card{
-                border-bottom: solid var(--el-border-color-darker);
-            }
+            border-bottom: 1px solid var(--ks-border-primary);
 
             .blueprint-link {
                 display: flex;
@@ -403,22 +398,17 @@
                         display: flex;
 
 
-                        .el-tag.el-tag--info {
-                            background-color: #FEFEFE;
+                        .el-tag {
+                            background-color: var(--ks-tag-background);
                             padding: 15px 10px;
-                            color: var(--ks-content-primary);
+                            color: var(--ks-tag-content);
                             text-transform: capitalize;
                             font-size: var(--el-font-size-small);
                             border: 1px solid var(--ks-border-primary);
-
-                            html.dark &.el-tag.el-tag--info {
-                                background-color: var(--bs-gray-600);
-                                border-color: var(--bs-gray-600-lighten-15);
-                            }
                         }
 
                         .tag-box {
-                            margin-right: calc($spacer / 3);
+                            margin-right: .3rem;
                         }
                     }
 
@@ -426,7 +416,7 @@
                     .tasks-container {
                         $plugin-icon-size: calc(var(--font-size-base) + 0.3rem);
                         display: flex;
-                        gap: calc(var(--spacer) / 4);
+                        gap: .25rem;
                         width: fit-content;
                         height: $plugin-icon-size;
 
@@ -470,7 +460,7 @@
             }
 
             html.dark &.embed {
-                background-color: var(--bs-gray-600);
+                background-color: var(--ks-background-card);
             }
         }
     }
@@ -478,9 +468,10 @@
     .tags-selection {
         display: flex;
         width: 100%;
-        margin-bottom: var(--spacer);
-        gap: calc($spacer / 3);
+        margin-bottom: 1rem;
+        gap: .3rem;
         flex-wrap: wrap;
+        --el-button-bg-color: var(--ks-background-card);
 
         & > * {
             max-width: 50%;
@@ -488,18 +479,12 @@
             :deep(span) {
                 border-radius: $border-radius !important;
                 border: 1px solid var(--ks-border-primary);
-                background: var(--ks-background-card);
                 width: 100%;
                 font-size: var(--el-font-size-extra-small);
-                font-weight: bold;
                 box-shadow: none;
                 text-overflow: ellipsis;
                 overflow: hidden;
             }
-        }
-
-        html.dark & :deep(:not(.is-active) span) {
-            background: var(--bs-gray-100);
         }
     }
 </style>
