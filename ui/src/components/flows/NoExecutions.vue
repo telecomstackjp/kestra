@@ -77,7 +77,7 @@
 <style scoped lang="scss">
 .main {
 	padding: 3rem 1rem 1rem;
-	background: var(--el-text-color-primary);
+	background: var(--ks-background-body);
 	background: radial-gradient(ellipse at top, rgba(102, 51, 255, 0.6) 0%, rgba(253, 253, 253, 0) 20%);
 	background-size: 4000px;
 	background-position: center;

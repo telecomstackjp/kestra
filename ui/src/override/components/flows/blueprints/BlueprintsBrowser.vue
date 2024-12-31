@@ -85,7 +85,7 @@
                                     {{ $t('copy') }}
                                 </el-button>
                             </el-tooltip>
-                            <el-button v-else text bg size="default" @click.prevent.stop="blueprintToEditor(blueprint.id)">
+                            <el-button v-else type="primary" size="default" @click.prevent.stop="blueprintToEditor(blueprint.id)">
                                 {{ $t('use') }}
                             </el-button>
                         </div>
@@ -440,12 +440,6 @@
                 .side {
                     &.buttons {
                         white-space: nowrap;
-                    }
-
-                    :deep(.el-button.is-text){
-                        background-color:  var(--el-color-primary) !important;
-                        color:  var(--el-color-white);
-
                     }
                 }
             }
