@@ -1,5 +1,8 @@
 package io.kestra.plugin.core.http;
 
+import io.kestra.core.http.HttpRequest;
+import io.kestra.core.http.HttpResponse;
+import io.kestra.core.http.client.HttpClient;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.annotations.PluginProperty;
@@ -10,20 +13,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.client5.http.protocol.HttpClientContext;
-import org.apache.hc.core5.http.NameValuePair;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Map;
+import java.util.OptionalInt;
 
 @SuperBuilder
 @ToString
@@ -284,15 +284,15 @@ public class Request extends AbstractHttp implements RunnableTask<Request.Output
     private boolean encryptBody = false;
 
     public Output run(RunContext runContext) throws Exception {
-        try (CloseableHttpClient client = this.client(runContext)) {
-            Pair<HttpUriRequest, HttpClientContext> requestContext = this.request(runContext);
+        try (HttpClient client = this.client(runContext)) {
+            HttpRequest request = this.request(runContext);
 
-            CloseableHttpResponse response = client.execute(requestContext.getLeft(), requestContext.getRight());
+            HttpResponse<Byte[]> response = client.request(request, Byte[].class);
 
             String body = null;
 
-            if (response.getEntity() != null) {
-                body = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+            if (response.getBody() != null) {
+                body = IOUtils.toString(ArrayUtils.toPrimitive(response.getBody()), StandardCharsets.UTF_8.name());
             }
 
             // check that the string is a valid Unicode string
@@ -305,19 +305,14 @@ public class Request extends AbstractHttp implements RunnableTask<Request.Output
                 }
             }
 
-            return this.output(runContext, requestContext.getLeft(), response, body);
+            return this.output(runContext, request, response, body);
         }
     }
 
-    public Output output(RunContext runContext, HttpUriRequest request, CloseableHttpResponse response, String body) throws GeneralSecurityException, URISyntaxException, IOException {
+    public Output output(RunContext runContext, HttpRequest request, HttpResponse<Byte[]> response, String body) throws GeneralSecurityException, URISyntaxException, IOException {
         return Output.builder()
-            .code(response.getCode())
-            .headers(Arrays.stream(response.getHeaders())
-                .collect(Collectors.groupingBy(
-                    (header) -> header.getName().toLowerCase(Locale.ROOT),
-                    Collectors.mapping(NameValuePair::getValue, Collectors.toList())
-                ))
-            )
+            .code(response.getStatus().getCode())
+            .headers(response.getHeaders().map())
             .uri(request.getUri())
             .body(encryptBody ? null : body)
             .encryptedBody(encryptBody ? EncryptedString.from(body, runContext) : null)

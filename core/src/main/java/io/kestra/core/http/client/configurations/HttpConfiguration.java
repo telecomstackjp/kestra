@@ -11,7 +11,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
-@Builder
+@Builder(toBuilder = true)
 @Getter
 public class HttpConfiguration {
     @Schema(title = "The timeout configuration.")
@@ -37,11 +37,6 @@ public class HttpConfiguration {
     @Builder.Default
     @PluginProperty
     private Boolean allowFailed = false;
-
-    @Deprecated
-    public void setSslOptions(SslOptions sslOptions) {
-        this.ssl = sslOptions;
-    }
 
     @Deprecated
     public void setConnectTimeout(Duration connectTimeout) {

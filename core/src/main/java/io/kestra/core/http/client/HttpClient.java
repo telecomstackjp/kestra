@@ -13,6 +13,7 @@ import io.kestra.core.serializers.JacksonMapper;
 import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.apache.hc.client5.http.config.ConnectionConfig;
@@ -205,8 +206,8 @@ public class HttpClient implements Closeable {
             return null;
         } else if (cls.isAssignableFrom(String.class)) {
             return (T) EntityUtils.toString(entity);
-        } else if (cls.isAssignableFrom(ByteBuffer.class)) {
-            return (T) EntityUtils.toByteArray(entity);
+        } else if (cls.isAssignableFrom(Byte[].class)) {
+            return (T) ArrayUtils.toObject(EntityUtils.toByteArray(entity));
         } else if (cls.isAssignableFrom(InputStream.class)) {
             return (T) entity.getContent();
         } else {

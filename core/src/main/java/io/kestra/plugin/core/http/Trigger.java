@@ -1,5 +1,6 @@
 package io.kestra.plugin.core.http;
 
+import io.kestra.core.http.client.configurations.HttpConfiguration;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.annotations.PluginProperty;
@@ -109,7 +110,7 @@ public class Trigger extends AbstractTrigger implements PollingTriggerInterface,
     private String uri;
 
     @Builder.Default
-    private HttpMethod method = HttpMethod.GET;
+    private String method = "GET";
 
     private String body;
 
@@ -120,9 +121,9 @@ public class Trigger extends AbstractTrigger implements PollingTriggerInterface,
 
     private Map<CharSequence, CharSequence> headers;
 
-    private RequestOptions options;
+    private HttpConfiguration options;
 
-    private SslOptions sslOptions;
+    private io.kestra.core.http.client.configurations.SslOptions sslOptions;
 
     @Builder.Default
     private Boolean allowFailed = false;
@@ -146,10 +147,12 @@ public class Trigger extends AbstractTrigger implements PollingTriggerInterface,
             .formData(this.formData)
             .contentType(this.contentType)
             .headers(this.headers)
-            .options(this.options)
-            .sslOptions(this.sslOptions)
-            // we allow failed status code as it is the condition that must determine whether we trigger the flow
-            .allowFailed(true)
+            .options((this.options == null ? HttpConfiguration.builder() : this.options.toBuilder())
+                // we allow failed status code as it is the condition that must determine whether we trigger the flow
+                .allowFailed(true)
+                .ssl(this.options != null && this.options.getSsl() != null ? this.options.getSsl() : this.sslOptions)
+                .build()
+            )
             .encryptBody(this.encryptBody)
             .build();
         var output = request.run(runContext);

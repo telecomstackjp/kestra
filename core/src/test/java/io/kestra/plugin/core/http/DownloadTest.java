@@ -1,6 +1,8 @@
 package io.kestra.plugin.core.http;
 
 import com.google.common.collect.ImmutableMap;
+import io.kestra.core.http.client.HttpClientResponseException;
+import io.kestra.core.http.client.configurations.HttpConfiguration;
 import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
@@ -11,11 +13,9 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
-import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.runtime.server.EmbeddedServer;
 import jakarta.inject.Inject;
 import org.apache.commons.io.IOUtils;
-import org.apache.hc.client5.http.ClientProtocolException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -112,8 +112,8 @@ class DownloadTest {
 
         RunContext runContext = TestsUtils.mockRunContext(this.runContextFactory, task, ImmutableMap.of());
 
-        ClientProtocolException exception = assertThrows(
-            ClientProtocolException.class,
+        HttpClientResponseException exception = assertThrows(
+            HttpClientResponseException.class,
             () -> task.run(runContext)
         );
 
@@ -168,7 +168,7 @@ class DownloadTest {
                 .id(Download.class.getSimpleName())
                 .type(Download.class.getName())
                 .uri(server.getURL().toString() + "/hello417")
-                .allowFailed(true)
+                .options(HttpConfiguration.builder().allowFailed(true).build())
                 .build();
 
             RunContext runContext = TestsUtils.mockRunContext(this.runContextFactory, task, ImmutableMap.of());

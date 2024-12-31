@@ -1,38 +1,30 @@
 package io.kestra.plugin.core.http;
 
+import io.kestra.core.http.HttpRequest;
+import io.kestra.core.http.client.HttpClient;
+import io.kestra.core.http.client.HttpClientResponseException;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Metric;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.http.HttpStatus;
-import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.protocol.HttpClientContext;
-import org.apache.hc.core5.http.ClassicHttpResponse;
-import org.apache.hc.core5.http.NameValuePair;
 import org.slf4j.Logger;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 @SuperBuilder
 @ToString
@@ -76,47 +68,51 @@ public class Download extends AbstractHttp implements RunnableTask<Download.Outp
         File tempFile = runContext.workingDir().createTempFile(filenameFromURI(from)).toFile();
 
         try (
-            CloseableHttpClient client = this.client(runContext);
+            HttpClient client = this.client(runContext);
             BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(tempFile));
         ) {
-            Pair<HttpUriRequest, HttpClientContext> requestContext = this.request(runContext);
+            HttpRequest request = this.request(runContext);
             AtomicReference<Long> size = new AtomicReference<>();
 
-            ClassicHttpResponse response = client.execute(
-                requestContext.getLeft(),
-                requestContext.getRight(),
-                r -> {
-                    if (r.getEntity() != null) {
-                        size.set(IOUtils.copyLarge(r.getEntity().getContent(), output));
-                    }
-                    return r;
-                }
+            io.kestra.core.http.HttpResponse<InputStream> response = client.request(
+                request,
+                InputStream.class
             );
+
+            if (response.getBody() != null) {
+                size.set(IOUtils.copyLarge(response.getBody(), output));
+            }
 
             if (size.get() == null) {
                 size.set(0L);
             }
 
-            if (response.getEntity() != null) {
-                long length = response.getEntity().getContentLength();
-                if (length != size.get()) {
-                    throw new IllegalStateException("Invalid size, got " + size + ", expected " + length);
-                }
+            if (response.getBody() != null) {
+                response.getHeaders().firstValue("Content-Length").ifPresent(header -> {
+                    long length = Long.parseLong(header);
+
+                    if (length != size.get()) {
+                        throw new IllegalStateException("Invalid size, got " + size + ", expected " + length);
+                    }
+                });
             }
 
             output.flush();
 
             if (size.get() == 0) {
-                if (this.failOnEmptyResponse && !this.getAllowFailed()) {
-                    throw new HttpClientResponseException("No response from server", HttpResponse.status(HttpStatus.SERVICE_UNAVAILABLE));
+                if (this.failOnEmptyResponse) {
+                    boolean allowFailed = this.options != null ? this.options.getAllowFailed() : false;
+                    if (!allowFailed) {
+                        throw new HttpClientResponseException("No response from server", response);
+                    }
                 } else {
                     logger.warn("File '{}' is empty", from);
                 }
             }
 
             String filename = null;
-            if (response.getLastHeader("Content-Disposition") != null) {
-                String contentDisposition = response.getLastHeader("Content-Disposition").getValue();
+            if (response.getHeaders().firstValue("Content-Disposition").isPresent()) {
+                String contentDisposition = response.getHeaders().firstValue("Content-Disposition").orElseThrow();
                 filename = filenameFromHeader(runContext, contentDisposition);
             }
             if (filename != null) {
@@ -126,14 +122,9 @@ public class Download extends AbstractHttp implements RunnableTask<Download.Outp
             logger.debug("File '{}' downloaded with size '{}'", from, size);
 
             return Output.builder()
-                .code(response.getCode())
+                .code(response.getStatus().getCode())
                 .uri(runContext.storage().putFile(tempFile, filename))
-                .headers(Arrays.stream(response.getHeaders())
-                    .collect(Collectors.groupingBy(
-                        (header) -> header.getName().toLowerCase(Locale.ROOT),
-                        Collectors.mapping(NameValuePair::getValue, Collectors.toList())
-                    ))
-                )
+                .headers(response.getHeaders().map())
                 .length(size.get())
                 .build();
         }

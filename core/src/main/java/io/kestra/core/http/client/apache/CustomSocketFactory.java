@@ -1,8 +1,8 @@
 package io.kestra.core.http.client.apache;
 
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
+import io.kestra.core.http.client.configurations.HttpConfiguration;
 import io.kestra.core.runners.RunContext;
-import io.kestra.plugin.core.http.HttpInterface;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.apache.hc.core5.http.protocol.HttpContext;
 
@@ -16,7 +16,7 @@ import javax.net.ssl.SSLContext;
 
 public class CustomSocketFactory extends SSLConnectionSocketFactory {
     private RunContext runContext;
-    private HttpInterface.RequestOptions options;
+    private HttpConfiguration options;
 
     public CustomSocketFactory(final SSLContext sslContext, final HostnameVerifier hostnameVerifier) {
         super(sslContext, hostnameVerifier);
@@ -26,11 +26,11 @@ public class CustomSocketFactory extends SSLConnectionSocketFactory {
     public Socket createSocket(final HttpContext context) throws IOException {
         try {
             SocketAddress proxyAddr = new InetSocketAddress(
-                runContext.render(this.options.getProxyAddress()),
-                this.options.getProxyPort()
+                runContext.render(this.options.getProxy().getAddress()),
+                this.options.getProxy().getPort()
             );
 
-            Proxy proxy = new Proxy(this.options.getProxyType(), proxyAddr);
+            Proxy proxy = new Proxy(this.options.getProxy().getType(), proxyAddr);
 
             return new Socket(proxy);
         } catch (IllegalVariableEvaluationException e) {

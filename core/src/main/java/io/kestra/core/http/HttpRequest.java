@@ -7,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.entity.mime.*;
 import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.hc.core5.http.ContentType;
@@ -14,6 +15,7 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
 import org.apache.hc.core5.http.io.entity.InputStreamEntity;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
 
 import java.io.File;
 import java.io.IOException;
@@ -239,6 +241,25 @@ public class HttpRequest {
 
     @AllArgsConstructor
     @SuperBuilder
+    public static class UrlEncodedRequestBody extends RequestBody {
+        @Builder.Default
+        private Charset charset = StandardCharsets.UTF_8;
+
+        private Map<String, Object> content;
+
+        public HttpEntity to() throws IOException {
+            return new UrlEncodedFormEntity(
+                this.content .entrySet()
+                    .stream()
+                    .map(e -> new BasicNameValuePair(e.getKey(), e.getValue().toString()))
+                    .toList(),
+                this.charset
+            );
+        }
+    }
+
+    @AllArgsConstructor
+    @SuperBuilder
     public static class MultipartRequestBody extends RequestBody {
         @Builder.Default
         private Charset charset = StandardCharsets.UTF_8;
@@ -258,7 +279,7 @@ public class HttpRequest {
                     );
                     case InputStream inputStream -> builder.addPart(
                         key,
-                        new InputStreamBody(inputStream, ContentType.DEFAULT_BINARY.withCharset(this.charset), "bma.xml")
+                        new InputStreamBody(inputStream, ContentType.DEFAULT_BINARY.withCharset(this.charset))
                     );
                     case byte[] byteValue -> builder.addPart(
                         key,

@@ -1,47 +1,18 @@
 package io.kestra.plugin.core.http;
 
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
-import io.kestra.core.http.client.apache.FailedResponseInterceptor;
-import io.kestra.core.http.client.apache.LoggingResponseInterceptor;
-import io.kestra.core.http.client.apache.LoggingRequestInterceptor;
-import io.kestra.core.http.client.apache.RunContextResponseInterceptor;
+import io.kestra.core.http.HttpRequest;
+import io.kestra.core.http.client.HttpClient;
+import io.kestra.core.http.client.configurations.HttpConfiguration;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
-import io.micronaut.http.HttpMethod;
-import io.micronaut.http.MediaType;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.hc.client5.http.auth.AuthScope;
-import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
-import org.apache.hc.client5.http.config.ConnectionConfig;
-import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
-import org.apache.hc.client5.http.entity.mime.FileBody;
-import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
-import org.apache.hc.client5.http.entity.mime.StringBody;
-import org.apache.hc.client5.http.impl.DefaultAuthenticationStrategy;
-import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
-import org.apache.hc.client5.http.protocol.HttpClientContext;
-import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
-import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
-import org.apache.hc.core5.http.ContentType;
-import org.apache.hc.core5.http.Header;
-import org.apache.hc.core5.http.io.entity.StringEntity;
-import org.apache.hc.core5.http.message.BasicHeader;
-import org.apache.hc.core5.http.message.BasicNameValuePair;
-import org.apache.hc.core5.ssl.SSLContexts;
-import org.apache.hc.core5.util.Timeout;
-import org.slf4j.event.Level;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,13 +21,13 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.http.HttpHeaders;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
+import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.Map;
-import javax.net.ssl.SSLContext;
+import java.util.stream.Collectors;
 
 import static io.kestra.core.utils.Rethrow.throwFunction;
 
@@ -71,127 +42,59 @@ abstract public class AbstractHttp extends Task implements HttpInterface {
     protected String uri;
 
     @Builder.Default
-    protected HttpMethod method = HttpMethod.GET;
+    protected String method = "GET";
 
     protected String body;
 
     protected Map<String, Object> formData;
 
     @Builder.Default
-    protected String contentType = MediaType.APPLICATION_JSON;
+    protected String contentType = "application/json";
 
     protected Map<CharSequence, CharSequence> headers;
 
-    protected RequestOptions options;
+    protected HttpConfiguration options;
 
-    protected SslOptions sslOptions;
-
-    @Builder.Default
-    private Boolean allowFailed = false;
-
-    private SSLConnectionSocketFactory selfSignedConnectionSocketFactory() {
-        try {
-            SSLContext sslContext = SSLContexts
-                .custom()
-                .loadTrustMaterial(null, (chain, authType) -> true)
+    @Deprecated
+    public void setAllowFailed(Boolean allowFailed) {
+        if (this.options == null) {
+            this.options = HttpConfiguration.builder()
                 .build();
-
-            return new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
-        } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
-            throw new IllegalArgumentException(e);
         }
+
+        this.options = this.options.toBuilder()
+            .allowFailed(allowFailed)
+            .build();
     }
 
-    protected CloseableHttpClient client(RunContext runContext) throws IllegalVariableEvaluationException, MalformedURLException, URISyntaxException {
-        HttpClientBuilder builder = HttpClients.custom();
-        PoolingHttpClientConnectionManagerBuilder connectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder.create();
-
-        if (this.options != null) {
-            ConnectionConfig.Builder connectionConfig = ConnectionConfig.custom();
-
-            if (this.options.getConnectTimeout() != null) {
-                connectionConfig.setConnectTimeout(Timeout.of(this.options.getConnectTimeout()));
-            }
-
-            if (this.options.getReadIdleTimeout() != null) {
-                connectionConfig.setSocketTimeout(Timeout.of(this.options.getReadIdleTimeout()));
-            }
-
-
-            if (this.options.getProxyAddress() != null && this.options.getProxyPort() != null) {
-                // @TODO use CustomSocketFactory
-
-                if (this.options.getProxyUsername() != null && this.options.getProxyPassword() != null) {
-                    builder.setProxyAuthenticationStrategy(new DefaultAuthenticationStrategy());
-
-                    BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-                    credentialsProvider.setCredentials(
-                        new AuthScope(
-                            runContext.render(this.options.getProxyAddress()),
-                            this.options.getProxyPort()
-                        ),
-                        new UsernamePasswordCredentials(
-                            runContext.render(this.options.getProxyUsername()),
-                            runContext.render(this.options.getProxyPassword()).toCharArray()
-                        )
-                    );
-
-                    builder.setDefaultCredentialsProvider(credentialsProvider);
-                }
-            }
-
-            if (this.options.getFollowRedirects() != null && !this.options.getFollowRedirects()) {
-                builder.disableRedirectHandling();
-            }
-
-            if (this.options.getLogLevel() != null) {
-                builder.addRequestInterceptorLast(new LoggingRequestInterceptor(runContext.logger()));
-                builder.addResponseInterceptorLast(new LoggingResponseInterceptor(runContext.logger()));
-            }
-
-            connectionManagerBuilder.setDefaultConnectionConfig(connectionConfig.build());
+    @Deprecated
+    public void sslOptions(io.kestra.core.http.client.configurations.SslOptions sslOptions) {
+        if (this.options == null) {
+            this.options = HttpConfiguration.builder()
+                .build();
         }
 
-        if (this.sslOptions != null) {
-            if (this.sslOptions.getInsecureTrustAllCertificates() != null) {
-                connectionManagerBuilder.setSSLSocketFactory(this.selfSignedConnectionSocketFactory());
-            }
-        }
+        this.options = this.options.toBuilder()
+            .ssl(sslOptions)
+            .build();
+    }
 
-        if (!this.allowFailed) {
-            builder.addResponseInterceptorLast(new FailedResponseInterceptor());
-        }
-
-        builder.setConnectionManager(connectionManagerBuilder.build());
-
-        builder.addResponseInterceptorFirst(new RunContextResponseInterceptor(runContext));
-
-        return builder.build();
+    protected HttpClient client(RunContext runContext) throws IllegalVariableEvaluationException, MalformedURLException, URISyntaxException {
+        return HttpClient.builder()
+            .configuration(this.options)
+            .runContext(runContext)
+            .build();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected Pair<HttpUriRequest, HttpClientContext> request(RunContext runContext) throws IllegalVariableEvaluationException, URISyntaxException, IOException {
-        URI from = new URI(runContext.render(this.uri));
-
-        HttpUriRequest request = new HttpUriRequestBase(this.method.name(), from);
-
-        HttpClientContext localContext = HttpClientContext.create();
-
-        if (this.options != null && this.options.getBasicAuthUser() != null && this.options.getBasicAuthPassword() != null) {
-            BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(
-                new AuthScope(null, -1),
-                new UsernamePasswordCredentials(
-                    runContext.render(this.options.getBasicAuthUser()),
-                    runContext.render(this.options.getBasicAuthPassword()).toCharArray()
-                )
-            );
-            localContext.setCredentialsProvider(credentialsProvider);
-        }
+    protected HttpRequest request(RunContext runContext) throws IllegalVariableEvaluationException, URISyntaxException, IOException {
+        HttpRequest.HttpRequestBuilder request = HttpRequest.builder()
+            .method(this.method)
+            .uri(new URI(runContext.render(this.uri)));
 
         if (this.formData != null) {
-            if (MediaType.MULTIPART_FORM_DATA.equals(this.contentType)) {
-                MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            if ("multipart/form-data".equals(this.contentType)) {
+                HashMap<String, Object> multipart = new HashMap<>();
 
                 for (Map.Entry<String, Object> e : this.formData.entrySet()) {
                     String key = runContext.render(e.getKey());
@@ -206,9 +109,9 @@ abstract public class AbstractHttp extends Task implements HttpInterface {
                                 IOUtils.copyLarge(runContext.storage().getFile(new URI(render)), outputStream);
                             }
 
-                            builder.addPart(key, new FileBody(tempFile));
+                            multipart.put(key, tempFile);
                         } else {
-                            builder.addPart(key, new StringBody(render, ContentType.APPLICATION_OCTET_STREAM));
+                            multipart.put(key, render);
                         }
                     } else if (e.getValue() instanceof Map mapValue && ((Map<String, String>) mapValue).containsKey("name") && ((Map<String, String>) mapValue).containsKey("content")) {
                         String name = runContext.render(((Map<String, String>) mapValue).get("name"));
@@ -221,43 +124,43 @@ abstract public class AbstractHttp extends Task implements HttpInterface {
                             IOUtils.copyLarge(runContext.storage().getFile(new URI(content)), outputStream);
                         }
 
-                        builder.addPart(key, new FileBody(renamedFile));
+                        multipart.put(key, renamedFile);
                     } else {
-                        builder.addPart(key, new StringBody(JacksonMapper.ofJson().writeValueAsString(e.getValue()), ContentType.APPLICATION_JSON));
+                        multipart.put(key, JacksonMapper.ofJson().writeValueAsString(e.getValue()));
                     }
                 }
 
-                request.setEntity(builder.build());
+                request.body(HttpRequest.MultipartRequestBody.builder().content(multipart).build());
             } else {
-                request.setEntity(new UrlEncodedFormEntity(runContext.render(this.formData)
-                    .entrySet()
-                    .stream()
-                    .map(e -> new BasicNameValuePair(e.getKey(), e.getValue().toString()))
-                    .toList()
-                ));
+                request.body(HttpRequest.UrlEncodedRequestBody.builder()
+                    .content(runContext.render(this.formData))
+                    .build()
+                );
             }
         } else if (this.body != null) {
-            request.setEntity(new StringEntity(
-                runContext.render(body),
-                ContentType.create(
-                    runContext.render(this.contentType),
-                    this.options != null ? this.options.getDefaultCharset() : StandardCharsets.UTF_8)
-                )
+            request.body(HttpRequest.StringRequestBody.builder()
+                .content(runContext.render(body))
+                .contentType(runContext.render(this.contentType))
+                .charset(this.options != null ? this.options.getDefaultCharset() : StandardCharsets.UTF_8)
+                .build()
             );
         }
 
         if (this.headers != null) {
-            request.setHeaders(this.headers
-                .entrySet()
-                .stream()
-                .map(throwFunction(e -> new BasicHeader(
-                    e.getKey().toString(),
-                    runContext.render(e.getValue().toString())
-                )))
-                .toArray(Header[]::new)
+            request.headers(HttpHeaders.of(
+                this.headers
+                    .entrySet()
+                    .stream()
+                    .map(throwFunction(e -> new AbstractMap.SimpleEntry<>(
+                            e.getKey().toString(),
+                            runContext.render(e.getValue().toString())
+                        ))
+                    )
+                    .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey, Collectors.mapping(AbstractMap.SimpleEntry::getValue, Collectors.toList()))),
+                (a, b) -> true)
             );
         }
 
-        return Pair.of(request, localContext);
+        return request.build();
     }
 }

@@ -96,6 +96,19 @@ class HttpClientTest {
     }
 
     @Test
+    void getByte() throws IllegalVariableEvaluationException, HttpClientException, IOException {
+        try (HttpClient client = client()) {
+            HttpResponse<Byte[]> response = client.request(
+                HttpRequest.of(URI.create(embeddedServerUri + "/http/text")),
+                Byte[].class
+            );
+
+            assertThat(response.getStatus().getCode(), is(200));
+            assertThat(response.getBody(), is("pong".getBytes(StandardCharsets.UTF_8)));
+        }
+    }
+
+    @Test
     void getEmpty() throws IllegalVariableEvaluationException, HttpClientException, IOException {
         try (HttpClient client = client()) {
             HttpResponse<String> response = client.request(
@@ -189,7 +202,6 @@ class HttpClientTest {
             .build();
 
         try (HttpClient client = client()) {
-
             HttpResponse<CustomObject> response = client.request(
                 HttpRequest.of(URI.create(embeddedServerUri + "/http/json-post"), "POST", HttpRequest.JsonRequestBody.builder().content(test).build()),
                 CustomObject.class

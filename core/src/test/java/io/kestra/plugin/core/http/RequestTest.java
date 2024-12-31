@@ -4,6 +4,9 @@ import com.devskiller.friendly_id.FriendlyId;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.http.client.HttpClientResponseException;
+import io.kestra.core.http.client.configurations.HttpConfiguration;
+import io.kestra.core.http.client.configurations.SslOptions;
+import io.kestra.core.http.client.configurations.TimeoutConfiguration;
 import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
@@ -17,7 +20,6 @@ import io.micronaut.http.multipart.StreamingFileUpload;
 import io.micronaut.runtime.server.EmbeddedServer;
 import jakarta.inject.Inject;
 import org.apache.commons.io.IOUtils;
-import org.apache.hc.client5.http.ClientProtocolException;
 import org.junit.jupiter.api.Test;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
@@ -75,7 +77,7 @@ class RequestTest {
             .id(RequestTest.class.getSimpleName())
             .type(RequestTest.class.getName())
             .uri(url)
-            .method(HttpMethod.HEAD)
+            .method("HEAD")
             .build();
 
         RunContext runContext = TestsUtils.mockRunContext(this.runContextFactory, task, ImmutableMap.of());
@@ -119,7 +121,7 @@ class RequestTest {
                 .id(RequestTest.class.getSimpleName())
                 .type(RequestTest.class.getName())
                 .uri(server.getURL().toString() + "/redirect")
-                .options(HttpInterface.RequestOptions.builder()
+                .options(HttpConfiguration.builder()
                     .followRedirects(false)
                     .build()
                 )
@@ -144,7 +146,10 @@ class RequestTest {
                 .id(RequestTest.class.getSimpleName())
                 .type(RequestTest.class.getName())
                 .uri(server.getURL().toString() + "/hello417")
-                .allowFailed(true)
+                .options(HttpConfiguration.builder()
+                    .allowFailed(true)
+                    .build()
+                )
                 .build();
 
             RunContext runContext = TestsUtils.mockRunContext(this.runContextFactory, task, ImmutableMap.of());
@@ -171,13 +176,12 @@ class RequestTest {
 
             RunContext runContext = TestsUtils.mockRunContext(this.runContextFactory, task, ImmutableMap.of());
 
-            ClientProtocolException exception = assertThrows(
-                ClientProtocolException.class,
+            HttpClientResponseException exception = assertThrows(
+                HttpClientResponseException.class,
                 () -> task.run(runContext)
             );
 
-            assertThat(exception.getCause(), instanceOf(HttpClientResponseException.class));
-            assertThat(((HttpClientResponseException) exception.getCause()).getResponse().getStatus().getCode(), is(417));
+            assertThat(exception.getResponse().getStatus().getCode(), is(417));
         }
     }
 
@@ -189,12 +193,13 @@ class RequestTest {
             .id(RequestTest.class.getSimpleName())
             .type(RequestTest.class.getName())
             .uri(url)
-            .allowFailed(true)
             .headers(Map.of("bla", "sdfsdf"))
-            .options(HttpInterface.RequestOptions.builder()
-                .readIdleTimeout(Duration.ofSeconds(30))
-                .build())
-            .sslOptions(AbstractHttp.SslOptions.builder().insecureTrustAllCertificates(true).build())
+            .options(HttpConfiguration.builder()
+                .allowFailed(true)
+                .timeout(TimeoutConfiguration.builder().readIdleTimeout(Duration.ofSeconds(30)).build())
+                .ssl(SslOptions.builder().insecureTrustAllCertificates(true).build())
+                .build()
+            )
             .build();
 
         RunContext runContext = TestsUtils.mockRunContext(this.runContextFactory, task, ImmutableMap.of());
@@ -216,7 +221,7 @@ class RequestTest {
             Request task = Request.builder()
                 .id(RequestTest.class.getSimpleName())
                 .type(RequestTest.class.getName())
-                .method(HttpMethod.POST)
+                .method("POST")
                 .uri(server.getURL().toString() + "/post/json")
                 .body(JacksonMapper.ofJson().writeValueAsString(ImmutableMap.of("hello", "world")))
                 .build();
@@ -240,7 +245,7 @@ class RequestTest {
             Request task = Request.builder()
                 .id(RequestTest.class.getSimpleName())
                 .type(RequestTest.class.getName())
-                .method(HttpMethod.POST)
+                .method("POST")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .uri(server.getURL().toString() + "/post/url-encoded")
                 .headers(ImmutableMap.of(
@@ -280,7 +285,7 @@ class RequestTest {
             Request task = Request.builder()
                 .id(RequestTest.class.getSimpleName())
                 .type(RequestTest.class.getName())
-                .method(HttpMethod.POST)
+                .method("POST")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .uri(server.getURL().toString() + "/post/multipart")
                 .formData(ImmutableMap.of("hello", "world", "file", fileStorage.toString()))
@@ -314,7 +319,7 @@ class RequestTest {
             Request task = Request.builder()
                 .id(RequestTest.class.getSimpleName())
                 .type(RequestTest.class.getName())
-                .method(HttpMethod.POST)
+                .method("POST")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .uri(server.getURL().toString() + "/post/multipart")
                 .formData(ImmutableMap.of("hello", "world", "file", ImmutableMap.of("content", fileStorage.toString(), "name", "test.yml")))
@@ -360,6 +365,7 @@ class RequestTest {
             .id(RequestTest.class.getSimpleName())
             .type(RequestTest.class.getName())
             .uri("https://github.com/kestra-io.png")
+            .contentType("application/octet-stream")
             .build();
 
         RunContext runContext = TestsUtils.mockRunContext(this.runContextFactory, task, ImmutableMap.of());
