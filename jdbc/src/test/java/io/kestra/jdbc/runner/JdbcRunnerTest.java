@@ -36,9 +36,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public abstract class JdbcRunnerTest {
 
     @Inject
-    private StandAloneRunner runner;
-
-    @Inject
     private JdbcTestUtils jdbcTestUtils;
 
     @Inject

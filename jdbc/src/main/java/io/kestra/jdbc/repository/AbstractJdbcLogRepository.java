@@ -97,9 +97,8 @@ public abstract class AbstractJdbcLogRepository extends AbstractJdbcRepository i
             select = select.and(this.findCondition(query));
         }
 
-        //todo I had to change for strict comparison to make sure the log shipper don't take some logs twice
         if (startDate != null) {
-            select = select.and(field("timestamp").greaterThan(startDate.withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime()));
+            select = select.and(field("timestamp").greaterThan(startDate.toOffsetDateTime()));
         }
 
         if (endDate != null) {
