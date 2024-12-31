@@ -3,6 +3,7 @@
 @use 'element-plus/theme-chalk/src/mixins/var' as *;
 
 @import "@kestra-io/ui-libs/src/scss/variables.scss";
+@import "../color-palette.scss";
 
 // use bootstrap for main style
 :root {
@@ -16,20 +17,20 @@
     --el-text-color-placeholder: var(--content-content-secondary);
     --el-text-color-disabled: var(--content-content-inactive);
 
-    --el-border-color: var(--border-border);
-    --el-border-color-light: var(--border-border);
-    --el-border-color-lighter: var(--border-border);
-    --el-border-color-extra-light: var(--border-border);
+    --el-border-color: var(--ks-border-primary);
+    --el-border-color-light: var(--ks-border-primary);
+    --el-border-color-lighter: var(--ks-border-primary);
+    --el-border-color-extra-light: var(--ks-border-primary);
     --el-border-color-dark: var(--ks-border-secondary);
     --el-border-color-darker: var(--ks-border-secondary);
 
-    --el-fill-color: var(--bs-gray-300); // used in buttons .is-text
-    --el-fill-color-light: var(--bs-gray-200); // used in many places autocomplete suggestion highlighted
-    --el-fill-color-lighter: var(--bs-gray-100); // used to be for table stripped but not anymore
-    --el-fill-color-extra-light: var(--bs-white); // not used at all
-    --el-fill-color-dark: var(--bs-gray-400); // used in buttons .is-text when active
-    --el-fill-color-darker: var(--bs-gray-500); // not used at kestra
-    --el-fill-color-blank: var(--bs-white); // used in many places --el-input-background-color
+    --el-fill-color: $base-gray-300;// used in buttons .is-text
+    --el-fill-color-light: $base-gray-200; // used in many places autocomplete suggestion highlighted
+    --el-fill-color-lighter: $base-gray-100; // used to be for table stripped but not anymore
+    --el-fill-color-extra-light: $base-white; // not used at all
+    --el-fill-color-dark: $base-gray-400; // used in buttons .is-text when active
+    --el-fill-color-darker: $base-gray-500; // not used at kestra
+    --el-fill-color-blank: $base-white;// used in many places --el-input-background-color
 
     // alert colors
     --el-color-alert-info: var(--tooltip-content-information);
@@ -46,7 +47,7 @@
     #{--bs-border-color}: #E5E4F7;
     #{--bs-border-secondary-color}: #E5E4F7;
 
-    #{--bs-card-bg}: #FFFFFF;
+    #{--bs-card-bg}: var(--ks-background-card);
     #{--bs-body-color}: black;
     #{--bs-heading-color}: var(--bs-black);
     #{--bs-secondary}: #564A75;
@@ -118,7 +119,7 @@ $logLevels: "trace", "debug", "info", "warn", "error";
 .button-top {
     background: var(--ks-background-card);
     border-bottom: 1px solid var(--ks-border-primary);
-    padding: .5rem calc(var(--spacer) * 2);
+    padding: .5rem 2rem;
     padding-left: .5rem;
     display: flex;
     align-items: center;
