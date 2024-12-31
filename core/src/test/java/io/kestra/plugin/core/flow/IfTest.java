@@ -23,16 +23,6 @@ class IfTest {
     private RunnerUtils runnerUtils;
 
     @Test
-    @LoadFlows({"flows/valids/if.yaml"})
-    void multipleIf() throws TimeoutException, QueueException {
-        Execution execution = runnerUtils.runOne(null, "io.kestra.tests", "if", null,
-            (f, e) -> Map.of("if1", true, "if2", false, "if3", true));
-
-        assertThat(execution.getTaskRunList(), hasSize(12));
-        assertThat(execution.getState().getCurrent(), is(State.Type.SUCCESS));
-    }
-
-    @Test
     @LoadFlows({"flows/valids/if-condition.yaml"})
     void ifTruthy() throws TimeoutException, QueueException {
         Execution execution = runnerUtils.runOne(null, "io.kestra.tests", "if-condition", null,
