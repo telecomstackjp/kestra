@@ -109,7 +109,7 @@
 <style scoped lang="scss">
     .main {
         padding: 3rem 1rem 1rem;
-        background: var(--ks-background-body);
+        background: var(--el-text-color-primary);
         background: radial-gradient(ellipse at top, rgba(102,51,255,0.6) 0%, rgba(253, 253, 253, 0) 20%);
         background-size: 4000px;
         background-position: center;
@@ -138,23 +138,17 @@
     }
 
     .product-link, .watch {
-        background: var(--ks-background-button-secondary);
-        color: var(--el-button-text-color);
         font-weight: 700;
         border-radius: 5px;
-        border: 1px solid var(--el-button-border-color);
         text-decoration: none;
         font-size: var(--el-font-size-small);
         width: 200px;
-        margin-bottom: calc(var(--spacer));
-
-
+        margin-bottom: 1rem;
     }
 
     .watch {
         font-weight: 500;
-        background-color: var(--ks-background-button-secondary-hover);
-        color: var(--ks-content-primary);
+        background-color: var(--ks-background-button-secondary);
         font-size: var(--el-font-size-small);
     }
 
