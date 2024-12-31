@@ -39,23 +39,23 @@
         #{--el-color-alert-#{$type}}: var(--executions-#{$type}-content-#{$type});
     }
 
-    --bs-code-color: #7400DF;
+    --bs-code-color: $base-purple-600;
 
     #{--card-bg}: var(--ks-background-card);
     #{--input-bg}: $input-bg;
 
-    #{--bs-border-color}: #E5E4F7;
-    #{--bs-border-secondary-color}: #E5E4F7;
+    #{--bs-border-color}: var(--ks-border-primary);
+    #{--bs-border-secondary-color}: var(--ks-border-secondary);
 
     #{--bs-card-bg}: var(--ks-background-card);
-    #{--bs-body-color}: black;
-    #{--bs-heading-color}: var(--bs-black);
+    #{--bs-body-color}: $base-black;
+    #{--bs-heading-color}: $base-black;
     #{--bs-secondary}: #564A75;
     #{--bs-secondary-rgb}: to-rgb(#564A75);
     #{--bs-tertiary-color}: #7E719F;
     #{--bs-tertiary}: $tertiary;
-    #{--bs-link-color-rgb}: to-rgb(#8405FF);
-    #{--bs-link-hover-color-rgb}: to-rgb(#9470FF);
+    #{--bs-link-color-rgb}: to-rgb($base-purple-500);
+    #{--bs-link-hover-color-rgb}: to-rgb($base-purple-300);
 
     #{--bs-gray}: #{map.get($grays, "600")};
     @each $key, $value in $grays {
@@ -73,11 +73,11 @@
         }
     }
 
-    $content-information: #134ecc;
-    $content-running: #7400df;
-    $content-alert: #ab0009;
-    $content-warning: #c15300;
-    $content-success: #03DABA;
+    $content-information: $base-blue-600;
+    $content-running: $base-purple-600;
+    $content-alert: $base-red-500;
+    $content-warning: $base-orange-600;
+    $content-success: $base-green-300;
     #{--bs-info-rgb}: to_rgb($content-information);
     #{--bs-running-rgb}: to_rgb($content-running);
     #{--bs-danger-rgb}: to_rgb($content-alert);
