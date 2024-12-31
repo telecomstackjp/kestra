@@ -588,55 +588,28 @@ public abstract class AbstractJdbcLogRepository extends AbstractJdbcRepository i
             .getDslContextWrapper()
             .transactionResult(configuration -> {
                 DSLContext context = DSL.using(configuration);
-                SelectConditionStep<org.jooq.Record> selectConditionStep = context
-                    .select(
-                        descriptors.getColumns().entrySet().stream()
-                            .map(entry -> {
-                                ColumnDescriptor<Logs.Fields> col = entry.getValue();
-                                String key = entry.getKey();
-                                Field<?> field = columnToField(col, fieldsMapping);
-                                if (col.getAgg() != null) {
-                                    AggregateFunction<?> aggField = this.getFilterService().buildAggregation(field, col.getAgg());
-                                    field = aggField;
-                                }
-                                return field.as(key);
-                            })
-                            .toList()
-                    )
-                    .from(this.jdbcRepository.getTable())
-                    .where(this.defaultFilter(tenantId));
-
-                // Apply Where filter
-                selectConditionStep = this.getFilterService().addFilters(selectConditionStep, this.getFieldsMapping(), descriptors.getWhere());
-
-                // Apply GroupBy for aggregation
-                SelectHavingStep<org.jooq.Record> selectHavingStep = selectConditionStep.groupBy(
-                    descriptors.getColumns().values().stream()
-                        .filter(col -> col.getAgg() == null)
-                        .map(col -> field(fieldsMapping.get(col.getField())))
-                        .toList()
+                // Init request
+                SelectConditionStep<Record> selectConditionStep = select(
+                    context,
+                    this.getFilterService(),
+                    descriptors,
+                    this.getFieldsMapping(),
+                    this.jdbcRepository.getTable(),
+                    tenantId
                 );
 
+                // Apply Where filter
+                selectConditionStep = where(selectConditionStep, this.getFilterService(), descriptors, fieldsMapping);
+
+                // Apply GroupBy for aggregation
+                SelectHavingStep<Record> selectHavingStep = groupBy(selectConditionStep, descriptors, fieldsMapping);
+
                 // Apply OrderBy
-                List<SortField<?>> orderFields = new ArrayList<>();
-                if (descriptors.getOrderBy() != null && !descriptors.getOrderBy().isEmpty()) {
-                    orderFields = descriptors.getOrderBy().stream()
-                        .map(orderBy -> {
-                            Field<?> field = field(orderBy.getColumn());
-                            return orderBy.getOrder() == Order.ASC ? field.asc() : field.desc();
-                        })
-                        .toList();
+                SelectSeekStepN<Record> selectSeekStep = orderBy(selectHavingStep, descriptors);
 
-                }
+                // Fetch and paginate if provided
+                List<Map<String, Object>> results = fetchSeekStep(selectSeekStep, pageable);
 
-                SelectSeekStepN<Record> selectSeekStep = selectHavingStep.orderBy(orderFields);
-                // Apply pagination
-                List<Map<String, Object>> results =
-                    (pageable != null ?
-                        selectSeekStep.limit(pageable.getSize()).offset(pageable.getOffset()) :
-                        selectSeekStep
-                    ).fetch()
-                        .intoMaps();
 
                 // Fetch total count for pagination
                 int total = context.fetchCount(selectConditionStep);

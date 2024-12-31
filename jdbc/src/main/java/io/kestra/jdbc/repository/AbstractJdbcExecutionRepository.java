@@ -5,6 +5,8 @@ import io.kestra.core.events.CrudEventType;
 import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
 import io.kestra.core.models.dashboards.Order;
+import io.kestra.core.models.dashboards.filters.AbstractFilter;
+import io.kestra.core.models.dashboards.filters.In;
 import io.kestra.core.models.executions.Execution;
 import io.kestra.core.models.executions.TaskRun;
 import io.kestra.core.models.executions.statistics.*;
@@ -1120,55 +1122,27 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
             .getDslContextWrapper()
             .transactionResult(configuration -> {
                 DSLContext context = DSL.using(configuration);
-                SelectConditionStep<Record> selectConditionStep = context
-                    .select(
-                        descriptors.getColumns().entrySet().stream()
-                            .map(entry -> {
-                                ColumnDescriptor<Executions.Fields> col = entry.getValue();
-                                String key = entry.getKey();
-                                Field<?> field = columnToField(col, fieldsMapping);
-                                if (col.getAgg() != null) {
-                                    AggregateFunction<?> aggField = this.getFilterService().buildAggregation(field, col.getAgg());
-                                    field = aggField;
-                                }
-                                return field.as(key);
-                            })
-                            .toList()
-                    )
-                    .from(this.jdbcRepository.getTable())
-                    .where(this.defaultFilter(tenantId));
-
-                // Apply Where filter
-                selectConditionStep = this.getFilterService().addFilters(selectConditionStep, this.getFieldsMapping(), descriptors.getWhere());
-
-                // Apply GroupBy for aggregation
-                SelectHavingStep<Record> selectHavingStep = selectConditionStep.groupBy(
-                    descriptors.getColumns().values().stream()
-                        .filter(col -> col.getAgg() == null)
-                        .map(col -> field(fieldsMapping.get(col.getField())))
-                        .toList()
+                // Init request
+                SelectConditionStep<Record> selectConditionStep = select(
+                    context,
+                    this.getFilterService(),
+                    descriptors,
+                    this.getFieldsMapping(),
+                    this.jdbcRepository.getTable(),
+                    tenantId
                 );
 
+                // Apply Where filter
+                selectConditionStep = where(selectConditionStep, this.getFilterService(), descriptors, fieldsMapping);
+
+                // Apply GroupBy for aggregation
+                SelectHavingStep<Record> selectHavingStep = groupBy(selectConditionStep, descriptors, fieldsMapping);
+
                 // Apply OrderBy
-                List<SortField<?>> orderFields = new ArrayList<>();
-                if (descriptors.getOrderBy() != null && !descriptors.getOrderBy().isEmpty()) {
-                    orderFields = descriptors.getOrderBy().stream()
-                        .map(orderBy -> {
-                            Field<?> field = field(orderBy.getColumn());
-                            return orderBy.getOrder() == Order.ASC ? field.asc() : field.desc();
-                        })
-                        .toList();
+                SelectSeekStepN<Record> selectSeekStep = orderBy(selectHavingStep, descriptors);
 
-                }
-
-                SelectSeekStepN<Record> selectSeekStep = selectHavingStep.orderBy(orderFields);
-                // Apply pagination
-                List<Map<String, Object>> results =
-                    (pageable != null ?
-                        selectSeekStep.limit(pageable.getSize()).offset(pageable.getOffset()) :
-                        selectSeekStep
-                    ).fetch()
-                    .intoMaps();
+                // Fetch and paginate if provided
+                List<Map<String, Object>> results = fetchSeekStep(selectSeekStep, pageable);
 
                 // Fetch total count for pagination
                 int total = context.fetchCount(selectConditionStep);
@@ -1193,4 +1167,33 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
         return field;
     }
 
+    @Override
+    protected <F extends Enum<F>> SelectConditionStep<Record> where(SelectConditionStep<Record> selectConditionStep, JdbcFilterService jdbcFilterService, DataFilter<F, ? extends ColumnDescriptor<F>> descriptors, Map<F, String> fieldsMapping) {
+        if (descriptors.getWhere() != null && !descriptors.getWhere().isEmpty()) {
+            // Check if descriptors contain a filter of type Executions.Fields.STATE and apply the custom filter "statesFilter" if present
+            List<In<Executions.Fields>> stateFilters = descriptors.getWhere().stream()
+                .filter(descriptor -> descriptor.getField().equals(Executions.Fields.STATE) && descriptor instanceof In)
+                .map(descriptor -> (In<Executions.Fields>) descriptor)
+                .toList();
+
+            if (!stateFilters.isEmpty()) {
+                selectConditionStep = selectConditionStep.and(
+                    statesFilter(stateFilters.stream()
+                        .flatMap(stateFilter -> stateFilter.getValues().stream())
+                        .map(value -> State.Type.valueOf(value.toString()))
+                        .toList())
+                );
+            }
+
+            // Remove the state filters from descriptors
+            List<AbstractFilter<F>> remainingFilters = descriptors.getWhere().stream()
+                .filter(descriptor -> !descriptor.getField().equals(Executions.Fields.STATE) || !(descriptor instanceof In))
+                .toList();
+
+            // Use the generic method addFilters with the remaining filters
+            return this.getFilterService().addFilters(selectConditionStep, fieldsMapping, remainingFilters);
+        } else {
+            return selectConditionStep;
+        }
+    }
 }
