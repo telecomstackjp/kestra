@@ -7,6 +7,7 @@ import io.kestra.core.http.HttpResponse;
 import io.kestra.core.http.client.apache.FailedResponseInterceptor;
 import io.kestra.core.http.client.apache.LoggingRequestInterceptor;
 import io.kestra.core.http.client.apache.LoggingResponseInterceptor;
+import io.kestra.core.http.client.apache.RunContextResponseInterceptor;
 import io.kestra.core.http.client.configurations.HttpConfiguration;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
@@ -36,7 +37,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
-import java.nio.ByteBuffer;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -65,9 +65,17 @@ public class HttpClient implements Closeable {
 
         // logger
         if (runContext.logger() != null) {
-            builder
-                .addRequestInterceptorLast(new LoggingRequestInterceptor(runContext.logger()))
-                .addResponseInterceptorLast(new LoggingResponseInterceptor(runContext.logger()));
+            if (ArrayUtils.contains(this.configuration.getLogs(), HttpConfiguration.LoggingType.REQUEST_HEADERS) ||
+                ArrayUtils.contains(this.configuration.getLogs(), HttpConfiguration.LoggingType.REQUEST_BODY)
+            ) {
+                builder.addRequestInterceptorLast(new LoggingRequestInterceptor(runContext.logger(), this.configuration.getLogs()));
+            }
+
+            if (ArrayUtils.contains(this.configuration.getLogs(), HttpConfiguration.LoggingType.RESPONSE_HEADERS) ||
+                ArrayUtils.contains(this.configuration.getLogs(), HttpConfiguration.LoggingType.RESPONSE_BODY)
+            ) {
+                builder.addResponseInterceptorLast(new LoggingResponseInterceptor(runContext.logger(), this.configuration.getLogs()));
+            }
         }
 
         // Object dependencies
@@ -123,6 +131,8 @@ public class HttpClient implements Closeable {
         if (!this.configuration.getAllowFailed()) {
             builder.addResponseInterceptorLast(new FailedResponseInterceptor());
         }
+
+        builder.addResponseInterceptorLast(new RunContextResponseInterceptor(this.runContext));
 
         // builder object
         connectionManagerBuilder.setDefaultConnectionConfig(connectionConfig.build());

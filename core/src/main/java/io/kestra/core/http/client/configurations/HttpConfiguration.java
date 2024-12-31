@@ -38,6 +38,17 @@ public class HttpConfiguration {
     @PluginProperty
     private Boolean allowFailed = false;
 
+    @Schema(title = "The enabled log.")
+    @PluginProperty
+    private LoggingType[] logs;
+
+    public enum LoggingType {
+        REQUEST_HEADERS,
+        REQUEST_BODY,
+        RESPONSE_HEADERS,
+        RESPONSE_BODY
+    }
+
     @Deprecated
     public void setConnectTimeout(Duration connectTimeout) {
         if (this.timeout == null) {
@@ -151,10 +162,26 @@ public class HttpConfiguration {
     @PluginProperty
     private final Charset defaultCharset = StandardCharsets.UTF_8;
 
-    @Schema(title = "The log level for the HTTP client.")
-    @PluginProperty
-    private final LogLevel logLevel;
-
+    @Deprecated
+    private void setLogLevel(LogLevel logLevel) {
+        if (logLevel == LogLevel.TRACE) {
+            this.logs = new LoggingType[]{
+                LoggingType.REQUEST_HEADERS,
+                LoggingType.REQUEST_BODY,
+                LoggingType.RESPONSE_HEADERS,
+                LoggingType.RESPONSE_BODY
+            };
+        } else if (logLevel == LogLevel.DEBUG) {
+            this.logs = new LoggingType[]{
+                LoggingType.REQUEST_HEADERS,
+                LoggingType.RESPONSE_HEADERS,
+            };
+        } else if (logLevel == LogLevel.INFO) {
+            this.logs = new LoggingType[]{
+                LoggingType.RESPONSE_HEADERS,
+            };
+        }
+    }
 
     @Deprecated
     private void setReadIdleTimeout(Duration readIdleTimeout) {
