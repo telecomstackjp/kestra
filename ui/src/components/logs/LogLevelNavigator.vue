@@ -52,7 +52,7 @@
         white-space: nowrap;
 
         &:hover {
-            box-shadow: 0 0 0 1px var(--el-border-color) inset;
+            box-shadow: 0 0 0 1px var(--ks-border-primary) inset;
         }
 
         .circle {

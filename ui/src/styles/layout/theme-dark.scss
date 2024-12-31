@@ -36,6 +36,11 @@ html.dark{
 	#{--ks-background-tag}: $base-gray-400;
 	#{--ks-background-warning}: $base-orange-900;
 
+	/* badge */
+	#{--ks-badge-background}: $base-blue-300;
+	#{--ks-badge-border}: $base-blue-300;
+	#{--ks-badge-content}: #a2cdff;
+
 	/* border */
 	#{--ks-border-active}: $base-purple-500;
 	#{--ks-border-cancelled}: $base-gray-800;
@@ -77,6 +82,7 @@ html.dark{
 	#{--ks-content-cancelled}: $base-gray-900;
 	#{--ks-content-created}: #fff2f3;
 	#{--ks-content-failed}: $base-red-200;
+	#{--ks-content-id}: $base-purple-100;
 	#{--ks-content-inactive}: $base-gray-300;
 	#{--ks-content-information}: #c7f0ff;
 	#{--ks-content-inverse}: $base-gray-950;

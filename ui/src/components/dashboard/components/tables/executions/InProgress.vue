@@ -184,7 +184,7 @@
 
 <style lang="scss" scoped>
 code {
-    color: var(--bs-code-color);
+    color: var(--ks-content-id);
 }
 
 .inprogress {

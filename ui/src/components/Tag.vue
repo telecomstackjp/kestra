@@ -24,14 +24,10 @@
         align-items: center;
         padding: 3px 6px;
         border-radius: 4px;
-        border: 1px solid var(--ks-border-primary);
-        background-color: var(--ks-tag-background);
-        color: var(--ks-tag-content);
+        border: 1px solid var(--ks-badge-border);
+        background-color: var(--ks-badge-background);
+        color: var(--ks-badge-content);
         font-size: 0.75rem;
-
-        &:hover{
-            background-color: var(--ks-tag-background-hover);
-        }
 
         .icon {
             margin-right: 5px !important;

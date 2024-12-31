@@ -215,6 +215,10 @@
     "log-border-info": "#1761fd",
     "log-background-info": "#0e3b9a",
     "log-content-info": "#c7f0ff",
-    "log-chart-info": "#1761fd"
+    "log-chart-info": "#1761fd",
+    "content-id": "#bbbbff",
+    "badge-background": "#5bb8ff",
+    "badge-content": "#a2cdff",
+    "badge-border": "#5bb8ff"
   }
 }

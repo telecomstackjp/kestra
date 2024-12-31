@@ -36,6 +36,11 @@
 	#{--ks-background-tag}: $base-gray-200;
 	#{--ks-background-warning}: $base-orange-50;
 
+	/* badge */
+	#{--ks-badge-background}: $base-blue-50;
+	#{--ks-badge-border}: $base-blue-400;
+	#{--ks-badge-content}: $base-blue-600;
+
 	/* border */
 	#{--ks-border-active}: $base-purple-500;
 	#{--ks-border-cancelled}: $base-gray-500;
@@ -77,6 +82,7 @@
 	#{--ks-content-cancelled}: $base-gray-950;
 	#{--ks-content-created}: $base-red-400;
 	#{--ks-content-failed}: $base-red-500;
+	#{--ks-content-id}: $base-purple-500;
 	#{--ks-content-inactive}: $base-gray-400;
 	#{--ks-content-information}: $base-blue-600;
 	#{--ks-content-inverse}: $base-white;

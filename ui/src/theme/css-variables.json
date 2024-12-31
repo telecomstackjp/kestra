@@ -56,7 +56,8 @@
     "ks-content-queued",
     "ks-content-retrying",
     "ks-content-retried",
-    "ks-content-cancelled"
+    "ks-content-cancelled",
+    "ks-content-id"
   ],
   "border": [
     "ks-border-primary",
@@ -145,5 +146,10 @@
     "ks-tag-background",
     "ks-tag-background-hover",
     "ks-tag-content"
+  ],
+  "badge": [
+    "ks-badge-background",
+    "ks-badge-content",
+    "ks-badge-border"
   ]
 }
