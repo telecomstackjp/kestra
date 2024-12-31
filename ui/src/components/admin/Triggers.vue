@@ -214,7 +214,7 @@
                             </template>
                         </el-table-column>
 
-                        <el-table-column :label="$t('action')" column-key="disable" class-name="row-action">
+                        <el-table-column :label="$t('actions')" column-key="disable" class-name="row-action">
                             <template #default="scope">
                                 <el-switch
                                     v-if="!scope.row.missingSource"
