@@ -1102,7 +1102,7 @@
 
 .sidebar {
     background: var(--ks-background-card);
-    border-right: 1px solid var(--bs-border-color);
+    border-right: 1px solid var(--ks-border-primary);
     overflow-x: hidden;
     min-width: calc(30% - 8px);
 
