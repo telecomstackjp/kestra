@@ -83,5 +83,6 @@ function makePalettes(palette, paletteName, selector) {
     fs.writeFileSync(path.resolve(__dirname, `../src/styles/layout/theme-${paletteName}.scss`), `@import "../color-palette.scss";\n\n${selector}{\n${tokenScss}\n}`, {encoding: "utf-8"})
 
     // write the css variables into an index for theme documentation
-    fs.writeFileSync(path.resolve(__dirname, "../src/theme/css-variables.json"), JSON.stringify(cssVariableNames, null, 2), {encoding: "utf-8"})
+    // NOTE: we assume that all themes will have the same variables and write the same file over and over
+    fs.writeFileSync(path.resolve(__dirname, "../theme/css-variables.json"), JSON.stringify(cssVariableNames, null, 2), {encoding: "utf-8"})
 }
