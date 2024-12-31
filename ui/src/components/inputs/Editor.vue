@@ -489,7 +489,7 @@
                 padding-right: inherit;
                 cursor: text;
                 user-select: none;
-                color: var(--el-text-color-placeholder);
+                color: var(--ks-content-inactive);
             }
 
             .editor-wrapper {
