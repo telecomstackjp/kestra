@@ -7,10 +7,16 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
-import org.apache.hc.client5.http.auth.AuthScope;
-import org.apache.hc.client5.http.auth.CredentialsProvider;
+import org.apache.hc.client5.http.auth.AuthScheme;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
-import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.impl.auth.BasicScheme;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.message.BasicHeader;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Base64;
 
 @Getter
 @SuperBuilder(toBuilder = true)
@@ -18,7 +24,7 @@ public class BasicAuthConfiguration extends AbstractAuthConfiguration {
     @NotNull
     @JsonInclude
     @Builder.Default
-    protected String type = "BASICAUTH";
+    protected AuthType type = AuthType.BASIC;
 
     @Schema(title = "The username for HTTP basic authentication.")
     @PluginProperty(dynamic = true)
@@ -29,16 +35,14 @@ public class BasicAuthConfiguration extends AbstractAuthConfiguration {
     private final String password;
 
     @Override
-    public CredentialsProvider credentials() {
-        BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(
-            new AuthScope(null, -1),
-            new UsernamePasswordCredentials(
-                this.getUsername(),
-                this.getPassword().toCharArray()
-            )
-        );
+    public void configure(HttpClientBuilder builder) {
+        byte[] encoded = Base64.getEncoder()
+            .encode((this.getUsername() + ":" + this.getPassword()).getBytes(StandardCharsets.UTF_8));
 
-        return credentialsProvider;
+        builder.addRequestInterceptorFirst((request, entity, context) -> request
+            .setHeader(new BasicHeader(
+                HttpHeaders.AUTHORIZATION,
+                "Basic " + new String(encoded, StandardCharsets.UTF_8)
+            )));
     }
 }

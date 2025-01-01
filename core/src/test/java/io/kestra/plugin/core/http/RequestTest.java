@@ -4,14 +4,13 @@ import com.devskiller.friendly_id.FriendlyId;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.http.client.HttpClientResponseException;
-import io.kestra.core.http.client.configurations.HttpConfiguration;
-import io.kestra.core.http.client.configurations.SslOptions;
-import io.kestra.core.http.client.configurations.TimeoutConfiguration;
+import io.kestra.core.http.client.configurations.*;
 import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.serializers.JacksonMapper;
 import io.kestra.core.storages.StorageInterface;
+import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.http.*;
@@ -30,6 +29,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
 
@@ -378,6 +378,58 @@ class RequestTest {
         assertThat(exception.getMessage(), containsString("Illegal unicode code"));
     }
 
+    @Test
+    void basicAuth() throws Exception {
+        try (
+            ApplicationContext applicationContext = ApplicationContext.run();
+            EmbeddedServer server = applicationContext.getBean(EmbeddedServer.class).start();
+        ) {
+            Request task = Request.builder()
+                .id(RequestTest.class.getSimpleName())
+                .type(RequestTest.class.getName())
+                .uri(server.getURL().toString() + "/auth/basic")
+                .options(HttpConfiguration.builder()
+                    .auth(BasicAuthConfiguration.builder().username("John").password("p4ss").build())
+                    .build()
+                )
+                .build();
+
+            RunContext runContext = TestsUtils.mockRunContext(this.runContextFactory, task, Map.of());
+
+            Request.Output output = task.run(runContext);
+
+            assertThat(output.getBody(), is("{\"hello\":\"John\"}"));
+            assertThat(output.getCode(), is(200));
+        }
+    }
+
+    @Test
+    void bearerAuth() throws Exception {
+        try (
+            ApplicationContext applicationContext = ApplicationContext.run();
+            EmbeddedServer server = applicationContext.getBean(EmbeddedServer.class).start();
+        ) {
+            String id = IdUtils.create();
+
+            Request task = Request.builder()
+                .id(RequestTest.class.getSimpleName())
+                .type(RequestTest.class.getName())
+                .uri(server.getURL().toString() + "/auth/bearer")
+                .options(HttpConfiguration.builder()
+                    .auth(BearerAuthConfiguration.builder().token(id).build())
+                    .build()
+                )
+                .build();
+
+            RunContext runContext = TestsUtils.mockRunContext(this.runContextFactory, task, Map.of());
+
+            Request.Output output = task.run(runContext);
+
+            assertThat(output.getBody(), is("{\"hello\":\"" + id + "\"}"));
+            assertThat(output.getCode(), is(200));
+        }
+    }
+
     @Controller
     static class MockController {
         @Get("/hello")
@@ -398,6 +450,34 @@ class RequestTest {
         @Get("/redirect")
         HttpResponse<String> redirect() {
             return HttpResponse.redirect(URI.create("/hello"));
+        }
+
+        @Get("/auth/basic")
+        HttpResponse<String> basicAuth(HttpRequest<?> request) {
+            return request.getHeaders()
+                .getAuthorization()
+                .filter(v -> v.startsWith("Basic "))
+                .map(v -> {
+                    String decode = new String(
+                        Base64.getDecoder().decode(v.substring(6).getBytes(StandardCharsets.UTF_8)),
+                        StandardCharsets.UTF_8
+                    );
+
+                    return decode.split(":", 2);
+                })
+                .filter(a -> a[1].equals("p4ss"))
+                .map(a -> HttpResponse.ok("{\"hello\":\"" + a[0] + "\"}"))
+                .orElseThrow();
+        }
+
+        @Get("/auth/bearer")
+        HttpResponse<String> bearerAuth(HttpRequest<?> request) {
+            return request.getHeaders()
+                .getAuthorization()
+                .filter(v -> v.startsWith("Bearer "))
+                .map(v -> v.substring(7))
+                .map(a -> HttpResponse.ok("{\"hello\":\"" + a + "\"}"))
+                .orElseThrow();
         }
 
         @Post(uri = "/post/json")

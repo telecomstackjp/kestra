@@ -1,5 +1,6 @@
 package io.kestra.core.http.client.apache;
 
+import io.kestra.core.http.HttpService;
 import io.kestra.core.http.client.configurations.HttpConfiguration;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.ArrayUtils;
@@ -29,6 +30,6 @@ public class LoggingRequestInterceptor extends AbstractLoggingInterceptor implem
     private String buildRequestEntry(HttpRequest request) {
         return "request:" +
             "\n    method: " + request.getMethod() +
-            "\n    uri: " + request.getRequestUri();
+            "\n    uri: " + HttpService.safeURI(request);
     }
 }

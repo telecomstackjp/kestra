@@ -15,8 +15,8 @@ import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.hc.client5.http.auth.AuthScope;
-import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.ContextBuilder;
+import org.apache.hc.client5.http.auth.*;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.impl.DefaultAuthenticationStrategy;
 import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
@@ -64,7 +64,7 @@ public class HttpClient implements Closeable {
             .setUserAgent("Kestra");
 
         // logger
-        if (runContext.logger() != null) {
+        if (this.configuration.getLogs() != null && this.configuration.getLogs().length > 0) {
             if (ArrayUtils.contains(this.configuration.getLogs(), HttpConfiguration.LoggingType.REQUEST_HEADERS) ||
                 ArrayUtils.contains(this.configuration.getLogs(), HttpConfiguration.LoggingType.REQUEST_BODY)
             ) {
@@ -81,6 +81,7 @@ public class HttpClient implements Closeable {
         // Object dependencies
         PoolingHttpClientConnectionManagerBuilder connectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder.create();
         ConnectionConfig.Builder connectionConfig = ConnectionConfig.custom();
+        BasicCredentialsProvider credentialsStore = new BasicCredentialsProvider();
 
         // Timeout
         if (this.configuration.getTimeout() != null) {
@@ -100,8 +101,7 @@ public class HttpClient implements Closeable {
             if (this.configuration.getProxy().getUsername() != null && this.configuration.getProxy().getPassword() != null) {
                 builder.setProxyAuthenticationStrategy(new DefaultAuthenticationStrategy());
 
-                BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-                credentialsProvider.setCredentials(
+                credentialsStore.setCredentials(
                     new AuthScope(
                         runContext.render(this.configuration.getProxy().getAddress()),
                         this.configuration.getProxy().getPort()
@@ -111,8 +111,6 @@ public class HttpClient implements Closeable {
                         runContext.render(this.configuration.getProxy().getPassword()).toCharArray()
                     )
                 );
-
-                builder.setDefaultCredentialsProvider(credentialsProvider);
             }
         }
 
@@ -121,6 +119,11 @@ public class HttpClient implements Closeable {
             if (this.configuration.getSsl().getInsecureTrustAllCertificates() != null) {
                 connectionManagerBuilder.setSSLSocketFactory(this.selfSignedConnectionSocketFactory());
             }
+        }
+
+        // auth
+        if (this.configuration.getAuth() != null) {
+            this.configuration.getAuth().configure(builder);
         }
 
         // root options
@@ -137,6 +140,7 @@ public class HttpClient implements Closeable {
         // builder object
         connectionManagerBuilder.setDefaultConnectionConfig(connectionConfig.build());
         builder.setConnectionManager(connectionManagerBuilder.build());
+        builder.setDefaultCredentialsProvider(credentialsStore);
 
         this.client = builder.build();
 
@@ -165,7 +169,7 @@ public class HttpClient implements Closeable {
      * @return the response
      */
     public <T> HttpResponse<T> request(HttpRequest request, Class<T> cls) throws HttpClientException, IllegalVariableEvaluationException {
-        HttpClientContext httpClientContext = HttpClientContext.create();
+        HttpClientContext httpClientContext = this.clientContext(request);
 
         return this.request(request, httpClientContext, r -> {
             T body = bodyHandler(cls, r.getEntity());
@@ -182,13 +186,19 @@ public class HttpClient implements Closeable {
      * @return the response
      */
     public <T> HttpResponse<T> request(HttpRequest request) throws HttpClientException, IllegalVariableEvaluationException {
-        HttpClientContext httpClientContext = HttpClientContext.create();
+        HttpClientContext httpClientContext = this.clientContext(request);
 
         return this.request(request, httpClientContext, response -> {
             T body = JacksonMapper.ofJson().readValue(response.getEntity().getContent(), new TypeReference<>() {});
 
             return HttpResponse.from(response, body, request, httpClientContext);
         });
+    }
+
+    private HttpClientContext clientContext(HttpRequest request) {
+        ContextBuilder contextBuilder = ContextBuilder.create();
+
+        return contextBuilder.build();
     }
 
     @SuppressWarnings("resource")

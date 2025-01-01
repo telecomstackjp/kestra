@@ -126,9 +126,6 @@ public class Trigger extends AbstractTrigger implements PollingTriggerInterface,
     private io.kestra.core.http.client.configurations.SslOptions sslOptions;
 
     @Builder.Default
-    private Boolean allowFailed = false;
-
-    @Builder.Default
     @Schema(
         title = "If true, the HTTP response body will be automatically encrypted and decrypted in the outputs if encryption is configured",
         description = "When true, the `encryptedBody` output will be filled, otherwise the `body` output will be filled"

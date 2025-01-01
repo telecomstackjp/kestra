@@ -7,8 +7,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
-import org.apache.hc.client5.http.auth.BearerToken;
-import org.apache.hc.client5.http.auth.CredentialsProvider;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.message.BasicHeader;
 
 @Getter
 @SuperBuilder(toBuilder = true)
@@ -16,16 +17,18 @@ public class BearerAuthConfiguration extends AbstractAuthConfiguration {
     @NotNull
     @JsonInclude
     @Builder.Default
-    protected String type = "BEARER";
+    protected AuthType type = AuthType.BEARER;
 
-    @Schema(title = "The password for HTTP basic authentication.")
+    @Schema(title = "The token for bearer token authentication.")
     @PluginProperty(dynamic = true)
     private final String token;
 
     @Override
-    public CredentialsProvider credentials() {
-        BearerToken bearerToken = new BearerToken(this.token);
-
-        return (authScope, context) -> bearerToken;
+    public void configure(HttpClientBuilder builder) {
+        builder.addRequestInterceptorFirst((request, entity, context) -> request
+            .setHeader(new BasicHeader(
+                HttpHeaders.AUTHORIZATION,
+                "Bearer " + this.token
+            )));
     }
 }
