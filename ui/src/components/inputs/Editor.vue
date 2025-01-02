@@ -433,6 +433,7 @@
 
 <style lang="scss">
     @import "../../styles/layout/root-dark.scss";
+    @import "../../styles/color-palette.scss";
 
     :not(.namespace-form, .el-drawer__body) > .ks-editor{
         flex-direction: column;
@@ -476,8 +477,8 @@
                     background-color: $input-bg;
                 }
 
-                html.dark & {
-                    background-color: var(--bs-gray-100);
+                &.theme-light{
+                    background-color: $base-white;
                 }
             }
 
