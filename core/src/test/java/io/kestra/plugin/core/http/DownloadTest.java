@@ -17,6 +17,8 @@ import io.micronaut.runtime.server.EmbeddedServer;
 import jakarta.inject.Inject;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.FluxSink;
 
 import java.io.IOException;
 import java.net.URI;
@@ -121,6 +123,24 @@ class DownloadTest {
     }
 
     @Test
+    void chunked() throws Exception {
+        EmbeddedServer embeddedServer = applicationContext.getBean(EmbeddedServer.class);
+        embeddedServer.start();
+
+        Download task = Download.builder()
+            .id(DownloadTest.class.getSimpleName())
+            .type(DownloadTest.class.getName())
+            .uri(embeddedServer.getURI() + "/chunked")
+            .build();
+
+        RunContext runContext = TestsUtils.mockRunContext(this.runContextFactory, task, ImmutableMap.of());
+
+        Download.Output output = task.run(runContext);
+
+        assertThat(this.storageInterface.get(null, null, output.getUri()).readAllBytes().length, is(10000 * 12));
+    }
+
+    @Test
     void contentDisposition() throws Exception {
         EmbeddedServer embeddedServer = applicationContext.getBean(EmbeddedServer.class);
         embeddedServer.start();
@@ -190,6 +210,17 @@ class DownloadTest {
         @Get("204")
         public HttpResponse<Void> noContent() {
             return HttpResponse.noContent();
+        }
+
+
+        @Get("chunked")
+        public Flux<byte[]> chunked() {
+            return Flux.create(sink -> {
+                for (int i = 0; i < 10000; i++) {
+                    sink.next("Hello World\n".getBytes());
+                }
+                sink.complete();
+            }, FluxSink.OverflowStrategy.BUFFER);
         }
 
         @Get("content-disposition")

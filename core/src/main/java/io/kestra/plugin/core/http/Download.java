@@ -1,6 +1,7 @@
 package io.kestra.plugin.core.http;
 
 import io.kestra.core.http.HttpRequest;
+import io.kestra.core.http.HttpResponse;
 import io.kestra.core.http.client.HttpClient;
 import io.kestra.core.http.client.HttpClientResponseException;
 import io.kestra.core.models.annotations.Example;
@@ -25,6 +26,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static io.kestra.core.utils.Rethrow.throwConsumer;
 
 @SuperBuilder
 @ToString
@@ -74,30 +77,30 @@ public class Download extends AbstractHttp implements RunnableTask<Download.Outp
             HttpRequest request = this.request(runContext);
             AtomicReference<Long> size = new AtomicReference<>();
 
-            io.kestra.core.http.HttpResponse<InputStream> response = client.request(
+            HttpResponse<Void> response = client.request(
                 request,
-                InputStream.class
-            );
-
-            if (response.getBody() != null) {
-                size.set(IOUtils.copyLarge(response.getBody(), output));
-            }
-
-            if (size.get() == null) {
-                size.set(0L);
-            }
-
-            if (response.getBody() != null) {
-                response.getHeaders().firstValue("Content-Length").ifPresent(header -> {
-                    long length = Long.parseLong(header);
-
-                    if (length != size.get()) {
-                        throw new IllegalStateException("Invalid size, got " + size + ", expected " + length);
+                throwConsumer(r -> {
+                    if (r.getBody() != null) {
+                        size.set(IOUtils.copyLarge(r.getBody(), output));
                     }
-                });
-            }
 
-            output.flush();
+                    if (size.get() == null) {
+                        size.set(0L);
+                    }
+
+                    if (r.getBody() != null) {
+                        r.getHeaders().firstValue("Content-Length").ifPresent(header -> {
+                            long length = Long.parseLong(header);
+
+                            if (length != size.get()) {
+                                throw new IllegalStateException("Invalid size, got " + size + ", expected " + length);
+                            }
+                        });
+                    }
+
+                    output.flush();
+                })
+            );
 
             if (size.get() == 0) {
                 if (this.failOnEmptyResponse) {

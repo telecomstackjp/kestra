@@ -40,6 +40,7 @@ import java.net.SocketException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.function.Consumer;
 import javax.net.ssl.SSLContext;
 
 @Slf4j
@@ -179,6 +180,30 @@ public class HttpClient implements Closeable {
     }
 
     /**
+     * Send a request, getting the response with body as input stream
+     *
+     * @param request the request
+     * @param consumer the consumer of the response
+     * @return the response without the body
+     */
+    public HttpResponse<Void> request(HttpRequest request, Consumer<HttpResponse<InputStream>> consumer) throws HttpClientException, IllegalVariableEvaluationException {
+        HttpClientContext httpClientContext = this.clientContext(request);
+
+        return this.request(request, httpClientContext, r -> {
+            HttpResponse<InputStream> from = HttpResponse.from(
+                r,
+                r.getEntity() != null ? r.getEntity().getContent() : null,
+                request,
+                httpClientContext
+            );
+
+            consumer.accept(from);
+
+            return HttpResponse.from(r, null, request, httpClientContext);
+        });
+    }
+
+    /**
      * Send a request and expect a json response
      *
      * @param request the request
@@ -228,8 +253,6 @@ public class HttpClient implements Closeable {
             return (T) EntityUtils.toString(entity);
         } else if (cls.isAssignableFrom(Byte[].class)) {
             return (T) ArrayUtils.toObject(EntityUtils.toByteArray(entity));
-        } else if (cls.isAssignableFrom(InputStream.class)) {
-            return (T) entity.getContent();
         } else {
             return (T) JacksonMapper.ofJson().readValue(entity.getContent(), cls);
         }
