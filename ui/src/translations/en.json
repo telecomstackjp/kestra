@@ -1059,14 +1059,6 @@
     "comment": "Comment",
     "uncomment": "Uncomment",
     "fold/unfold code": "Fold/Unfold code",
-    "shortcuts": "Keyboard Shortcuts",
-    "namespace files.toggle.show": "Show namespace files",
-    "namespace files.toggle.hide": "Hide namespace files",
-    "namespace_editor.close.tab": "Close tab",
-    "namespace_editor.close.all": "Close all tabs",
-    "namespace_editor.close.other": "Close other tabs",
-    "namespace_editor.close.right": "Close tabs to the right",
-    "namespace_editor.empty.title": "No tabs currently opened",
-    "namespace_editor.empty.message": "You can create or import namespace files from the sidebar and you can check out the introduction video for our Editor."
+    "shortcuts": "Keyboard Shortcuts"
   }
 }
