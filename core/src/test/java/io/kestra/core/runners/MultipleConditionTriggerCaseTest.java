@@ -11,6 +11,7 @@ import io.kestra.core.queues.QueueInterface;
 import io.kestra.core.repositories.FlowRepositoryInterface;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -46,10 +47,14 @@ public class MultipleConditionTriggerCaseTest {
     public void trigger() throws InterruptedException, TimeoutException, QueueException {
         CountDownLatch countDownLatch = new CountDownLatch(3);
         ConcurrentHashMap<String, Execution> ended = new ConcurrentHashMap<>();
+        List<String> watchedExecutions = List.of("trigger-multiplecondition-flow-a",
+            "trigger-multiplecondition-flow-b",
+            "trigger-multiplecondition-listener"
+        );
 
         Flux<Execution> receive = TestsUtils.receive(executionQueue, either -> {
             Execution execution = either.getLeft();
-            if (execution.getState().getCurrent() == State.Type.SUCCESS) {
+            if (watchedExecutions.contains(execution.getFlowId()) && execution.getState().getCurrent() == State.Type.SUCCESS) {
                 ended.put(execution.getId(), execution);
                 countDownLatch.countDown();
             }
