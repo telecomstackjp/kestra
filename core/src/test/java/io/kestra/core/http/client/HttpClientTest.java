@@ -8,9 +8,16 @@ import io.kestra.core.http.HttpRequest;
 import io.kestra.core.http.HttpResponse;
 import io.kestra.core.http.client.configurations.HttpConfiguration;
 import io.kestra.core.junit.annotations.KestraTest;
+import io.kestra.core.models.executions.Execution;
+import io.kestra.core.models.executions.LogEntry;
+import io.kestra.core.models.flows.Flow;
+import io.kestra.core.queues.QueueFactoryInterface;
+import io.kestra.core.queues.QueueInterface;
+import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.serializers.JacksonMapper;
 import io.kestra.core.utils.IdUtils;
+import io.kestra.core.utils.TestsUtils;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
@@ -22,6 +29,7 @@ import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import lombok.Builder;
 import lombok.Value;
 import org.apache.commons.io.IOUtils;
@@ -42,6 +50,7 @@ import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -58,6 +67,10 @@ class HttpClientTest {
     private RunContextFactory runContextFactory;
 
     private URI embeddedServerUri;
+
+    @Inject
+    @Named(QueueFactoryInterface.WORKERTASKLOG_NAMED)
+    QueueInterface<LogEntry> workerTaskLogQueue;
 
     @BeforeEach
     void setUp() {
@@ -84,14 +97,37 @@ class HttpClientTest {
 
     @Test
     void getText() throws IllegalVariableEvaluationException, HttpClientException, IOException {
-        try (HttpClient client = client()) {
+        Flow flow = TestsUtils.mockFlow();
+        Execution execution = TestsUtils.mockExecution(flow, Map.of());
+
+        List<LogEntry> logs = new CopyOnWriteArrayList<>();
+        TestsUtils.receive(workerTaskLogQueue, either -> logs.add(either.getLeft()));
+
+        RunContext runContext = runContextFactory.of(flow, execution);
+
+        HttpClient.HttpClientBuilder configuration = HttpClient
+            .builder()
+            .runContext(runContext)
+            .configuration(HttpConfiguration.builder().logs(HttpConfiguration.LoggingType.values()).build());
+
+        try (HttpClient client = configuration.build()) {
             HttpResponse<String> response = client.request(
-                HttpRequest.of(URI.create(embeddedServerUri + "/http/text")),
+                HttpRequest.builder()
+                    .uri(URI.create(embeddedServerUri + "/http/text"))
+                    .addHeader("X-Unit", "Test")
+                    .build(),
                 String.class
             );
 
+
             assertThat(response.getStatus().getCode(), is(200));
             assertThat(response.getBody(), is("pong"));
+
+            List<LogEntry> logEntries = TestsUtils.awaitLogs(logs, 6);
+
+            assertThat(logEntries.stream().filter(logEntry -> logEntry.getMessage().startsWith("request")).count(), is(3L));
+            assertThat(logEntries.stream().filter(logEntry -> logEntry.getMessage().contains("X-Unit: Test")).count(), is(1L));
+            assertThat(logEntries.stream().filter(logEntry -> logEntry.getMessage().startsWith("response")).count(), is(3L));
         }
     }
 
@@ -265,7 +301,6 @@ class HttpClientTest {
         }
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Test
     void error400() throws IOException, IllegalVariableEvaluationException {
         try (HttpClient client = client()) {
@@ -275,7 +310,7 @@ class HttpClientTest {
                 client.request(HttpRequest.of(uri));
             });
 
-            assertThat(e.getResponse().getStatus().getCode(), is(400));
+            assertThat(Objects.requireNonNull(e.getResponse()).getStatus().getCode(), is(400));
             assertThat(e.getMessage(), containsString("Required QueryValue [status]"));
             assertThat(new String((byte[]) e.getResponse().getBody()), containsString("Required QueryValue [status]"));
         }
@@ -290,7 +325,7 @@ class HttpClientTest {
                 client.request(HttpRequest.of(uri));
             });
 
-            assertThat(e.getResponse().getStatus().getCode(), is(404));
+            assertThat(Objects.requireNonNull(e.getResponse()).getStatus().getCode(), is(404));
         }
     }
 

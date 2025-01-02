@@ -3,9 +3,14 @@ package io.kestra.core.http.client;
 import io.kestra.core.http.HttpRequest;
 import lombok.Getter;
 
+import java.io.Serial;
+
 @Getter
 public class HttpClientRequestException extends HttpClientException {
-    protected HttpRequest request;
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    protected final HttpRequest request;
 
     public HttpClientRequestException(String message, HttpRequest request) {
         super(message);

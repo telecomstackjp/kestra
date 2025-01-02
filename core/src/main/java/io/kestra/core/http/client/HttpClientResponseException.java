@@ -5,9 +5,14 @@ import io.kestra.core.http.HttpResponse;
 import jakarta.annotation.Nullable;
 import lombok.Getter;
 
+import java.io.Serial;
+
 @Getter
 public class HttpClientResponseException extends HttpClientException {
-    protected HttpRequest request;
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    protected final HttpRequest request;
 
     @Nullable
     protected HttpResponse<?> response;

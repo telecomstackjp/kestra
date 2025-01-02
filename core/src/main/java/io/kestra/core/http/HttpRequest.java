@@ -135,7 +135,7 @@ public class HttpRequest {
     @AllArgsConstructor
     @SuperBuilder
     public abstract static class RequestBody {
-        abstract public HttpEntity to() throws IOException;
+        public abstract HttpEntity to() throws IOException;
 
         public static RequestBody from(HttpEntity entity) throws IOException {
             if (entity == null) {
