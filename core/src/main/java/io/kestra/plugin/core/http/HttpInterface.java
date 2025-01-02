@@ -1,19 +1,10 @@
 package io.kestra.plugin.core.http;
 
 import io.kestra.core.http.client.configurations.HttpConfiguration;
+import io.kestra.core.http.client.configurations.SslOptions;
 import io.kestra.core.models.annotations.PluginProperty;
-import io.micronaut.http.HttpMethod;
-import io.micronaut.http.client.HttpClientConfiguration;
-import io.micronaut.logging.LogLevel;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Getter;
 
-import java.net.Proxy;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
 public interface HttpInterface {
@@ -57,4 +48,9 @@ public interface HttpInterface {
             title = "The HTTP request options"
     )
     HttpConfiguration getOptions();
+
+    @Schema(
+        title = "The SSL request options"
+    )
+    SslOptions getSslOptions();
 }

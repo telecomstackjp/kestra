@@ -4,10 +4,12 @@ import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.http.HttpRequest;
 import io.kestra.core.http.client.HttpClient;
 import io.kestra.core.http.client.configurations.HttpConfiguration;
+import io.kestra.core.http.client.configurations.SslOptions;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -56,6 +58,13 @@ abstract public class AbstractHttp extends Task implements HttpInterface {
     protected HttpConfiguration options;
 
     @Deprecated
+    @Builder.Default
+    @Schema(
+        title = "If true, allow a failed response code (response code >= 400)"
+    )
+    private boolean allowFailed = false;
+
+    @Deprecated
     public void setAllowFailed(Boolean allowFailed) {
         if (this.options == null) {
             this.options = HttpConfiguration.builder()
@@ -68,12 +77,16 @@ abstract public class AbstractHttp extends Task implements HttpInterface {
     }
 
     @Deprecated
-    public void sslOptions(io.kestra.core.http.client.configurations.SslOptions sslOptions) {
+    protected SslOptions sslOptions;
+
+    @Deprecated
+    public void sslOptions(SslOptions sslOptions) {
         if (this.options == null) {
             this.options = HttpConfiguration.builder()
                 .build();
         }
 
+        this.sslOptions = sslOptions;
         this.options = this.options.toBuilder()
             .ssl(sslOptions)
             .build();

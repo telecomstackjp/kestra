@@ -1,6 +1,7 @@
 package io.kestra.plugin.core.http;
 
 import io.kestra.core.http.client.configurations.HttpConfiguration;
+import io.kestra.core.http.client.configurations.SslOptions;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.annotations.PluginProperty;
@@ -9,7 +10,6 @@ import io.kestra.core.models.executions.Execution;
 import io.kestra.core.models.triggers.*;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.utils.TruthUtils;
-import io.micronaut.http.HttpMethod;
 import io.micronaut.http.MediaType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -123,8 +123,6 @@ public class Trigger extends AbstractTrigger implements PollingTriggerInterface,
 
     private HttpConfiguration options;
 
-    private io.kestra.core.http.client.configurations.SslOptions sslOptions;
-
     @Builder.Default
     @Schema(
         title = "If true, the HTTP response body will be automatically encrypted and decrypted in the outputs if encryption is configured",
@@ -173,5 +171,22 @@ public class Trigger extends AbstractTrigger implements PollingTriggerInterface,
         }
 
         return Optional.empty();
+    }
+
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    @Deprecated
+    private SslOptions sslOptions;
+
+    @Deprecated
+    public void sslOptions(SslOptions sslOptions) {
+        if (this.options == null) {
+            this.options = HttpConfiguration.builder()
+                .build();
+        }
+
+        this.sslOptions = sslOptions;
+        this.options = this.options.toBuilder()
+            .ssl(sslOptions)
+            .build();
     }
 }
