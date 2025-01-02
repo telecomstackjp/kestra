@@ -46,7 +46,7 @@ public abstract class AbstractRunnerTest {
 
     @Inject
     @Named(QueueFactoryInterface.WORKERTASKLOG_NAMED)
-    private QueueInterface<LogEntry> logsQueue;
+    protected QueueInterface<LogEntry> logsQueue;
 
     @Inject
     private RestartCaseTest restartCaseTest;
@@ -73,7 +73,7 @@ public abstract class AbstractRunnerTest {
     private SkipExecutionCaseTest skipExecutionCaseTest;
 
     @Inject
-    private ForEachItemCaseTest forEachItemCaseTest;
+    protected ForEachItemCaseTest forEachItemCaseTest;
 
     @Inject
     private WaitForCaseTest waitForTestCaseTest;
@@ -104,25 +104,6 @@ public abstract class AbstractRunnerTest {
     @ExecuteFlow("flows/valids/logs.yaml")
     void logs(Execution execution) {
         assertThat(execution.getTaskRunList(), hasSize(5));
-    }
-
-    @Test
-    @LoadFlows("flows/valids/errors.yaml")
-    void errors() throws Exception {
-        List<LogEntry> logs = new CopyOnWriteArrayList<>();
-        Flux<LogEntry> receive = TestsUtils.receive(logsQueue,
-            either -> logs.add(either.getLeft()));
-
-        Execution execution = runnerUtils.runOne(null, "io.kestra.tests", "errors", null, null,
-            Duration.ofSeconds(60));
-
-        assertThat(execution.getTaskRunList(), hasSize(7));
-
-        receive.blockLast();
-        LogEntry logEntry = TestsUtils.awaitLog(logs,
-            log -> log.getMessage().contains("- task: failed, message: Task failure"));
-        assertThat(logEntry, notNullValue());
-        assertThat(logEntry.getMessage(), is("- task: failed, message: Task failure"));
     }
 
     @Test
@@ -322,16 +303,6 @@ public abstract class AbstractRunnerTest {
         pauseTest.runTimeout(runnerUtils);
     }
 
-    @RetryingTest(5)
-    @LoadFlows({"flows/valids/execution.yaml"})
-    void executionDate() throws Exception {
-        Execution execution = runnerUtils.runOne(null, "io.kestra.tests",
-            "execution-start-date", null, null, Duration.ofSeconds(60));
-
-        assertThat((String) execution.getTaskRunList().getFirst().getOutputs().get("value"),
-            matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z"));
-    }
-
     @Test
     @LoadFlows({"flows/valids/minimal.yaml"})
     void skipExecution() throws Exception {
@@ -349,13 +320,6 @@ public abstract class AbstractRunnerTest {
     @LoadFlows({"flows/valids/for-each-item.yaml"})
     protected void forEachItemEmptyItems() throws Exception {
         forEachItemCaseTest.forEachItemEmptyItems();
-    }
-
-    @RetryingTest(5)
-    @LoadFlows({"flows/valids/for-each-item-subflow.yaml",
-        "flows/valids/for-each-item-no-wait.yaml"})
-    protected void forEachItemNoWait() throws Exception {
-        forEachItemCaseTest.forEachItemNoWait();
     }
 
     @RetryingTest(5)
@@ -451,60 +415,6 @@ public abstract class AbstractRunnerTest {
     @LoadFlows({"flows/valids/waitfor-multiple-tasks-failed.yaml"})
     void waitforMultipleTasksFailed() throws Exception {
         waitForTestCaseTest.waitforMultipleTasksFailed();
-    }
-
-    @Test
-    @LoadFlows({"flows/valids/inputs-large.yaml"})
-    void queueMessageTooLarge() {
-        char[] chars = new char[1100000];
-        Arrays.fill(chars, 'a');
-
-        Map<String, Object> inputs = new HashMap<>(InputsTest.inputs);
-        inputs.put("string", new String(chars));
-
-        var exception = assertThrows(QueueException.class, () -> runnerUtils.runOne(
-            null,
-            "io.kestra.tests",
-            "inputs-large",
-            null,
-            (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, inputs),
-            Duration.ofSeconds(60)
-        ));
-
-        // the size is different on all runs, so we cannot assert on the exact message size
-        assertThat(exception.getMessage(), containsString("Message of size"));
-        assertThat(exception.getMessage(),
-            containsString("has exceeded the configured limit of 1048576"));
-        assertThat(exception, instanceOf(MessageTooBigException.class));
-    }
-
-    @Test
-    @LoadFlows({"flows/valids/workertask-result-too-large.yaml"})
-    void workerTaskResultTooLarge() throws Exception {
-        List<LogEntry> logs = new CopyOnWriteArrayList<>();
-        Flux<LogEntry> receive = TestsUtils.receive(logsQueue,
-            either -> logs.add(either.getLeft()));
-
-        Execution execution = runnerUtils.runOne(
-            null,
-            "io.kestra.tests",
-            "workertask-result-too-large"
-        );
-
-        LogEntry matchingLog = TestsUtils.awaitLog(logs, log -> log.getMessage()
-            .startsWith("Unable to emit the worker task result to the queue"));
-        receive.blockLast();
-
-        assertThat(matchingLog, notNullValue());
-        assertThat(matchingLog.getLevel(), is(Level.ERROR));
-        // the size is different on all runs, so we cannot assert on the exact message size
-        assertThat(matchingLog.getMessage(), containsString("Message of size"));
-        assertThat(matchingLog.getMessage(),
-            containsString("has exceeded the configured limit of 1048576"));
-
-        assertThat(execution.getState().getCurrent(), is(State.Type.FAILED));
-        assertThat(execution.getTaskRunList().size(), is(1));
-
     }
 
     @Test
