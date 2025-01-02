@@ -71,7 +71,7 @@
             <switch-view
                 v-if="!isNamespace"
                 :type="viewType"
-                class="to-topology-button"
+                class="to-topology-button me-2"
                 @switch-view="switchViewType"
             />
 
