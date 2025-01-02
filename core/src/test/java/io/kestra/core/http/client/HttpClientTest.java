@@ -66,11 +66,11 @@ class HttpClientTest {
         embeddedServerUri = embeddedServer.getURI();
     }
 
-    HttpClient client() {
+    HttpClient client() throws IllegalVariableEvaluationException {
         return client(null);
     }
 
-    HttpClient client(@Nullable Consumer<HttpClient.HttpClientBuilder> consumer) {
+    HttpClient client(@Nullable Consumer<HttpClient.HttpClientBuilder> consumer) throws IllegalVariableEvaluationException {
         HttpClient.HttpClientBuilder builder = HttpClient
             .builder()
             .runContext(runContextFactory.of());
@@ -243,7 +243,7 @@ class HttpClientTest {
     }
 
     @Test
-    void errorUnreachable() throws IOException {
+    void errorUnreachable() throws IOException, IllegalVariableEvaluationException {
         try (HttpClient client = client()) {
             URI uri = URI.create("http://localhost:1234");
 
@@ -267,7 +267,7 @@ class HttpClientTest {
 
     @SuppressWarnings("DataFlowIssue")
     @Test
-    void error400() throws IOException {
+    void error400() throws IOException, IllegalVariableEvaluationException {
         try (HttpClient client = client()) {
             URI uri = URI.create(embeddedServerUri + "/http/error");
 
@@ -282,7 +282,7 @@ class HttpClientTest {
     }
 
     @Test
-    void error404() throws IOException {
+    void error404() throws IOException, IllegalVariableEvaluationException {
         try (HttpClient client = client()) {
             URI uri = URI.create(embeddedServerUri + "/http/error?status=404");
 

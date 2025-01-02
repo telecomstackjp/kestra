@@ -50,14 +50,15 @@ public class HttpClient implements Closeable {
     private final HttpConfiguration configuration;
 
     @Builder
-    public HttpClient(RunContext runContext, @Nullable HttpConfiguration configuration) {
+    public HttpClient(RunContext runContext, @Nullable HttpConfiguration configuration) throws IllegalVariableEvaluationException {
         this.runContext = runContext;
         this.configuration = configuration == null ? HttpConfiguration.builder().build() : configuration;
+        this.client = this.createClient();
     }
 
-    private CloseableHttpClient client() throws IllegalVariableEvaluationException {
+    private CloseableHttpClient createClient() throws IllegalVariableEvaluationException {
         if (this.client != null) {
-            return this.client;
+            throw new IllegalStateException("Client has already been created");
         }
 
         org.apache.hc.client5.http.impl.classic.HttpClientBuilder builder = HttpClients.custom()
@@ -233,7 +234,7 @@ public class HttpClient implements Closeable {
         HttpClientResponseHandler<HttpResponse<T>> responseHandler
     ) throws HttpClientException, IllegalVariableEvaluationException {
         try {
-            return client().execute(request.to(), httpClientContext, responseHandler);
+            return this.client.execute(request.to(), httpClientContext, responseHandler);
         } catch (SocketException e) {
             throw new HttpClientRequestException(e.getMessage(), request, e);
         } catch (IOException e) {
