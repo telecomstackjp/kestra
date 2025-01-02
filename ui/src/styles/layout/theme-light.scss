@@ -4,20 +4,20 @@
 	/* background */
 	#{--ks-background-body}: $base-gray-50;
 	#{--ks-background-button-inactive}: $base-gray-50;
+	#{--ks-background-button-primary}: $base-purple-500;
 	#{--ks-background-button-primary-active}: $base-purple-700;
 	#{--ks-background-button-primary-hover}: $base-purple-400;
-	#{--ks-background-button-primary}: $base-purple-500;
+	#{--ks-background-button-secondary}: $base-white;
 	#{--ks-background-button-secondary-active}: $base-gray-50;
 	#{--ks-background-button-secondary-hover}: $base-gray-50;
-	#{--ks-background-button-secondary}: $base-white;
-	#{--ks-background-button-success-hover}: $base-green-400;
 	#{--ks-background-button-success}: $base-green-500;
+	#{--ks-background-button-success-hover}: $base-green-400;
 	#{--ks-background-cancelled}: $base-gray-300;
-	#{--ks-background-card-opacity}: #1b1c23;
 	#{--ks-background-card}: $base-white;
+	#{--ks-background-card-opacity}: #1b1c23e5;
 	#{--ks-background-created}: $base-red-50;
 	#{--ks-background-failed}: $base-red-50;
-	#{--ks-background-information}: $base-blue-50;
+	#{--ks-background-information}: #c7f0ff;
 	#{--ks-background-input}: $base-white;
 	#{--ks-background-killed}: $base-gray-50;
 	#{--ks-background-killing}: $base-gray-200;
@@ -31,8 +31,8 @@
 	#{--ks-background-running}: $base-blue-50;
 	#{--ks-background-success}: $base-green-50;
 	#{--ks-background-table-header}: $base-gray-50;
+	#{--ks-background-table-row}: $base-gray-100;
 	#{--ks-background-table-row-hover}: $base-white;
-	#{--ks-background-table-row}: $base-gray-200;
 	#{--ks-background-tag}: $base-gray-200;
 	#{--ks-background-warning}: $base-orange-50;
 
@@ -46,7 +46,7 @@
 	#{--ks-border-cancelled}: $base-gray-500;
 	#{--ks-border-created}: $base-red-200;
 	#{--ks-border-failed}: $base-red-300;
-	#{--ks-border-inactive}: $base-gray-200;
+	#{--ks-border-inactive}: $base-gray-100;
 	#{--ks-border-information}: $base-blue-200;
 	#{--ks-border-killed}: $base-gray-400;
 	#{--ks-border-killing}: $base-gray-400;
@@ -57,7 +57,7 @@
 	#{--ks-border-retried}: $base-blue-300;
 	#{--ks-border-retrying}: $base-blue-500;
 	#{--ks-border-running}: $base-blue-400;
-	#{--ks-border-secondary}: $base-gray-200;
+	#{--ks-border-secondary}: $base-gray-100;
 	#{--ks-border-success}: $base-green-300;
 	#{--ks-border-system}: $base-blue-400;
 	#{--ks-border-warning}: $base-orange-300;
@@ -79,25 +79,25 @@
 
 	/* content */
 	#{--ks-content-alert}: $base-red-500;
-	#{--ks-content-cancelled}: $base-gray-950;
+	#{--ks-content-cancelled}: $base-black;
 	#{--ks-content-created}: $base-red-400;
 	#{--ks-content-failed}: $base-red-500;
 	#{--ks-content-id}: $base-purple-500;
 	#{--ks-content-inactive}: $base-gray-400;
 	#{--ks-content-information}: $base-blue-600;
 	#{--ks-content-inverse}: $base-white;
-	#{--ks-content-killed}: $base-gray-950;
+	#{--ks-content-killed}: $base-black;
 	#{--ks-content-killing}: $base-gray-900;
-	#{--ks-content-link-hover}: $base-purple-300;
 	#{--ks-content-link}: $base-purple-500;
+	#{--ks-content-link-hover}: $base-purple-300;
 	#{--ks-content-paused}: $base-orange-500;
-	#{--ks-content-primary}: $base-gray-950;
+	#{--ks-content-primary}: $base-black;
 	#{--ks-content-queued}: $base-yellow-800;
 	#{--ks-content-restarted}: $base-blue-600;
 	#{--ks-content-retried}: $base-blue-600;
 	#{--ks-content-retrying}: $base-blue-700;
 	#{--ks-content-running}: $base-blue-600;
-	#{--ks-content-secondary}: $base-gray-800;
+	#{--ks-content-secondary}: $base-gray-700;
 	#{--ks-content-success}: $base-green-700;
 	#{--ks-content-tertiary}: $base-gray-500;
 	#{--ks-content-warning}: $base-orange-500;
@@ -105,9 +105,9 @@
 	/* dialog */
 	#{--ks-dialog-background}: $base-white;
 	#{--ks-dialog-border}: $base-gray-200;
-	#{--ks-dialog-headerbtn-hover}: $base-purple-300;
-	#{--ks-dialog-headerbtn}: $base-gray-300;
 	#{--ks-dialog-header}: $base-white;
+	#{--ks-dialog-headerbtn}: $base-gray-300;
+	#{--ks-dialog-headerbtn-hover}: $base-purple-300;
 
 	/* editor */
 	#{--ks-editor-number}: $base-orange-600;
@@ -119,7 +119,7 @@
 	/* log */
 	#{--ks-log-background-debug}: $base-blue-50;
 	#{--ks-log-background-error}: $base-red-50;
-	#{--ks-log-background-info}: $base-blue-50;
+	#{--ks-log-background-info}: #c7f0ff;
 	#{--ks-log-background-trace}: $base-gray-300;
 	#{--ks-log-background-warn}: $base-orange-50;
 	#{--ks-log-border-debug}: $base-blue-400;
@@ -135,19 +135,19 @@
 	#{--ks-log-content-debug}: $base-blue-600;
 	#{--ks-log-content-error}: $base-red-500;
 	#{--ks-log-content-info}: $base-blue-600;
-	#{--ks-log-content-trace}: $base-gray-950;
+	#{--ks-log-content-trace}: $base-black;
 	#{--ks-log-content-warn}: $base-orange-800;
 
 	/* select */
-	#{--ks-select-active-icon}: $base-purple-500;
 	#{--ks-select-active}: $base-gray-50;
+	#{--ks-select-active-icon}: $base-purple-500;
 	#{--ks-select-background}: $base-white;
 	#{--ks-select-border}: $base-gray-200;
 	#{--ks-select-hover}: $base-gray-200;
 
 	/* tag */
-	#{--ks-tag-background-hover}: $base-gray-200;
 	#{--ks-tag-background}: $base-gray-50;
+	#{--ks-tag-background-hover}: $base-gray-200;
 	#{--ks-tag-content}: $base-gray-800;
 
 	/* tooltip */
