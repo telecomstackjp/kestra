@@ -5,13 +5,11 @@ import com.google.common.collect.ImmutableList;
 import io.kestra.core.Helpers;
 import io.kestra.core.events.CrudEvent;
 import io.kestra.core.events.CrudEventType;
+import io.kestra.core.models.SearchResult;
 import io.kestra.core.models.executions.Execution;
 import io.kestra.core.models.flows.*;
 import io.kestra.core.models.flows.input.StringInput;
-import io.kestra.core.models.triggers.Trigger;
 import io.kestra.core.queues.QueueException;
-import io.kestra.core.queues.QueueFactoryInterface;
-import io.kestra.core.queues.QueueInterface;
 import io.kestra.core.schedulers.AbstractSchedulerTest;
 import io.kestra.core.serializers.JacksonMapper;
 import io.kestra.core.services.FlowService;
@@ -27,7 +25,6 @@ import io.micronaut.data.model.Pageable;
 import io.micronaut.data.model.Sort;
 import io.kestra.core.junit.annotations.KestraTest;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import lombok.Getter;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,10 +59,6 @@ public abstract class AbstractFlowRepositoryTest {
 
     @Inject
     protected PluginDefaultService pluginDefaultService;
-
-    @Inject
-    @Named(QueueFactoryInterface.TRIGGER_NAMED)
-    private QueueInterface<Trigger> triggerQueue;
 
     @BeforeEach
     protected void init() throws IOException, URISyntaxException {
@@ -283,7 +276,7 @@ public abstract class AbstractFlowRepositoryTest {
     @Test
     void findByNamespace() {
         List<Flow> save = flowRepository.findByNamespace(null, "io.kestra.tests");
-        assertThat((long) save.size(), is(Helpers.FLOWS_COUNT - 23));
+        assertThat((long) save.size(), is(Helpers.FLOWS_COUNT - 20));
 
         save = flowRepository.findByNamespace(null, "io.kestra.tests2");
         assertThat((long) save.size(), is(1L));
@@ -341,6 +334,12 @@ public abstract class AbstractFlowRepositoryTest {
 
         save = flowRepository.find(Pageable.from(1), null, null, null, "io.kestra.tests", Map.of("key1", "value2"));
         assertThat((long) save.size(), is(0L));
+    }
+
+    @Test
+    protected void findSpecialChars() {
+        ArrayListTotal<SearchResult<Flow>> save = flowRepository.findSourceCode(Pageable.unpaged(), "https://api.chucknorris.io", null, null);
+        assertThat((long) save.size(), is(2L));
     }
 
     @Test
@@ -479,7 +478,7 @@ public abstract class AbstractFlowRepositoryTest {
     @Test
     void findDistinctNamespace() {
         List<String> distinctNamespace = flowRepository.findDistinctNamespace(null);
-        assertThat((long) distinctNamespace.size(), is(8L));
+        assertThat((long) distinctNamespace.size(), is(7L));
     }
 
     @SuppressWarnings("deprecation")

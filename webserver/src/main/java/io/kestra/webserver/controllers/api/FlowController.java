@@ -21,7 +21,7 @@ import io.kestra.core.models.validations.ValidateConstraintViolation;
 import io.kestra.core.repositories.FlowRepositoryInterface;
 import io.kestra.core.repositories.FlowTopologyRepositoryInterface;
 import io.kestra.core.serializers.JacksonMapper;
-import io.kestra.core.serializers.YamlFlowParser;
+import io.kestra.core.serializers.YamlParser;
 import io.kestra.core.services.FlowService;
 import io.kestra.core.services.GraphService;
 import io.kestra.core.services.PluginDefaultService;
@@ -43,8 +43,11 @@ import io.micronaut.http.multipart.CompletedFileUpload;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.validation.Validated;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.extensions.Extension;
+import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.inject.Inject;
@@ -90,7 +93,7 @@ public class FlowController {
     private FlowService flowService;
 
     @Inject
-    private YamlFlowParser yamlFlowParser;
+    private YamlParser yamlParser;
 
     @Inject
     private GraphService graphService;
@@ -135,7 +138,7 @@ public class FlowController {
         @Parameter(description = "The flow") @Body String flow,
         @Parameter(description = "The subflow tasks to display") @Nullable @QueryValue List<String> subflows
     ) throws ConstraintViolationException, IllegalVariableEvaluationException {
-        FlowWithSource flowParsed = yamlFlowParser.parse(flow, Flow.class).withSource(flow);
+        FlowWithSource flowParsed = yamlParser.parse(flow, Flow.class).withSource(flow);
 
         return graphService.flowGraph(flowParsed, subflows);
     }
@@ -248,7 +251,7 @@ public class FlowController {
     public HttpResponse<FlowWithSource> create(
         @Parameter(description = "The flow") @Body String flow
     ) throws ConstraintViolationException {
-        Flow flowParsed = yamlFlowParser.parse(flow, Flow.class);
+        Flow flowParsed = yamlParser.parse(flow, Flow.class);
 
         return HttpResponse.ok(doCreate(flowParsed, flow));
     }
@@ -260,6 +263,7 @@ public class FlowController {
     @Post(consumes = MediaType.ALL)
     @Operation(tags = {"Flows"}, summary = "Create a flow from json object", deprecated = true)
     @Deprecated(forRemoval = true, since = "0.18")
+    @Hidden // we hide it otherwise this is the one that will be included in the OpenAPI spec instead of the YAML one.
     public HttpResponse<Flow> create(
         @Parameter(description = "The flow") @Body Flow flow
     ) throws ConstraintViolationException {
@@ -291,7 +295,7 @@ public class FlowController {
             namespace,
             sources
                 .stream()
-                .map(flow -> FlowWithSource.of(yamlFlowParser.parse(flow, Flow.class), flow.trim()))
+                .map(flow -> FlowWithSource.of(yamlParser.parse(flow, Flow.class), flow.trim()))
                 .toList(),
             delete
         );
@@ -310,6 +314,7 @@ public class FlowController {
         deprecated = true
     )
     @Deprecated(forRemoval = true, since = "0.18")
+    @Hidden // we hide it otherwise this is the one that will be included in the OpenAPI spec instead of the YAML one.
     public List<Flow> updateNamespace(
         @Parameter(description = "The flow namespace") @PathVariable String namespace,
         @Parameter(description = "A list of flows") @Body @Valid List<Flow> flows,
@@ -419,7 +424,7 @@ public class FlowController {
 
             return HttpResponse.status(HttpStatus.NOT_FOUND);
         }
-        Flow flowParsed = yamlFlowParser.parse(flow, Flow.class);
+        Flow flowParsed = yamlParser.parse(flow, Flow.class);
 
         return HttpResponse.ok(update(flowParsed, existingFlow.get(), flow));
     }
@@ -431,6 +436,7 @@ public class FlowController {
     @ExecuteOn(TaskExecutors.IO)
     @Operation(tags = {"Flows"}, summary = "Update a flow", deprecated = true)
     @Deprecated(forRemoval = true, since = "0.18")
+    @Hidden // we hide it otherwise this is the one that will be included in the OpenAPI spec instead of the JSON one.
     public HttpResponse<Flow> update(
         @Parameter(description = "The flow namespace") @PathVariable String namespace,
         @Parameter(description = "The flow id") @PathVariable String id,
@@ -468,7 +474,7 @@ public class FlowController {
             null,
             sources
                 .stream()
-                .map(flow -> FlowWithSource.of(yamlFlowParser.parse(flow, Flow.class), flow.trim()))
+                .map(flow -> FlowWithSource.of(yamlParser.parse(flow, Flow.class), flow.trim()))
                 .toList(),
             delete
         );
@@ -481,6 +487,7 @@ public class FlowController {
     @ExecuteOn(TaskExecutors.IO)
     @Operation(tags = {"Flows"}, summary = "Update a single task on a flow", deprecated = true)
     @Deprecated(forRemoval = true, since = "0.18")
+    @SuppressWarnings("deprecated")
     public HttpResponse<Flow> updateTask(
         @Parameter(description = "The flow namespace") @PathVariable String namespace,
         @Parameter(description = "The flow id") @PathVariable String id,
@@ -566,7 +573,7 @@ public class FlowController {
                 validateConstraintViolationBuilder.index(index.getAndIncrement());
 
                 try {
-                    Flow flowParse = yamlFlowParser.parse(flow, Flow.class);
+                    Flow flowParse = yamlParser.parse(flow, Flow.class);
                     Integer sentRevision = flowParse.getRevision();
                     if (sentRevision != null) {
                         Integer lastRevision = Optional.ofNullable(flowRepository.lastRevision(tenantService.resolveTenant(), flowParse.getNamespace(), flowParse.getId()))
@@ -656,10 +663,10 @@ public class FlowController {
 
         try {
             if (section == TaskValidationType.TASKS) {
-                Task taskParse = yamlFlowParser.parse(task, Task.class);
+                Task taskParse = yamlParser.parse(task, Task.class);
                 modelValidator.validate(taskParse);
             } else if (section == TaskValidationType.TRIGGERS) {
-                AbstractTrigger triggerParse = yamlFlowParser.parse(task, AbstractTrigger.class);
+                AbstractTrigger triggerParse = yamlParser.parse(task, AbstractTrigger.class);
                 modelValidator.validate(triggerParse);
             }
         } catch (ConstraintViolationException e) {
@@ -831,18 +838,29 @@ public class FlowController {
     @Post(uri = "/import", consumes = MediaType.MULTIPART_FORM_DATA)
     @Operation(
         tags = {"Flows"},
-        summary = "Import flows as a ZIP archive of yaml sources or a multi-objects YAML file."
+        summary = """
+            Import flows as a ZIP archive of yaml sources or a multi-objects YAML file.
+            When sending a Yaml that contains one or more flows, a list of index is returned.
+            When sending a ZIP archive, a list of files that couldn't be imported is returned.
+        """
     )
     @ApiResponse(responseCode = "204", description = "On success")
-    public HttpResponse<Void> importFlows(
+    public HttpResponse<List<String>> importFlows(
         @Parameter(description = "The file to import, can be a ZIP archive or a multi-objects YAML file")
         @Part CompletedFileUpload fileUpload
     ) throws IOException {
         String fileName = fileUpload.getFilename().toLowerCase();
         String tenantId = tenantService.resolveTenant();
+        List<String> wrongFiles = new ArrayList<>();
+
         if (fileName.endsWith(".yaml") || fileName.endsWith(".yml")) {
             List<String> sources = List.of(new String(fileUpload.getBytes()).split("---"));
             for (String source : sources) {
+                try {
+                    this.importFlow(tenantId, source.trim());
+                } catch (Exception e) {
+                    wrongFiles.add(String.valueOf(sources.indexOf(source)));
+                }
                 this.importFlow(tenantId, source.trim());
             }
         } else if (fileName.endsWith(".zip")) {
@@ -854,14 +872,19 @@ public class FlowController {
                     }
 
                     String source = new String(archive.readAllBytes());
-                    this.importFlow(tenantId, source);
+                    try {
+                        this.importFlow(tenantId, source);
+                    } catch (Exception e) {
+                        wrongFiles.add(entry.getName());
+                    }
                 }
             }
         } else {
+            fileUpload.discard();
             throw new IllegalArgumentException("Cannot import file of type " + fileName.substring(fileName.lastIndexOf('.')));
         }
 
-        return HttpResponse.status(HttpStatus.NO_CONTENT);
+        return HttpResponse.ok(wrongFiles);
     }
 
     protected void importFlow(String tenantId, String source) {

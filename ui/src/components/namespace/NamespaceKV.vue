@@ -1,12 +1,14 @@
 <template>
+    <KestraFilter :placeholder="$t('search')" :search-callback="(input)=> search = input" :decode="false" />
+
     <select-table
-        :data="kvs"
+        :data="filteredKeywords"
         ref="selectTable"
         :default-sort="{prop: 'id', order: 'ascending'}"
-        stripe
         table-layout="auto"
         fixed
         @selection-change="handleSelectionChange"
+        @sort-change="handleSort"
     >
         <template #select-actions>
             <bulk-select
@@ -19,9 +21,9 @@
                     {{ $t("delete") }}
                 </el-button>
             </bulk-select>
-        </template>    
+        </template>
         <el-table-column prop="key" sortable="custom" :sort-orders="['ascending', 'descending']" :label="$t('key')">
-            <template #default="scope"> 
+            <template #default="scope">
                 <id :value="scope.row.key" :shrink="false" />
             </template>
         </el-table-column>
@@ -136,6 +138,7 @@
     import ContentSave from "vue-material-design-icons/ContentSave.vue";
     import TimeSelect from "../executions/date-select/TimeSelect.vue";
     import Check from "vue-material-design-icons/Check.vue";
+    import KestraFilter from "../filter/KestraFilter.vue";
 </script>
 
 <script>
@@ -152,6 +155,9 @@
         },
         computed: {
             ...mapState("namespace", ["kvs"]),
+            filteredKeywords(){
+                return this.kvs?.filter((kw) => !this.search || kw.key.toLowerCase().includes(this.search.toLowerCase()));
+            },
             kvModalTitle() {
                 return this.kv.key ? this.$t("kv.update", {key: this.kv.key}) : this.$t("kv.add");
             },
@@ -227,8 +233,9 @@
                     value: undefined,
                     ttl: undefined,
                     update: undefined
-                }
-            }
+                },
+                search: "",
+            };
         },
         mounted () {
             this.loadKvs();
@@ -242,7 +249,7 @@
                     } else {
                         callback();
                     }
-                } catch (error) {
+                } catch {
                     callback(new Error(this.$t("Invalid input: Expected a JSON formatted string")));
                 }
             },
@@ -334,6 +341,18 @@
             },
             onTtlChange(value) {
                 this.kv.ttl = value.timeRange
+            },
+            handleSort({prop, order}) {
+                if (prop && order) {
+                    this.kvs.sort((a, b) => {
+                        const [valueA, valueB] = [a[prop] ?? "", b[prop] ?? ""];
+                        const modifier = order === "ascending" ? 1 : -1;
+
+                        return typeof valueA === "string"
+                            ? modifier * valueA.localeCompare(valueB)
+                            : modifier * (valueA - valueB);
+                    });
+                }
             }
         },
     };

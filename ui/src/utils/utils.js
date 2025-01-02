@@ -205,8 +205,14 @@ export default class Utils {
         localStorage.setItem("theme", theme);
     }
 
-    static getTheme() {
-        return localStorage.getItem("theme") || "light";
+    static getTheme(which = "theme") {
+        let theme = localStorage.getItem(which) || "light";
+
+        if(theme === "syncWithSystem") {
+            theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        
+        return theme;
     }
 
     static getLang() {

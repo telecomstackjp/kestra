@@ -2,6 +2,7 @@ package io.kestra.webserver.controllers.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableMap;
+import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.models.Label;
 import io.kestra.core.models.executions.Execution;
 import io.kestra.core.models.executions.ExecutionKilled;
@@ -14,8 +15,12 @@ import io.kestra.core.models.storage.FileMetas;
 import io.kestra.core.models.tasks.TaskForExecution;
 import io.kestra.core.models.triggers.AbstractTriggerForExecution;
 import io.kestra.core.queues.QueueException;
+import io.kestra.core.repositories.LocalFlowRepositoryLoader;
 import io.kestra.core.runners.FlowInputOutput;
+import io.kestra.core.runners.RunnerUtils;
+import io.kestra.core.runners.StandAloneRunner;
 import io.kestra.core.utils.TestsUtils;
+import io.kestra.jdbc.JdbcTestUtils;
 import io.kestra.plugin.core.trigger.Webhook;
 import io.kestra.core.queues.QueueFactoryInterface;
 import io.kestra.core.queues.QueueInterface;
@@ -25,7 +30,6 @@ import io.kestra.core.runners.InputsTest;
 import io.kestra.core.serializers.JacksonMapper;
 import io.kestra.core.utils.Await;
 import io.kestra.core.utils.IdUtils;
-import io.kestra.webserver.controllers.h2.JdbcH2ControllerTest;
 import io.kestra.webserver.responses.BulkResponse;
 import io.kestra.webserver.responses.PagedResults;
 import io.micronaut.core.type.Argument;
@@ -39,18 +43,18 @@ import io.micronaut.reactor.http.client.ReactorHttpClient;
 import io.micronaut.reactor.http.client.ReactorSseClient;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junitpioneer.jupiter.RetryingTest;
 import reactor.core.publisher.Flux;
 
 import java.io.File;
-import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -67,7 +71,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class ExecutionControllerTest extends JdbcH2ControllerTest {
+@KestraTest
+class ExecutionControllerTest {
     public static final String URL_LABEL_VALUE = "https://some-url.com";
     public static final String ENCODED_URL_LABEL_VALUE = URL_LABEL_VALUE.replace("/", URLEncoder.encode("/", StandardCharsets.UTF_8));
 
@@ -99,6 +104,18 @@ class ExecutionControllerTest extends JdbcH2ControllerTest {
     @Inject
     private FlowInputOutput flowIO;
 
+    @Inject
+    private JdbcTestUtils jdbcTestUtils;
+
+    @Inject
+    protected LocalFlowRepositoryLoader repositoryLoader;
+
+    @Inject
+    protected RunnerUtils runnerUtils;
+
+    @Inject
+    protected StandAloneRunner runner;
+
     public static final String TESTS_FLOW_NS = "io.kestra.tests";
     public static final String TESTS_WEBHOOK_KEY = "a-secret-key";
 
@@ -119,6 +136,20 @@ class ExecutionControllerTest extends JdbcH2ControllerTest {
             - of
             - values""")
         .build();
+
+    @SneakyThrows
+    @BeforeEach
+    protected void setup() {
+        jdbcTestUtils.drop();
+        jdbcTestUtils.migrate();
+
+        TestsUtils.loads(repositoryLoader);
+
+        if (!runner.isRunning()) {
+            runner.setSchedulerEnabled(false);
+            runner.run();
+        }
+    }
 
     @Test
     void getNotFound() {
@@ -197,12 +228,27 @@ class ExecutionControllerTest extends JdbcH2ControllerTest {
         assertThat(notFound.getStatus(), is(HttpStatus.NOT_FOUND));
     }
 
+    @Test
+    void triggerInputSmall() {
+        File applicationFile = new File(Objects.requireNonNull(
+            ExecutionControllerTest.class.getClassLoader().getResource("application-test.yml")
+        ).getPath());
+
+        MultipartBody requestBody = MultipartBody.builder()
+            .addPart("files", "f", MediaType.TEXT_PLAIN_TYPE, applicationFile)
+            .build();
+
+        Execution execution = triggerExecution(TESTS_FLOW_NS, "inputs-small-files", requestBody, true);
+
+        assertThat(execution.getState().getCurrent(), is(State.Type.SUCCESS));
+        assertThat((String) execution.getOutputs().get("o"), startsWith("kestra://"));
+    }
 
     @Test
     void invalidInputs() {
         MultipartBody.Builder builder = MultipartBody.builder()
             .addPart("validatedString", "B-failed");
-        inputs.forEach((s, o) -> builder.addPart(s, o instanceof String ? (String) o : null));
+        inputs.forEach((s, o) -> builder.addPart(s, o instanceof String str ? str : null));
 
         HttpClientResponseException e = assertThrows(
             HttpClientResponseException.class,
@@ -214,7 +260,6 @@ class ExecutionControllerTest extends JdbcH2ControllerTest {
         assertThat(response, containsString("Invalid entity"));
         assertThat(response, containsString("Invalid input for `validatedString`"));
     }
-
 
     @Test
     void triggerAndWait() {
@@ -1618,5 +1663,142 @@ class ExecutionControllerTest extends JdbcH2ControllerTest {
         );
 
         assertThat(error.getStatus(), is(HttpStatus.UNPROCESSABLE_ENTITY));
+    }
+
+    @Test
+    void shouldUnqueueAQueuedFlow() throws QueueException, TimeoutException {
+        // run a first flow so the second is queued
+        runnerUtils.runOneUntilRunning(null, "io.kestra.tests", "flow-concurrency-queue");
+        Execution result = runUntilQueued("io.kestra.tests", "flow-concurrency-queue");
+
+        var response = client.toBlocking().exchange(HttpRequest.POST("/api/v1/executions/" + result.getId() + "/unqueue", null));
+        assertThat(response.getStatus(), is(HttpStatus.OK));
+
+        var notFound = assertThrows(HttpClientResponseException.class, () -> client.toBlocking().exchange(HttpRequest.POST("/api/v1/executions/notfound/unqueue", null)));
+        assertThat(notFound.getStatus(), is(HttpStatus.NOT_FOUND));
+
+        // pausing an already completed flow will result in errors
+        Execution completed = runnerUtils.runOne(null, "io.kestra.tests", "minimal");
+
+        var notRunning = assertThrows(HttpClientResponseException.class, () -> client.toBlocking().exchange(HttpRequest.POST("/api/v1/executions/" + completed.getId() + "/unqueue", null)));
+        assertThat(notRunning.getStatus(), is(HttpStatus.UNPROCESSABLE_ENTITY));
+    }
+
+    @Test
+    void shouldUnqueueByIdsQueuedFlows() throws TimeoutException, QueueException {
+        // run a first flow so the others are queued
+        runnerUtils.runOneUntilRunning(null, "io.kestra.tests", "flow-concurrency-queue");
+        Execution result1 = runUntilQueued("io.kestra.tests", "flow-concurrency-queue");
+        Execution result2 = runUntilQueued("io.kestra.tests", "flow-concurrency-queue");
+        Execution result3 = runUntilQueued("io.kestra.tests", "flow-concurrency-queue");
+
+        BulkResponse response = client.toBlocking().retrieve(
+            HttpRequest.POST("/api/v1/executions/unqueue/by-ids", List.of(result1.getId(), result2.getId(), result3.getId())),
+            BulkResponse.class
+        );
+        assertThat(response.getCount(), is(3));
+    }
+
+    @Test
+    void shouldForceRunAQueuedFlow() throws QueueException, TimeoutException {
+        // run a first flow so the second is queued
+        runnerUtils.runOneUntilRunning(null, "io.kestra.tests", "flow-concurrency-queue");
+        Execution result = runUntilQueued("io.kestra.tests", "flow-concurrency-queue");
+
+        var response = client.toBlocking().exchange(HttpRequest.POST("/api/v1/executions/" + result.getId() + "/force-run", null));
+        assertThat(response.getStatus(), is(HttpStatus.OK));
+        Optional<Execution> forcedRun = executionRepositoryInterface.findById(null, result.getId());
+        assertThat(forcedRun.isPresent(), is(true));
+        assertThat(forcedRun.get().getState().getCurrent(), not(State.Type.QUEUED));
+    }
+
+    @Test
+    void shouldFailToForceRunNotFoundOrTerminatedExecutions() throws QueueException, TimeoutException {
+        var notFound = assertThrows(HttpClientResponseException.class, () -> client.toBlocking().exchange(HttpRequest.POST("/api/v1/executions/notfound/force-run", null)));
+        assertThat(notFound.getStatus(), is(HttpStatus.NOT_FOUND));
+
+        // force run an already completed flow will result in errors
+        Execution completed = runnerUtils.runOne(null, "io.kestra.tests", "minimal");
+
+        var notRunning = assertThrows(HttpClientResponseException.class, () -> client.toBlocking().exchange(HttpRequest.POST("/api/v1/executions/" + completed.getId() + "/force-run", null)));
+        assertThat(notRunning.getStatus(), is(HttpStatus.UNPROCESSABLE_ENTITY));
+    }
+
+    @Test
+    void shouldForceRunACreatedFlow() throws QueueException, TimeoutException {
+        Execution result = runUntilCreated("io.kestra.tests", "minimal");
+
+        var response = client.toBlocking().exchange(HttpRequest.POST("/api/v1/executions/" + result.getId() + "/force-run", null));
+        assertThat(response.getStatus(), is(HttpStatus.OK));
+        Optional<Execution> forcedRun = executionRepositoryInterface.findById(null, result.getId());
+        assertThat(forcedRun.isPresent(), is(true));
+        assertThat(forcedRun.get().getState().getCurrent(), not(State.Type.CREATED));
+    }
+
+    @Test
+    void shouldForceRunAPausedFlow() throws QueueException, TimeoutException {
+        // Run execution until it is paused
+        Execution result = runnerUtils.runOneUntilPaused(null, TESTS_FLOW_NS, "pause");
+
+        var response = client.toBlocking().exchange(HttpRequest.POST("/api/v1/executions/" + result.getId() + "/force-run", null));
+        assertThat(response.getStatus(), is(HttpStatus.OK));
+        Optional<Execution> forcedRun = executionRepositoryInterface.findById(null, result.getId());
+        assertThat(forcedRun.isPresent(), is(true));
+        assertThat(forcedRun.get().getState().getCurrent(), not(State.Type.PAUSED));
+    }
+
+    @Test
+    void shouldForceRunARunningFlow() throws QueueException, TimeoutException {
+        // Run execution until it is paused
+        Execution result = runnerUtils.runOneUntilRunning(null, TESTS_FLOW_NS, "sleep");
+
+        var response = client.toBlocking().exchange(HttpRequest.POST("/api/v1/executions/" + result.getId() + "/force-run", null));
+        assertThat(response.getStatus(), is(HttpStatus.OK));
+        Optional<Execution> forcedRun = executionRepositoryInterface.findById(null, result.getId());
+        assertThat(forcedRun.isPresent(), is(true));
+        assertThat(forcedRun.get().getState().getCurrent(), not(State.Type.CREATED));
+    }
+
+    @Test
+    void shouldForRunByIdsFlows() throws TimeoutException, QueueException {
+        Execution result1 =  runnerUtils.runOneUntilRunning(null, TESTS_FLOW_NS, "sleep");
+        Execution result2 =  runnerUtils.runOneUntilRunning(null, TESTS_FLOW_NS, "sleep");
+        Execution result3 =  runnerUtils.runOneUntilRunning(null, TESTS_FLOW_NS, "sleep");
+
+        BulkResponse response = client.toBlocking().retrieve(
+            HttpRequest.POST("/api/v1/executions/force-run/by-ids", List.of(result1.getId(), result2.getId(), result3.getId())),
+            BulkResponse.class
+        );
+        assertThat(response.getCount(), is(3));
+    }
+
+    @Test
+    void shouldForRunByQueryFlows() throws TimeoutException, QueueException {
+        runnerUtils.runOneUntilRunning(null, TESTS_FLOW_NS, "sleep");
+        runnerUtils.runOneUntilRunning(null, TESTS_FLOW_NS, "sleep");
+        runnerUtils.runOneUntilRunning(null, TESTS_FLOW_NS, "sleep");
+
+        BulkResponse response = client.toBlocking().retrieve(
+            HttpRequest.POST("/api/v1/executions/force-run/by-query?namespace=" + TESTS_FLOW_NS, null),
+            BulkResponse.class
+        );
+        assertThat(response.getCount(), is(3));
+    }
+
+    private Execution runUntilQueued(String namespace, String flowId) throws TimeoutException, QueueException {
+        return runUntilState(namespace, flowId, State.Type.QUEUED);
+    }
+
+    private Execution runUntilCreated(String namespace, String flowId) throws TimeoutException, QueueException {
+        return runUntilState(namespace, flowId, State.Type.CREATED);
+    }
+
+    private Execution runUntilState(String namespace, String flowId, State.Type state) throws TimeoutException, QueueException {
+        Flow flow = flowRepositoryInterface.findById(null, namespace, flowId).orElseThrow();
+        Execution execution = Execution.newExecution(flow, null);
+        return runnerUtils.awaitExecution(
+            it -> it.getState().getCurrent() == state,
+            throwRunnable(() -> this.executionQueue.emit(execution)),
+            Duration.ofSeconds(1));
     }
 }

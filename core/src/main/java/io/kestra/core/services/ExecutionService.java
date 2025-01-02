@@ -93,18 +93,26 @@ public class ExecutionService {
     @Inject
     private ApplicationEventPublisher<CrudEvent<Execution>> eventPublisher;
 
-    public Execution getExecutionIfPause(final String tenant, final @NotNull String executionId) {
-        Optional<Execution> maybeExecution = executionRepository.findById(tenant, executionId);
-        if (maybeExecution.isEmpty()) {
-            throw new NoSuchElementException("Execution '"+ executionId + "' not found.");
-        }
+    @Inject
+    private ConcurrencyLimitService concurrencyLimitService;
 
-        var execution = maybeExecution.get();
+    public Execution getExecutionIfPause(final String tenant, final @NotNull String executionId, boolean withACL) {
+        Execution execution = getExecution(tenant, executionId, withACL);
+
         if (!execution.getState().isPaused()) {
             throw new IllegalStateException("Execution '"+ executionId + "' is not paused, can't resume it");
         }
 
         return execution;
+    }
+
+    public Execution getExecution(final String tenant, final @NotNull String executionId, boolean withACL) {
+        Optional<Execution> maybeExecution = withACL ?
+            executionRepository.findById(tenant, executionId) :
+            executionRepository.findByIdWithoutAcl(tenant, executionId);
+
+        return maybeExecution
+            .orElseThrow(() -> new NoSuchElementException("Execution '"+ executionId + "' not found."));
     }
 
     /**
@@ -314,13 +322,18 @@ public class ExecutionService {
                     newTaskRun = newTaskRun.withOutputs(pauseTask.generateOutputs(onResumeInputs));
                 }
 
-                if (task instanceof Pause pauseTask && pauseTask.getTasks() == null && newState == State.Type.RUNNING) {
-                    newTaskRun = newTaskRun.withState(State.Type.SUCCESS);
+                // if it's a Pause task with no subtask, we terminate the task
+                if (task instanceof Pause pauseTask && pauseTask.getTasks() == null) {
+                    if (newState == State.Type.RUNNING) {
+                        newTaskRun = newTaskRun.withState(State.Type.SUCCESS);
+                    } else if (newState == State.Type.KILLING) {
+                        newTaskRun = newTaskRun.withState(State.Type.KILLED);
+                    }
                 }
 
                 if (originalTaskRun.getAttempts() != null && !originalTaskRun.getAttempts().isEmpty()) {
                     ArrayList<TaskRunAttempt> attempts = new ArrayList<>(originalTaskRun.getAttempts());
-                    attempts.set(attempts.size() - 1, attempts.get(attempts.size() - 1).withState(newState));
+                    attempts.set(attempts.size() - 1, attempts.getLast().withState(newState));
                     newTaskRun = newTaskRun.withAttempts(attempts);
                 }
 
@@ -393,7 +406,7 @@ public class ExecutionService {
 
                 if (purgeStorage) {
                     URI uri = StorageContext.forExecution(execution).getExecutionStorageURI(StorageContext.KESTRA_SCHEME);
-                    builder.storagesCount(storageInterface.deleteByPrefix(execution.getTenantId(), uri).size());
+                    builder.storagesCount(storageInterface.deleteByPrefix(execution.getTenantId(), execution.getNamespace(), uri).size());
                 }
 
                 return (PurgeResult) builder.build();
@@ -433,7 +446,7 @@ public class ExecutionService {
 
         if (deleteStorage) {
             URI uri = StorageContext.forExecution(execution).getExecutionStorageURI(StorageContext.KESTRA_SCHEME);
-            storageInterface.deleteByPrefix(execution.getTenantId(), uri);
+            storageInterface.deleteByPrefix(execution.getTenantId(), execution.getNamespace(), uri);
         }
     }
 
@@ -442,7 +455,7 @@ public class ExecutionService {
      * The execution must be paused or this call will be a no-op.
      *
      * @param execution the execution to resume
-     * @param newState  should be RUNNING or KILLING, other states may lead to undefined behaviour
+     * @param newState  should be RUNNING or KILLING, other states may lead to undefined behavior
      * @param flow      the flow of the execution
      * @return the execution in the new state.
      * @throws Exception if the state of the execution cannot be updated
@@ -452,7 +465,28 @@ public class ExecutionService {
     }
 
     /**
+     * Validates the inputs for an execution to be resumed.
+     * <p>
+     * The execution must be paused or this call will be a no-op.
+     *
+     * @param execution the execution to resume
+     * @param flow      the flow of the execution
+     * @return the execution in the new state.
+     */
+    public Mono<List<InputAndValue>> validateForResume(final Execution execution, Flow flow) {
+        return getFirstPausedTaskOr(execution, flow)
+            .flatMap(task -> {
+                if (task.isPresent() && task.get() instanceof Pause pauseTask) {
+                    return Mono.just(flowInputOutput.resolveInputs(pauseTask.getOnResume(), execution, Map.of()));
+                } else {
+                    return Mono.just(Collections.emptyList());
+                }
+            });
+    }
+
+    /**
      * Resume a paused execution to a new state.
+     * <p>
      * The execution must be paused or this call will be a no-op.
      *
      * @param execution the execution to resume
@@ -600,22 +634,27 @@ public class ExecutionService {
      * @return the execution in a KILLING state if not already terminated
      */
     public Execution kill(Execution execution, Flow flow) {
+        if (execution.getState().getCurrent() == State.Type.KILLING || execution.getState().isTerminated()) {
+            return execution;
+        }
+
+        Execution newExecution;
         if (execution.getState().isPaused()) {
             // Must be resumed and killed, no need to send killing event to the worker as the execution is not executing anything in it.
             // An edge case can exist where the execution is resumed automatically before we resume it with a killing.
             try {
-                return this.resume(execution, flow, State.Type.KILLING);
+                newExecution = this.resume(execution, flow, State.Type.KILLING);
             } catch (Exception e) {
                 // if we cannot resume, we set it anyway to killing, so we don't throw
                 log.warn("Unable to resume a paused execution before killing it", e);
+                newExecution = execution.withState(State.Type.KILLING);
             }
+        } else {
+            newExecution = execution.withState(State.Type.KILLING);
         }
 
-        if (execution.getState().getCurrent() != State.Type.KILLING && !execution.getState().isTerminated()) {
-            return execution.withState(State.Type.KILLING);
-        }
-
-        return execution;
+        eventPublisher.publishEvent(new CrudEvent<>(newExecution, execution, CrudEventType.UPDATE));
+        return newExecution;
     }
 
     /**
@@ -702,15 +741,20 @@ public class ExecutionService {
         State.Type newStateType,
         Boolean toRestart
     ) throws InternalException {
-        Task task = flow.findTaskByTaskId(originalTaskRun.getTaskId());
-
         State alterState;
-        if (!task.isFlowable() || task instanceof WorkingDirectory) {
-            // The current task run is the reference task run, its default state will be newState
+        if (Boolean.TRUE.equals(originalTaskRun.getDynamic())) {
+            // dynamic task runs (task runs from dynamic worker task results) are fake task runs,
+            // we cannot get their corresponding task so we blidinly translate them to the new state.
             alterState = originalTaskRun.withState(newStateType).getState();
         } else {
-            // The current task run is an ascendant of the reference task run
-            alterState = originalTaskRun.withState(State.Type.RUNNING).getState();
+            Task task = flow.findTaskByTaskId(originalTaskRun.getTaskId());
+            if (!task.isFlowable() || task instanceof WorkingDirectory) {
+                // The current task run is the reference task run, its default state will be newState
+                alterState = originalTaskRun.withState(newStateType).getState();
+            } else {
+                // The current task run is an ascendant of the reference task run
+                alterState = originalTaskRun.withState(State.Type.RUNNING).getState();
+            }
         }
 
         return originalTaskRun
@@ -751,5 +795,35 @@ public class ExecutionService {
         }
 
         return nextDate;
+    }
+
+    /**
+     * Force run the execution, it must be in a non-terminal state.
+     * - CREATED executions will be moved to RUNNING
+     * - QUEUED executions will be unqueued
+     * - PAUSED executions will be resumed
+     * All other non-terminated states will be no-op.
+     */
+    public Execution forceRun(Execution execution) throws Exception {
+        if (execution.getState().isTerminated()) {
+            throw new IllegalArgumentException("Only non terminated executions can be forced run.");
+        }
+
+        if (execution.getState().isCreated()) {
+            return execution.withState(State.Type.RUNNING);
+        }
+
+        if (execution.getState().getCurrent() == State.Type.QUEUED) {
+            return concurrencyLimitService.unqueue(execution);
+        }
+
+        if (execution.getState().getCurrent() == State.Type.PAUSED) {
+            Flow flow = flowRepositoryInterface.findByExecution(execution);
+            return resume(execution, flow, State.Type.RUNNING);
+        }
+
+        // for all other states, we just return the same execution,
+        // it will be resent to the queue and forced re-processed.
+        return execution;
     }
 }

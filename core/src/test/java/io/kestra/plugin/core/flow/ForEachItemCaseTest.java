@@ -70,8 +70,8 @@ public class ForEachItemCaseTest {
         Flux<Execution> receive = TestsUtils.receive(executionQueue, either -> {
             Execution execution = either.getLeft();
             if (execution.getFlowId().equals("for-each-item-subflow") && execution.getState().getCurrent().isTerminated()) {
-                countDownLatch.countDown();
                 triggered.set(execution);
+                countDownLatch.countDown();
             }
         });
 
@@ -132,8 +132,8 @@ public class ForEachItemCaseTest {
             if (execution.getFlowId().equals("for-each-item-subflow")) {
                 log.info("Received sub-execution " + execution.getId() + " with status " + execution.getState().getCurrent());
                 if (execution.getState().getCurrent().isTerminated()) {
-                    countDownLatch.countDown();
                     triggered.set(execution);
+                    countDownLatch.countDown();
                 }
             }
         });
@@ -180,8 +180,8 @@ public class ForEachItemCaseTest {
         Flux<Execution> receive = TestsUtils.receive(executionQueue, either -> {
             Execution execution = either.getLeft();
             if (execution.getFlowId().equals("for-each-item-subflow-failed") && execution.getState().getCurrent().isTerminated()) {
-                countDownLatch.countDown();
                 triggered.set(execution);
+                countDownLatch.countDown();
             }
         });
 
@@ -189,7 +189,7 @@ public class ForEachItemCaseTest {
         Map<String, Object> inputs = Map.of("file", file.toString());
         Execution execution = runnerUtils.runOne(null, TEST_NAMESPACE, "for-each-item-failed", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, inputs),
-            Duration.ofSeconds(30));
+            Duration.ofSeconds(60));
 
         // we should have triggered 26 subflows
         assertThat(countDownLatch.await(1, TimeUnit.MINUTES), is(true));
@@ -223,8 +223,8 @@ public class ForEachItemCaseTest {
         Flux<Execution> receive = TestsUtils.receive(executionQueue, either -> {
             Execution execution = either.getLeft();
             if (execution.getFlowId().equals("for-each-item-outputs-subflow") && execution.getState().getCurrent().isTerminated()) {
-                countDownLatch.countDown();
                 triggered.set(execution);
+                countDownLatch.countDown();
             }
         });
 
@@ -261,7 +261,7 @@ public class ForEachItemCaseTest {
         // asserts for subflow merged outputs
         Map<String, Object> mergeTaskOutputs = execution.getTaskRunList().get(3).getOutputs();
         assertThat(mergeTaskOutputs.get("subflowOutputs"), notNullValue());
-        InputStream stream = storageInterface.get(null, URI.create((String) mergeTaskOutputs.get("subflowOutputs")));
+        InputStream stream = storageInterface.get(null, execution.getNamespace(), URI.create((String) mergeTaskOutputs.get("subflowOutputs")));
 
         try (var br = new BufferedReader(new InputStreamReader(stream))) {
             // one line per sub-flows
@@ -276,6 +276,7 @@ public class ForEachItemCaseTest {
 
         return storageInterface.put(
             null,
+            null,
             new URI("/file/storage/file.txt"),
             new FileInputStream(tempFile)
         );
@@ -285,6 +286,7 @@ public class ForEachItemCaseTest {
         File tempFile = File.createTempFile("file", ".txt");
 
         return storageInterface.put(
+            null,
             null,
             new URI("/file/storage/file.txt"),
             new FileInputStream(tempFile)

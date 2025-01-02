@@ -22,12 +22,8 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.transaction.exceptions.CannotCreateTransactionException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.jooq.DSLContext;
-import org.jooq.Field;
-import org.jooq.JSONB;
+import org.jooq.*;
 import org.jooq.Record;
-import org.jooq.Result;
-import org.jooq.Table;
 import org.jooq.impl.DSL;
 
 import java.io.IOException;
@@ -161,19 +157,46 @@ public abstract class JdbcQueue<T> implements QueueInterface<T> {
 
     @Override
     public void delete(String consumerGroup, T message) throws QueueException {
-        dslContextWrapper.transaction(configuration -> DSL
-            .using(configuration)
-            .delete(table)
-            .where(AbstractJdbcRepository.field("key").eq(queueService.key(message)))
-            .execute()
-        );
+        // Just do nothing!
+        // The message will be removed by the indexer (synchronously if using the queue indexer, async otherwise),
+        // and the queue has its own cleaner, which we better not mess with, as the 'queues' table is selected with a lock.
     }
 
     protected Result<Record> receiveFetch(DSLContext ctx, String consumerGroup, Integer offset) {
         return this.receiveFetch(ctx, consumerGroup, offset, true);
     }
 
-    abstract protected Result<Record> receiveFetch(DSLContext ctx, String consumerGroup, Integer offset, boolean forUpdate);
+    protected Result<Record> receiveFetch(DSLContext ctx, String consumerGroup, Integer offset, boolean forUpdate) {
+        var select = ctx.select(
+                AbstractJdbcRepository.field("value"),
+                AbstractJdbcRepository.field("offset")
+            )
+            .from(this.table)
+            .where(buildTypeCondition(this.cls.getName()));
+
+        if (offset != 0) {
+            select = select.and(AbstractJdbcRepository.field("offset").gt(offset));
+        }
+
+        if (consumerGroup != null) {
+            select = select.and(AbstractJdbcRepository.field("consumer_group").eq(consumerGroup));
+        } else {
+            select = select.and(AbstractJdbcRepository.field("consumer_group").isNull());
+        }
+
+        var limitSelect = select
+            .orderBy(AbstractJdbcRepository.field("offset").asc())
+            .limit(configuration.getPollSize());
+        ResultQuery<Record2<Object, Object>> configuredSelect = limitSelect;
+
+        if (forUpdate) {
+            configuredSelect = limitSelect.forUpdate().skipLocked();
+        }
+
+        return configuredSelect
+            .fetchMany()
+            .getFirst();
+    }
 
     protected Result<Record> receiveFetch(DSLContext ctx, String consumerGroup, String queueType) {
         return this.receiveFetch(ctx, consumerGroup, queueType, true);
@@ -183,18 +206,26 @@ public abstract class JdbcQueue<T> implements QueueInterface<T> {
 
     abstract protected void updateGroupOffsets(DSLContext ctx, String consumerGroup, String queueType, List<Integer> offsets);
 
+    protected abstract Condition buildTypeCondition(String type);
+
     @Override
     public Runnable receive(String consumerGroup, Consumer<Either<T, DeserializationException>> consumer, boolean forUpdate) {
         AtomicInteger maxOffset = new AtomicInteger();
 
         // fetch max offset
         dslContextWrapper.transaction(configuration -> {
-            Integer integer = DSL
+            var select = DSL
                 .using(configuration)
                 .select(DSL.max(AbstractJdbcRepository.field("offset")).as("max"))
                 .from(table)
-                .fetchAny("max", Integer.class);
+                .where(buildTypeCondition(this.cls.getName()));
+            if (consumerGroup != null) {
+                select = select.and(AbstractJdbcRepository.field("consumer_group").eq(consumerGroup));
+            } else {
+                select = select.and(AbstractJdbcRepository.field("consumer_group").isNull());
+            }
 
+            Integer integer = select.fetchAny("max", Integer.class);
             if (integer != null) {
                 maxOffset.set(integer);
             }

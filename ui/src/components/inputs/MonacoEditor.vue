@@ -1,5 +1,5 @@
 <template>
-    <div class="monaco-editor" />
+    <div class="ks-monaco-editor" />
 </template>
 
 <script>
@@ -304,15 +304,9 @@
                 })
             }
 
-            // Expose paste function globally for testing
-            window.pasteToEditor = (textToPaste) => {
-                this.editor.executeEdits("", [
-                    {
-                        range: this.editor.getSelection(),
-                        text: textToPaste,
-                    },
-                ]);
-            };
+            // Exposing functions globally for testing purposes
+            window.pasteToEditor = (textToPaste) => {this.editor.executeEdits("", [{range: this.editor.getSelection(), text: textToPaste}])};
+            window.clearEditor = () => {this.editor.getModel().setValue("")};
         },
         beforeUnmount: function () {
             this.destroy();
@@ -451,7 +445,7 @@
                                 deleted: true
                             }
                         )).inputs?.map(input => input.id) ?? [];
-                    } catch (e) {
+                    } catch {
                         return undefined;
                     }
                 }
@@ -720,18 +714,22 @@
 </script>
 
 <style scoped lang="scss">
-    .monaco-editor {
+    .ks-monaco-editor {
         position: absolute;
         width: 100%;
         height: 100%;
         outline: none;
+    }
+
+    .main-editor > #editorWrapper .monaco-editor {
+        padding: 1rem 0 0 1rem;
     }
 </style>
 
 <style lang="scss">
     @import "../../styles/layout/root-dark.scss";
 
-    .custom-dark-vs-theme .monaco-editor .sticky-widget {
+    .custom-dark-vs-theme .ks-monaco-editor .sticky-widget {
         background-color: $input-bg;
     }
 </style>

@@ -40,6 +40,17 @@
                             />
                         </el-select>
                     </Column>
+
+                    <Column :label="$t('settings.blocks.configuration.fields.execute_default_tab')">
+                        <el-select :model-value="pendingSettings.executeDefaultTab" @update:model-value="onExecuteDefaultTabChange">
+                            <el-option
+                                v-for="item in executeDefaultTabOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                            />
+                        </el-select>
+                    </Column>
                 </Row>
             </template>
         </Block>
@@ -71,6 +82,16 @@
                             />
                         </el-select>
                     </Column>
+                    <Column :label="$t('settings.blocks.theme.fields.editor_font_family')">
+                        <el-select :model-value="pendingSettings.editorFontFamily" @update:model-value="onFontFamily">
+                            <el-option
+                                v-for="item in fontFamilyOptions"
+                                :key="item.value"
+                                :label="item.text"
+                                :value="item.value"
+                            />
+                        </el-select>
+                    </Column>
                 </Row>
 
                 <Row>
@@ -94,16 +115,15 @@
                             :max="50"
                         />
                     </Column>
-
-                    <Column :label="$t('settings.blocks.theme.fields.editor_font_family')">
-                        <el-select :model-value="pendingSettings.editorFontFamily" @update:model-value="onFontFamily">
-                            <el-option
-                                v-for="item in fontFamilyOptions"
-                                :key="item.value"
-                                :label="item.text"
-                                :value="item.value"
-                            />
-                        </el-select>
+                    
+                    <Column :label="$t('settings.blocks.theme.fields.logs_font_size')"> 
+                        <el-input-number
+                            :model-value="pendingSettings.logsFontSize"
+                            @update:model-value="onLogsFontSize"
+                            controls-position="right"
+                            :min="1"
+                            :max="50"
+                        />
                     </Column>
                 </Row>
 
@@ -120,6 +140,8 @@
                             @change="onEnvNameChange"
                             :placeholder="$t('name')"
                             clearable
+                            show-word-limit
+                            maxlength="30"
                         />
                     </Column>
 
@@ -160,7 +182,7 @@
                     </Column>
 
                     <Column :label="$t('settings.blocks.localization.fields.date_format')">
-                        <el-select :model-value="pendingSettings.dateFormat" @update:model-value="onDateFormat">
+                        <el-select :model-value="pendingSettings.dateFormat" @update:model-value="onDateFormat" :key="localeKey">
                             <el-option
                                 v-for="item in dateFormats"
                                 :key="pendingSettings.timezone + item.value"
@@ -250,7 +272,9 @@
                     editorFontFamily: undefined,
                     executeFlowBehaviour: undefined,
                     envName: undefined,
-                    envColor: undefined
+                    envColor: undefined,
+                    executeDefaultTab: undefined,
+                    logsFontSize: undefined
                 },
                 settingsKeyMapping: {
                     chartColor: "scheme",
@@ -268,6 +292,7 @@
                 }).sort((a, b) => a.offset - b.offset),
                 guidedTour: undefined,
                 now: this.$moment(), 
+                localeKey: this.$moment.locale(),
             };
         },
         created() {
@@ -276,9 +301,14 @@
             this.pendingSettings.defaultNamespace = localStorage.getItem("defaultNamespace") || "";
             this.pendingSettings.defaultLogLevel = localStorage.getItem("defaultLogLevel") || "INFO";
             this.pendingSettings.lang = Utils.getLang();
-            this.pendingSettings.theme = localStorage.getItem("theme") || "light";
-            this.pendingSettings.editorTheme = localStorage.getItem("editorTheme") || "dark";
-            this.pendingSettings.chartColor = localStorage.getItem("scheme") || "classic";
+            
+            this.pendingSettings.theme = Utils.getTheme();
+            this.pendingSettings.editorTheme = Utils.getTheme("editorTheme")
+
+            let scheme = localStorage.getItem("scheme") || "classic";
+            if(scheme === "default") scheme = "classic";
+            this.pendingSettings.chartColor =  scheme
+
             this.pendingSettings.dateFormat = localStorage.getItem(DATE_FORMAT_STORAGE_KEY) || "llll";
             this.pendingSettings.timezone = localStorage.getItem(TIMEZONE_STORAGE_KEY) || this.$moment.tz.guess();
             this.pendingSettings.autofoldTextEditor = localStorage.getItem("autofoldTextEditor") === "true";
@@ -287,8 +317,10 @@
             this.pendingSettings.editorFontSize = parseInt(localStorage.getItem("editorFontSize")) || 12;
             this.pendingSettings.editorFontFamily = localStorage.getItem("editorFontFamily") || "'Source Code Pro', monospace";
             this.pendingSettings.executeFlowBehaviour = localStorage.getItem("executeFlowBehaviour") || "same tab";
+            this.pendingSettings.executeDefaultTab = localStorage.getItem("executeDefaultTab") || "gantt";
             this.pendingSettings.envName = store.getters["layout/envName"] || this.configs?.environment?.name;
             this.pendingSettings.envColor = store.getters["layout/envColor"] || this.configs?.environment?.color;
+            this.pendingSettings.logsFontSize = parseInt(localStorage.getItem("logsFontSize")) || 12;
         },
         methods: {
             onNamespaceSelect(value) {
@@ -298,13 +330,10 @@
                 this.pendingSettings.defaultLogLevel = value;
             },
             onLang(value) {
-                this.$moment.locale(value);
-                this.$i18n.locale = value;
                 this.pendingSettings.lang = value;
             },
             onTheme(value) {
                 this.pendingSettings.theme = value;
-                Utils.switchTheme(value);            
             },
             updateThemeBasedOnSystem() {
                 if (this.theme === "syncWithSystem") {
@@ -358,6 +387,12 @@
             onExecuteFlowBehaviourChange(value) {
                 this.pendingSettings.executeFlowBehaviour = value;
             },
+            onExecuteDefaultTabChange(value){
+                this.pendingSettings.executeDefaultTab = value;
+            },
+            onLogsFontSize(value) {
+                this.pendingSettings.logsFontSize = value;
+            },
             saveAllSettings() {
                 Object.keys(this.pendingSettings).forEach((key) => {
                     const storedKey = this.settingsKeyMapping[key]
@@ -382,6 +417,27 @@
                     case "autofoldTextEditor":
                         localStorage.setItem(key, this.pendingSettings[key])
                         break
+                    case "logsFontSize":
+                        localStorage.setItem(key, this.pendingSettings[key])
+                        this.$store.commit("layout/setLogsFontSize", this.pendingSettings[key])
+                        break   
+                    case "theme":
+                        Utils.switchTheme(this.pendingSettings[key]);
+                        localStorage.setItem(key, Utils.getTheme())
+                        break
+                    case "lang":
+                    {
+                        if(this.pendingSettings[key]) {
+                            localStorage.setItem(key, this.pendingSettings[key])
+                        }
+
+                        let newlang = Utils.getLang();
+                        this.$moment.locale(newlang);
+                        this.$i18n.locale = newlang;
+                        this.localeKey = this.$moment.locale();
+
+                        break;
+                    }
                     default:
                         if (storedKey) {
                             if(this.pendingSettings[key])
@@ -490,6 +546,34 @@
                         text: "SimSun"
                     }
                 ]
+            },
+            executeDefaultTabOptions() {
+                return [
+                    {
+                        value : "overview",
+                        label: this.$t("overview")
+                    },
+                    {
+                        value : "gantt",
+                        label: this.$t("gantt")
+                    },
+                    {
+                        value : "logs",
+                        label: this.$t("logs")
+                    },
+                    {
+                        value : "topology",
+                        label: this.$t("topology")
+                    },
+                    {
+                        value: "outputs",
+                        label: this.$t("outputs")
+                    },
+                    {
+                        value : "metrics",
+                        label: this.$t("metrics")
+                    }
+                ]
             }
         }
     };
@@ -497,5 +581,13 @@
 <style>
     .el-input-number {
         max-width: 20vw;
+    }
+
+    .el-input__count {
+        color: var(--bs-white) !important;
+        
+        .el-input__count-inner {
+            background: none !important;
+        }
     }
 </style>

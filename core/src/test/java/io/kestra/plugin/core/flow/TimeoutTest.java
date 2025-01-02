@@ -1,16 +1,17 @@
 package io.kestra.plugin.core.flow;
 
+import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.models.executions.Execution;
 import io.kestra.core.models.executions.LogEntry;
 import io.kestra.core.models.flows.Flow;
 import io.kestra.core.models.flows.State;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.queues.QueueException;
 import io.kestra.core.queues.QueueFactoryInterface;
 import io.kestra.core.queues.QueueInterface;
 import io.kestra.core.repositories.FlowRepositoryInterface;
-import io.kestra.core.runners.AbstractMemoryRunnerTest;
+import io.kestra.core.runners.RunnerUtils;
 import io.kestra.core.services.PluginDefaultService;
-import io.kestra.core.tasks.test.Sleep;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
 import jakarta.inject.Inject;
@@ -27,7 +28,8 @@ import java.util.concurrent.TimeoutException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-class TimeoutTest extends AbstractMemoryRunnerTest {
+@KestraTest(startRunner = true)
+class TimeoutTest {
     @Inject
     FlowRepositoryInterface flowRepository;
 
@@ -37,6 +39,9 @@ class TimeoutTest extends AbstractMemoryRunnerTest {
     @Inject
     @Named(QueueFactoryInterface.WORKERTASKLOG_NAMED)
     private QueueInterface<LogEntry> workerTaskLogQueue;
+
+    @Inject
+    private RunnerUtils runnerUtils;
 
     @Test
     void timeout() throws TimeoutException, QueueException {
@@ -50,8 +55,8 @@ class TimeoutTest extends AbstractMemoryRunnerTest {
             .tasks(Collections.singletonList(Sleep.builder()
                 .id("test")
                 .type(Sleep.class.getName())
-                .duration(100000L)
-                .timeout(Duration.ofNanos(100000))
+                .duration(Duration.ofSeconds(100))
+                .timeout(Property.of(Duration.ofNanos(100000)))
                 .build()))
             .build();
 
