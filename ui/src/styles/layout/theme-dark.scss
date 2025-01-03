@@ -1,4 +1,5 @@
-@import "../color-palette.scss";
+/* stylelint-disable color-no-hex */
+@import "../color-palette";
 
 html.dark{
 	/* background */

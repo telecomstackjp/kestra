@@ -1,9 +1,10 @@
+/* stylelint-disable color-no-hex */
 @use 'sass:map';
 @use 'sass:math';
 @use 'element-plus/theme-chalk/src/mixins/var' as *;
 
-@import "@kestra-io/ui-libs/src/scss/variables.scss";
-@import "../color-palette.scss";
+@import "@kestra-io/ui-libs/src/scss/variables";
+@import "../color-palette";
 
 // use bootstrap for main style
 :root {
@@ -126,13 +127,13 @@ $logLevels: "trace", "debug", "info", "warn", "error";
     justify-content: end;
     max-height: 49.5px;
 
-    :deep(.validation) {
+    .validation {
         border: 0;
         padding-left: .5rem;
         padding-right: .5rem;
     }
 
-    :deep(.el-button) {
+    .el-button {
         border: 0;
         padding-left: .5rem;
         padding-right: .5rem;
