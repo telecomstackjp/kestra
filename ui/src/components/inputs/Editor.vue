@@ -432,8 +432,8 @@
 </script>
 
 <style lang="scss">
-    @import "../../styles/layout/root-dark.scss";
-    @import "../../styles/color-palette.scss";
+    @import "../../styles/layout/root-dark";
+    @import "../../styles/color-palette";
 
     :not(.namespace-form, .el-drawer__body) > .ks-editor{
         flex-direction: column;

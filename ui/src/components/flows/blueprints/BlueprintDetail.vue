@@ -188,7 +188,7 @@
     };
 </script>
 <style scoped lang="scss">
-    @import "@kestra-io/ui-libs/src/scss/variables.scss";
+    @import "@kestra-io/ui-libs/src/scss/variables";
 
     .header-wrapper {
         margin-bottom: calc($spacer * 2);

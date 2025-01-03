@@ -334,11 +334,6 @@
             }
         }
 
-
-        a.vsm--link_active[href="#"] {
-            cursor: initial !important;
-        }
-
         html.dark & {
             background-color: var(--bs-gray-100);
 

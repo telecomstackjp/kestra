@@ -1268,7 +1268,7 @@
 
 <style lang="scss" scoped>
     @use "element-plus/theme-chalk/src/mixins/mixins" as *;
-    @import "@kestra-io/ui-libs/src/scss/variables.scss";
+    @import "@kestra-io/ui-libs/src/scss/variables";
 
     .main-editor {
         padding: .5rem 0px;
@@ -1348,10 +1348,6 @@
         &:hover {
             background-color: var(--ks-border-active);
         }
-    }
-
-    .vueflow {
-        height: 100%;
     }
 
     .topology-display .el-alert {

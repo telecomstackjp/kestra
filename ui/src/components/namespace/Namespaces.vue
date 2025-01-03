@@ -139,7 +139,7 @@
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/color-palette.scss";
+@import "../../styles/color-palette";
 
 .filter {
     min-width: 200px;
