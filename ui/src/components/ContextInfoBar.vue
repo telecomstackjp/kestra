@@ -255,8 +255,8 @@
 
         .closeButton {
             position: fixed;
-            top: var(--spacer);
-            right: var(--spacer);
+            top: 1rem;
+            right: 1rem;
             color: var(--ks-content-tertiary);
             background: none;
             border: none;

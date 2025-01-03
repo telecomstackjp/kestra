@@ -109,7 +109,7 @@
 <style lang="scss" scoped>
     .blank {
         margin-top: 4px;
-        margin-left: var(--spacer);
+        margin-left: 1rem;
         color: var(--ks-content-tertiary);
     }
 </style>

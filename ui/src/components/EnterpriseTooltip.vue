@@ -94,7 +94,7 @@
 <style lang="scss" scoped>
     :global(.el-popper.ee-tooltip) {
         max-width: 320px;
-        padding: calc(var(--spacer) * 2);
+        padding: 2rem;
     }
 
     p {

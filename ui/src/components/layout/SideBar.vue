@@ -172,7 +172,7 @@
 <style lang="scss">
     .collapseButton {
         position: absolute;
-        top: calc(var(--spacer) * .5);
+        top: .5rem;
         right: 0;
         z-index: 1;
 
@@ -187,7 +187,7 @@
         }
 
         .vsm_collapsed & {
-            top: calc(var(--spacer) * .5);
+            top: .5rem;
         }
     }
 
@@ -327,7 +327,7 @@
         .vsm--dropdown {
             background-color: var(--bs-gray-100);
             border-radius: 4px;
-            margin-bottom: calc(.5 * var(--spacer));
+            margin-bottom: .5rem;
 
             .vsm--title {
                 top: 3px;

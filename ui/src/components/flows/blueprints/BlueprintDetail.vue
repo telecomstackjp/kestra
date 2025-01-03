@@ -171,7 +171,7 @@
         },
         computed: {
             ...mapState("auth", ["user"]),
-            ...mapState("plugin", ["icons"]),         
+            ...mapState("plugin", ["icons"]),
             userCanCreateFlow() {
                 return this.user.hasAnyAction(permission.FLOW, action.CREATE);
             },
@@ -198,7 +198,7 @@
         }
 
         .header {
-            margin-bottom: calc(var(--spacer) * 0.5);
+            margin-bottom: .5rem;
 
             > * {
                 margin: 0;
@@ -279,11 +279,11 @@
             }
         }
     }
-    
+
         .tags {
             margin: 10px 0;
             display: flex;
-                        
+
             .el-tag.el-tag--info {
                 background-color: var(--ks-background-card);
                 padding: 15px 10px;
