@@ -7,7 +7,7 @@ export default {
     rules: {
         "color-no-hex": true,
         "no-descending-specificity": null,
-        "custom-property-pattern": "(?<=ks-)",
+        "custom-property-pattern": "(?<=(ks|el)-)",
         "scss/no-global-function-names": null,
     },
 }
