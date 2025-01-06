@@ -106,7 +106,8 @@
         if (!("canShare" in navigator)) {
             content = content.replaceAll(/\s*web-share\s*/g, "");
         }
-        const parse = getParser()
+        const parse = await getParser()
+        console.log("parsing content", {parse})
         ast.value = await parse(content);
     }
 </script>
