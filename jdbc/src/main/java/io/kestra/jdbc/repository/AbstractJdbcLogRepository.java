@@ -2,6 +2,7 @@ package io.kestra.jdbc.repository;
 
 import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
+import io.kestra.core.models.dashboards.Order;
 import io.kestra.core.models.executions.Execution;
 import io.kestra.core.models.executions.LogEntry;
 import io.kestra.core.models.executions.statistics.LogStatistics;
@@ -9,17 +10,19 @@ import io.kestra.core.repositories.ArrayListTotal;
 import io.kestra.core.repositories.LogRepositoryInterface;
 import io.kestra.core.utils.DateUtils;
 import io.kestra.core.utils.ListUtils;
+import io.kestra.jdbc.services.JdbcFilterService;
+import io.kestra.plugin.core.dashboard.data.Executions;
 import io.kestra.plugin.core.dashboard.data.Logs;
 import io.micronaut.data.model.Pageable;
 import jakarta.annotation.Nullable;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.NotImplementedException;
+import lombok.Getter;
 import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.slf4j.event.Level;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -38,11 +41,31 @@ public abstract class AbstractJdbcLogRepository extends AbstractJdbcRepository i
 
     protected io.kestra.jdbc.AbstractJdbcRepository<LogEntry> jdbcRepository;
 
-    public AbstractJdbcLogRepository(io.kestra.jdbc.AbstractJdbcRepository<LogEntry> jdbcRepository) {
+    public AbstractJdbcLogRepository(io.kestra.jdbc.AbstractJdbcRepository<LogEntry> jdbcRepository,
+                                     JdbcFilterService filterService) {
         this.jdbcRepository = jdbcRepository;
+
+        this.filterService = filterService;
     }
 
     abstract protected Condition findCondition(String query);
+
+    @Getter
+    private final JdbcFilterService filterService;
+
+    @Getter
+    private final Map<Logs.Fields, String> fieldsMapping = Map.of(
+        Logs.Fields.DATE, "timestamp",
+        Logs.Fields.NAMESPACE, "namespace",
+        Logs.Fields.FLOW_ID, "flow_id",
+        Logs.Fields.TASK_ID, "task_id",
+        Logs.Fields.EXECUTION_ID, "execution_id",
+        Logs.Fields.TASK_RUN_ID, "taskrun_id",
+        Logs.Fields.ATTEMPT_NUMBER, "attempt_number",
+        Logs.Fields.TRIGGER_ID, "trigger_id",
+        Logs.Fields.LEVEL, "level",
+        Logs.Fields.MESSAGE, "message"
+    );
 
     @Override
     public ArrayListTotal<LogEntry> find(
@@ -607,7 +630,44 @@ public abstract class AbstractJdbcLogRepository extends AbstractJdbcRepository i
     }
 
     @Override
-    public ArrayListTotal<Map<String, Object>> fetchData(String tenantId, DataFilter<Logs.Fields, ? extends ColumnDescriptor<Logs.Fields>> filter, ZonedDateTime startDate, ZonedDateTime endDate, Pageable pageable) throws IOException {
-        throw new NotImplementedException();
+    public ArrayListTotal<Map<String, Object>> fetchData(
+        String tenantId,
+        DataFilter<Logs.Fields, ? extends ColumnDescriptor<Logs.Fields>> descriptors,
+        ZonedDateTime startDate,
+        ZonedDateTime endDate,
+        Pageable pageable
+    ) {
+        return this.jdbcRepository
+            .getDslContextWrapper()
+            .transactionResult(configuration -> {
+                DSLContext context = DSL.using(configuration);
+                // Init request
+                SelectConditionStep<Record> selectConditionStep = select(
+                    context,
+                    this.getFilterService(),
+                    descriptors,
+                    this.getFieldsMapping(),
+                    this.jdbcRepository.getTable(),
+                    tenantId
+                );
+
+                // Apply Where filter
+                selectConditionStep = where(selectConditionStep, this.getFilterService(), descriptors, fieldsMapping);
+
+                // Apply GroupBy for aggregation
+                SelectHavingStep<Record> selectHavingStep = groupBy(selectConditionStep, descriptors, fieldsMapping);
+
+                // Apply OrderBy
+                SelectSeekStepN<Record> selectSeekStep = orderBy(selectHavingStep, descriptors);
+
+                // Fetch and paginate if provided
+                List<Map<String, Object>> results = fetchSeekStep(selectSeekStep, pageable);
+
+
+                // Fetch total count for pagination
+                int total = context.fetchCount(selectConditionStep);
+
+                return new ArrayListTotal<>(results, total);
+            });
     }
 }
