@@ -41,7 +41,7 @@
 
     .sidebar {
         background: var(--ks-background-card);
-        padding: calc(var(--spacer) * 2);
+        padding: 2rem;
         height: calc(100vh - 80px);
         top: 80px;
         position: sticky;
@@ -61,7 +61,7 @@
         }
 
         &.collapsed {
-            padding: calc(var(--spacer) * 2) calc(var(--spacer) * 0.5);
+            padding: 2rem .5rem;
             background: transparent;
         }
 
