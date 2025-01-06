@@ -69,17 +69,20 @@
         .buttons {
             color: var(--ks-content-primary);
             position: absolute;
+            align-items: center;
             z-index: 1;
             top: 0;
             right: 0;
+            bottom: 0;
             display: none;
             gap: .5rem;
             background-color: var(--ks-background-button-secondary-hover);
-            padding: .25rem;
+            padding: .5rem;
             > span{
                 cursor: pointer;
             }
         }
+
         &:hover .buttons {
             display: flex;
         }
