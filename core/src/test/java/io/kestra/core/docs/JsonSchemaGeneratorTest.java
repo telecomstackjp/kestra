@@ -36,6 +36,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import reactor.core.publisher.Flux;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -356,8 +357,8 @@ class JsonSchemaGeneratorTest {
     public static class TestLogShipper extends LogShipper {
 
         @Override
-        public void sendLogs(List<LogRecord> logRecord) {
-
+        public Flux<LogRecord> sendLogs(Flux<LogRecord> logRecord) {
+            return logRecord;
         }
     }
 }

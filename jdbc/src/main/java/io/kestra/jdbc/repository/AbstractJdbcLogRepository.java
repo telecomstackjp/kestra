@@ -12,6 +12,7 @@ import io.kestra.core.utils.ListUtils;
 import io.kestra.plugin.core.dashboard.data.Logs;
 import io.micronaut.data.model.Pageable;
 import jakarta.annotation.Nullable;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jooq.Record;
 import org.jooq.*;
@@ -28,8 +29,13 @@ import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.*;
 import java.util.stream.Collectors;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.FluxSink;
 
 public abstract class AbstractJdbcLogRepository extends AbstractJdbcRepository implements LogRepositoryInterface {
+
+    protected static final int FETCH_SIZE = 100;
+
     protected io.kestra.jdbc.AbstractJdbcRepository<LogEntry> jdbcRepository;
 
     public AbstractJdbcLogRepository(io.kestra.jdbc.AbstractJdbcRepository<LogEntry> jdbcRepository) {
@@ -77,9 +83,7 @@ public abstract class AbstractJdbcLogRepository extends AbstractJdbcRepository i
         @Nullable ZonedDateTime startDate,
         @Nullable ZonedDateTime endDate
     ) {
-        if (namespace != null) {
-            select = select.and(DSL.or(field("namespace").eq(namespace), field("namespace").likeIgnoreCase(namespace + ".%")));
-        }
+        select = addNamespace(select, namespace);
 
         if (flowId != null) {
             select = select.and(field("flow_id").eq(flowId));
@@ -89,16 +93,14 @@ public abstract class AbstractJdbcLogRepository extends AbstractJdbcRepository i
             select = select.and(field("trigger_id").eq(triggerId));
         }
 
-        if (minLevel != null) {
-            select = select.and(minLevel(minLevel));
-        }
+        select = addMinLevel(select, minLevel);
 
         if (query != null) {
             select = select.and(this.findCondition(query));
         }
 
         if (startDate != null) {
-            select = select.and(field("timestamp").greaterThan(startDate.toOffsetDateTime()));
+            select = select.and(field("timestamp").greaterOrEqual(startDate.toOffsetDateTime()));
         }
 
         if (endDate != null) {
@@ -106,6 +108,54 @@ public abstract class AbstractJdbcLogRepository extends AbstractJdbcRepository i
         }
 
         return select;
+    }
+
+    private <T extends Record> SelectConditionStep<T> addMinLevel(SelectConditionStep<T> select,
+        Level minLevel) {
+        if (minLevel != null) {
+            select = select.and(minLevel(minLevel));
+        }
+        return select;
+    }
+
+    private static <T extends Record> SelectConditionStep<T> addNamespace(SelectConditionStep<T> select,
+        String namespace) {
+        if (namespace != null) {
+            select = select.and(DSL.or(field("namespace").eq(namespace), field("namespace").likeIgnoreCase(namespace + ".%")));
+        }
+        return select;
+    }
+
+    @Override
+    public Flux<LogEntry> findAsynch(
+        Pageable pageable,
+        @Nullable String tenantId,
+        @Nullable String namespace,
+        @Nullable Level minLevel,
+        ZonedDateTime startDate
+    ){
+        return Flux.create(emitter -> this.jdbcRepository
+            .getDslContextWrapper()
+            .transaction(configuration -> {
+                DSLContext context = DSL.using(configuration);
+
+                SelectConditionStep<Record1<Object>> select = context
+                    .select(field("value"))
+                    .hint(context.configuration().dialect().supports(SQLDialect.MYSQL) ? "SQL_CALC_FOUND_ROWS" : null)
+                    .from(this.jdbcRepository.getTable())
+                    .where(this.defaultFilter(tenantId));
+                addNamespace(select, namespace);
+                addMinLevel(select, minLevel);
+                select = select.and(field("timestamp").greaterThan(startDate.toOffsetDateTime()));
+
+                Select<Record> query = this.jdbcRepository.buildPageQuery(context, select, pageable);
+                try (Stream<Record> stream = query.fetchSize(FETCH_SIZE).stream()){
+                    stream.map((Record record) -> jdbcRepository.map(record))
+                        .forEach(emitter::next);
+                } finally {
+                    emitter.complete();
+                }
+            }), FluxSink.OverflowStrategy.BUFFER);
     }
 
     @Override
