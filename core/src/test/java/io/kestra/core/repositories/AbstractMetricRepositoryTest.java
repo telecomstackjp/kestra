@@ -25,7 +25,6 @@ public abstract class AbstractMetricRepositoryTest {
     protected MetricRepositoryInterface metricRepository;
 
     @Test
-    @Disabled
     void all() {
         String executionId = FriendlyId.createFriendlyId();
         TaskRun taskRun1 = taskRun(executionId, "task");

@@ -4,7 +4,6 @@ import io.kestra.core.events.CrudEvent;
 import io.kestra.core.events.CrudEventType;
 import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
-import io.kestra.core.models.dashboards.Order;
 import io.kestra.core.models.dashboards.filters.AbstractFilter;
 import io.kestra.core.models.dashboards.filters.In;
 import io.kestra.core.models.executions.Execution;
@@ -64,7 +63,6 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
     private QueueInterface<Execution> executionQueue;
     private NamespaceUtils namespaceUtils;
 
-    @Getter
     private final JdbcFilterService filterService;
 
     @Getter
@@ -1125,7 +1123,7 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
                 // Init request
                 SelectConditionStep<Record> selectConditionStep = select(
                     context,
-                    this.getFilterService(),
+                    filterService,
                     descriptors,
                     this.getFieldsMapping(),
                     this.jdbcRepository.getTable(),
@@ -1133,7 +1131,7 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
                 );
 
                 // Apply Where filter
-                selectConditionStep = where(selectConditionStep, this.getFilterService(), descriptors, fieldsMapping);
+                selectConditionStep = where(selectConditionStep, filterService, descriptors, fieldsMapping);
 
                 // Apply GroupBy for aggregation
                 SelectHavingStep<Record> selectHavingStep = groupBy(selectConditionStep, descriptors, fieldsMapping);
@@ -1191,7 +1189,7 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
                 .toList();
 
             // Use the generic method addFilters with the remaining filters
-            return this.getFilterService().addFilters(selectConditionStep, fieldsMapping, remainingFilters);
+            return filterService.addFilters(selectConditionStep, fieldsMapping, remainingFilters);
         } else {
             return selectConditionStep;
         }

@@ -4,12 +4,12 @@ import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
 import io.kestra.core.models.dashboards.Order;
 import io.kestra.core.utils.DateUtils;
+import io.kestra.core.utils.ListUtils;
 import io.kestra.jdbc.services.JdbcFilterService;
-import io.kestra.plugin.core.dashboard.data.Executions;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.model.Pageable;
-import org.jooq.*;
 import org.jooq.Record;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 
 import java.sql.Timestamp;
@@ -168,7 +168,7 @@ public abstract class AbstractJdbcRepository {
      */
     protected <F extends Enum<F>> SelectSeekStepN<Record> orderBy(SelectHavingStep<Record> selectHavingStep, DataFilter<F, ? extends ColumnDescriptor<F>> descriptors) {
         List<SortField<?>> orderFields = new ArrayList<>();
-        if (descriptors.getOrderBy() != null && !descriptors.getOrderBy().isEmpty()) {
+        if (!ListUtils.isEmpty(descriptors.getOrderBy())) {
             orderFields = descriptors.getOrderBy().stream()
                 .map(orderBy -> {
                     Field<?> field = field(orderBy.getColumn());
@@ -201,4 +201,6 @@ public abstract class AbstractJdbcRepository {
     protected <F extends Enum<F>> Field<?> columnToField(ColumnDescriptor<?> column, Map<F, String> fieldsMapping) {
         return column.getField() != null ? field(fieldsMapping.get(column.getField())) : null;
     }
+
+
 }
