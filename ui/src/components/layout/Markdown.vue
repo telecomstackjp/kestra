@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    import Markdown from "../../utils/markdown";
+    import Markdown from "../../utils/markdownSync";
 
     export default {
         props: {

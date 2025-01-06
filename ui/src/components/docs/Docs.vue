@@ -14,7 +14,6 @@
 </template>
 
 <script>
-    import useMarkdownParser from "@kestra-io/ui-libs/src/composables/useMarkdownParser";
     import MDCRenderer from "@kestra-io/ui-libs/src/components/content/MDCRenderer.vue";
     import TopNavBar from "../layout/TopNavBar.vue";
     import {mapGetters} from "vuex";
@@ -22,7 +21,11 @@
     import Toc from "./Toc.vue";
     import {getCurrentInstance} from "vue";
 
-    const parse = useMarkdownParser();
+    async function getParser() {
+        const {default: useMarkdownParser} = await import("@kestra-io/ui-libs/src/composables/useMarkdownParser")
+        const parser = await useMarkdownParser();
+        return parser
+    }
 
     export default {
         computed: {
@@ -79,6 +82,7 @@
                     if (!("canShare" in navigator)) {
                         content = content.replaceAll(/\s*web-share\s*/g, "");
                     }
+                    const parse = await getParser();
                     this.ast = await parse(content);
                 },
                 immediate: true
