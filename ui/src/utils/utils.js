@@ -252,4 +252,15 @@ export default class Utils {
     static distinctFilter(value, index, array) {
         return array.indexOf(value) === index;
     }
+
+    static toFormData(obj) {
+        if (!(obj instanceof FormData)) {
+            const formData = new FormData();
+            for (const key in obj) {
+                formData.append(key, obj[key]);
+            }
+            return formData;
+        }
+        return obj;
+    }
 }
