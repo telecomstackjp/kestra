@@ -107,7 +107,7 @@
 
     .el-button {
         display: inline-flex !important;
-        margin-right: calc(var(--spacer) / 4);
+        margin-right: .25rem;
     }
 
     :deep(div.wrapper) {

@@ -100,7 +100,7 @@
     p {
         font-size: var(--font-size-lg);
         text-align: center;
-        margin-bottom: calc(var(--spacer) * 2);
+        margin-bottom: 2rem;
         font-weight: bold;
     }
 

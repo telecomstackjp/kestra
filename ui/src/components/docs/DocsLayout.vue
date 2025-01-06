@@ -169,7 +169,7 @@
 
         :deep(.video-container) {
             position: relative;
-            margin: calc(var(--spacer) * 2) 0;
+            margin: 2rem 0;
             padding-top: 35.25%;
             background-color: var(--ks-background-body);
             height: 28.351rem;
@@ -213,7 +213,7 @@
             .card-body {
                 color: var(--ks-content-primary);
                 flex: 1 1 auto;
-                padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
+                padding: 1rem;
                 gap: 1rem;
             }
         }

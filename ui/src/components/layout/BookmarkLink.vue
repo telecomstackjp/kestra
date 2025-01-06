@@ -71,11 +71,11 @@
             position: absolute;
             z-index: 1;
             top: 0;
-            right: calc(.15 * var(--spacer));
+            right: 0;
             display: none;
-            gap: calc(.5 * var(--spacer));
+            gap: .5rem;
             background-color: var(--ks-background-button-secondary-hover);
-            padding: calc(.35 * var(--spacer));
+            padding: .25rem;
             > span{
                 cursor: pointer;
             }
@@ -100,8 +100,8 @@
 
             .save {
                 position: absolute;
-                top: calc(.5 * var(--spacer));
-                right: calc(.5 * var(--spacer));
+                top: .5rem;
+                right: .5rem;
                 z-index: 2;
                 color: var(--ks-content-primary);
                 cursor: pointer;
@@ -110,7 +110,7 @@
     }
     a {
         display: block;
-        padding: calc(.25 * var(--spacer)) calc(.5 * var(--spacer));
+        padding: .25rem .5rem;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;

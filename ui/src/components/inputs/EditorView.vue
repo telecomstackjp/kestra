@@ -1308,7 +1308,7 @@
         height: 100%;
 
         &.enhance-readability {
-            padding: calc(var(--spacer) * 1.5);
+            padding: 1.5rem;
             background-color: var(--bs-gray-100);
         }
 
@@ -1351,7 +1351,7 @@
     }
 
     .topology-display .el-alert {
-        margin-top: calc(3 * var(--spacer));
+        margin-top: 3rem;
     }
 
     .toggle-button {

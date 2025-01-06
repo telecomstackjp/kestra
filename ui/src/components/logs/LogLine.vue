@@ -200,7 +200,7 @@ div.line {
     }
 
     .log-level {
-        padding: calc(var(--spacer) / 4);
+        padding: .25rem;
     }
 
     .log-content {
