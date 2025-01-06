@@ -8,6 +8,6 @@ public abstract class LogShipper implements io.kestra.core.models.Plugin {
 
     protected String type;
 
-    public abstract Flux<LogRecord> sendLogs(Flux<LogRecord> logRecord);
+    public abstract void sendLogs(Flux<LogRecord> logRecord);
 
 }

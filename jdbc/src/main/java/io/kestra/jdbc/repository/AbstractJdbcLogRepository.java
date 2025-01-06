@@ -2,7 +2,6 @@ package io.kestra.jdbc.repository;
 
 import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
-import io.kestra.core.models.dashboards.Order;
 import io.kestra.core.models.executions.Execution;
 import io.kestra.core.models.executions.LogEntry;
 import io.kestra.core.models.executions.statistics.LogStatistics;
@@ -11,12 +10,10 @@ import io.kestra.core.repositories.LogRepositoryInterface;
 import io.kestra.core.utils.DateUtils;
 import io.kestra.core.utils.ListUtils;
 import io.kestra.jdbc.services.JdbcFilterService;
-import io.kestra.plugin.core.dashboard.data.Executions;
 import io.kestra.plugin.core.dashboard.data.Logs;
 import io.micronaut.data.model.Pageable;
 import jakarta.annotation.Nullable;
 import java.util.stream.Stream;
-import org.apache.commons.lang3.NotImplementedException;
 import lombok.Getter;
 import org.jooq.Record;
 import org.jooq.*;
@@ -150,7 +147,7 @@ public abstract class AbstractJdbcLogRepository extends AbstractJdbcRepository i
     }
 
     @Override
-    public Flux<LogEntry> findAsynch(
+    public Flux<LogEntry> findAsync(
         Pageable pageable,
         @Nullable String tenantId,
         @Nullable String namespace,

@@ -86,7 +86,7 @@ public interface LogRepositoryInterface extends SaveRepositoryInterface<LogEntry
         @Nullable ZonedDateTime endDate
     );
 
-    Flux<LogEntry> findAsynch(
+    Flux<LogEntry> findAsync(
         Pageable pageable,
         @Nullable String tenantId,
         @Nullable String namespace,

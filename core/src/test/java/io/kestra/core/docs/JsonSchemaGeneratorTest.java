@@ -357,8 +357,6 @@ class JsonSchemaGeneratorTest {
     public static class TestLogShipper extends LogShipper {
 
         @Override
-        public Flux<LogRecord> sendLogs(Flux<LogRecord> logRecord) {
-            return logRecord;
-        }
+        public void sendLogs(Flux<LogRecord> logRecord) {}
     }
 }
