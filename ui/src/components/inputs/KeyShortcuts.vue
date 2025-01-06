@@ -100,19 +100,19 @@
     background-color: #e3dbff;
     text-transform: capitalize;
     font-weight: 700;
+    border: 1px solid #d1c4ff;
+    border-radius: 4px;
+    box-shadow: 0 2px #d1c4ff;
+    transition: all 0.2s ease;
+    display: inline-block;
+    padding: 6px 10px;
 }
 
 .el-tag::after {
     content: attr(data-content);
-}
-
-.el-tag[data-content*='⌘ Cmd'], 
-.el-tag[data-content*='Ctrl'], 
-.el-tag[data-content*='⌥ Option'], 
-.el-tag[data-content*='Alt'], 
-.el-tag[data-content*='⇧ Shift'] {
     text-transform: none;
 }
+
 </style>
 
 <style lang="scss">
