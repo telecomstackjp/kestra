@@ -205,8 +205,8 @@ public abstract class AbstractJdbcRepository<T> {
         return this.fetchPage(context, select, pageable, this::map);
     }
 
-    public <R extends Record, E> Select<Record> buildPageQuery(DSLContext context, SelectConditionStep<R> select, Pageable pageable){
-        return this.limit(
+    public <R extends Record> Select<R> buildPageQuery(DSLContext context, SelectConditionStep<R> select, Pageable pageable){
+        return (Select<R>) this.limit(
             context.select(DSL.asterisk())
                 .from(this
                     .sort(select, pageable)
@@ -263,9 +263,9 @@ public abstract class AbstractJdbcRepository<T> {
     }
 
     protected <R extends Record> Select<R> limit(SelectConditionStep<R> select, Pageable pageable) {
-       if (pageable == null || pageable.getSize() == -1) {
-           return select;
-       }
+        if (pageable == null || pageable.getSize() == -1) {
+            return select;
+        }
 
         return select
             .limit(pageable.getSize())

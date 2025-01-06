@@ -14,6 +14,7 @@ import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Record;
 import org.jooq.RecordMapper;
+import org.jooq.Select;
 import org.jooq.SelectConditionStep;
 import org.jooq.impl.DSL;
 
@@ -64,6 +65,11 @@ public class MysqlRepository<T> extends AbstractJdbcRepository<T> {
             map,
             DSL.using(configuration).fetchOne("SELECT FOUND_ROWS()").into(Integer.class)
         ));
+    }
+
+    @Override
+    public <R extends Record> Select<R> buildPageQuery(DSLContext context, SelectConditionStep<R> select, Pageable pageable){
+        return this.pageable(select, pageable);
     }
 
     public Field<Integer> weekFromTimestamp(Field<Timestamp> timestampField) {

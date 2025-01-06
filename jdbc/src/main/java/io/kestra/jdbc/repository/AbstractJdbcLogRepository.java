@@ -148,8 +148,10 @@ public abstract class AbstractJdbcLogRepository extends AbstractJdbcRepository i
                 addMinLevel(select, minLevel);
                 select = select.and(field("timestamp").greaterThan(startDate.toOffsetDateTime()));
 
-                Select<Record> query = this.jdbcRepository.buildPageQuery(context, select, pageable);
-                try (Stream<Record> stream = query.fetchSize(FETCH_SIZE).stream()){
+                Select<Record1<Object>> query = this.jdbcRepository.buildPageQuery(context,
+                    select, pageable);
+
+                try (Stream<Record1<Object>> stream = query.fetchSize(FETCH_SIZE).stream()){
                     stream.map((Record record) -> jdbcRepository.map(record))
                         .forEach(emitter::next);
                 } finally {
