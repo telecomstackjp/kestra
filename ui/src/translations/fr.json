@@ -1036,6 +1036,7 @@
       "format": "Tapez le paramètre comme 'key:value'",
       "label": "Choisir des filtres"
     },
-    "custom value": "Valeur personnalisée"
+    "custom value": "Valeur personnalisée",
+    "execution restarted": "Cette exécution a été redémarrée {nbRestart} fois."
   }
 }

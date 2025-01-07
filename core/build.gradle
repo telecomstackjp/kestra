@@ -54,6 +54,9 @@ dependencies {
         exclude group: 'com.fasterxml.jackson.core'
     }
 
+    //Open telemetry
+    implementation 'io.opentelemetry:opentelemetry-sdk-logs:1.45.0'
+
     // test
     testAnnotationProcessor project(':processor')
     testImplementation project(':tests')
@@ -65,4 +68,7 @@ dependencies {
     testImplementation "io.micronaut:micronaut-http-client"
     testImplementation "io.micronaut:micronaut-http-server-netty"
     testImplementation "io.micronaut:micronaut-management"
+
+    testImplementation "org.testcontainers:testcontainers:1.20.3"
+    testImplementation "org.testcontainers:junit-jupiter:1.20.3"
 }

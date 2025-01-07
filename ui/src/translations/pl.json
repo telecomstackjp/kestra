@@ -1036,6 +1036,7 @@
       "format": "Wpisz parametr jako 'key:value'",
       "label": "Wybierz filtry"
     },
-    "custom value": "Wartość niestandardowa"
+    "custom value": "Wartość niestandardowa",
+    "execution restarted": "Ta wykonanie zostało ponownie uruchomione {nbRestart} raz(y)."
   }
 }

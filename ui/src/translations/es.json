@@ -1036,6 +1036,7 @@
       "format": "Escriba el parámetro como 'key:value'",
       "label": "Elegir filtros"
     },
-    "custom value": "Valor personalizado"
+    "custom value": "Valor personalizado",
+    "execution restarted": "Esta ejecución se ha reiniciado {nbRestart} vez/veces."
   }
 }

@@ -7,6 +7,7 @@ import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.http.HttpRequest;
 import io.kestra.core.http.HttpResponse;
 import io.kestra.core.http.client.configurations.HttpConfiguration;
+import io.kestra.core.http.client.configurations.ProxyConfiguration;
 import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.models.executions.Execution;
 import io.kestra.core.models.executions.LogEntry;
@@ -38,11 +39,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Flux;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -59,6 +64,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @KestraTest
+@Testcontainers
 class HttpClientTest {
     @Inject
     private ApplicationContext applicationContext;
@@ -67,6 +73,12 @@ class HttpClientTest {
     private RunContextFactory runContextFactory;
 
     private URI embeddedServerUri;
+
+    @SuppressWarnings("resource")
+    @Container
+    static GenericContainer<?> proxy = new GenericContainer<>("kalaksi/tinyproxy")
+        .withExposedPorts(8888)
+        .withEnv(Map.of("AUTH_USER", "pr0xy", "AUTH_PASSWORD", "p4ss"));
 
     @Inject
     @Named(QueueFactoryInterface.WORKERTASKLOG_NAMED)
@@ -335,6 +347,29 @@ class HttpClientTest {
             HttpResponse<Map<String, String>> response = client.request(HttpRequest.of(URI.create(embeddedServerUri + "/http/error?status=404")));
 
             assertThat(response.getStatus().getCode(), is(404));
+        }
+    }
+
+    @Test
+    void getProxy() throws IllegalVariableEvaluationException, HttpClientException, IOException {
+        try (HttpClient client = client(b -> b
+            .configuration(HttpConfiguration.builder()
+                .proxy(ProxyConfiguration.builder()
+                    .type(Proxy.Type.HTTP)
+                    .address(proxy.getHost())
+                    .username("pr0xy")
+                    .password("p4ss")
+                    .port(proxy.getFirstMappedPort())
+                    .build())
+                .build()))
+        ) {
+            HttpResponse<String> response = client.request(
+                HttpRequest.of(URI.create("https://www.google.com")),
+                String.class
+            );
+
+            assertThat(response.getStatus().getCode(), is(200));
+            assertThat(response.getBody(), containsString("<html"));
         }
     }
 

@@ -240,6 +240,10 @@ public class State {
             return this == Type.SUCCESS;
         }
 
+        public boolean isKilled(){
+            return this == Type.KILLED;
+        }
+
         public static List<Type> terminatedTypes() {
             return Stream.of(Type.values()).filter(type -> type.isTerminated()).toList();
         }

@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.http.HttpRequest;
 import io.kestra.core.http.HttpResponse;
-import io.kestra.core.http.client.apache.FailedResponseInterceptor;
-import io.kestra.core.http.client.apache.LoggingRequestInterceptor;
-import io.kestra.core.http.client.apache.LoggingResponseInterceptor;
-import io.kestra.core.http.client.apache.RunContextResponseInterceptor;
+import io.kestra.core.http.client.apache.*;
 import io.kestra.core.http.client.configurations.HttpConfiguration;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
@@ -36,10 +33,11 @@ import org.apache.hc.core5.util.Timeout;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.SocketException;
+import java.net.*;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.function.Consumer;
 import javax.net.ssl.SSLContext;
 
@@ -98,7 +96,24 @@ public class HttpClient implements Closeable {
 
         // proxy
         if (this.configuration.getProxy() != null) {
-            // @TODO use CustomSocketFactory
+            SocketAddress proxyAddr = new InetSocketAddress(
+                runContext.render(configuration.getProxy().getAddress()),
+                configuration.getProxy().getPort()
+            );
+
+            Proxy proxy = new Proxy(configuration.getProxy().getType(), proxyAddr);
+
+            builder.setProxySelector(new ProxySelector() {
+                @Override
+                public void connectFailed(URI uri, SocketAddress sa, IOException e) {
+                    /* ignore */
+                }
+
+                @Override
+                public List<Proxy> select(URI uri) {
+                    return List.of(proxy);
+                }
+            });
 
             if (this.configuration.getProxy().getUsername() != null && this.configuration.getProxy().getPassword() != null) {
                 builder.setProxyAuthenticationStrategy(new DefaultAuthenticationStrategy());
@@ -227,7 +242,6 @@ public class HttpClient implements Closeable {
         return contextBuilder.build();
     }
 
-    @SuppressWarnings("resource")
     private <T> HttpResponse<T> request(
         HttpRequest request,
         HttpClientContext httpClientContext,

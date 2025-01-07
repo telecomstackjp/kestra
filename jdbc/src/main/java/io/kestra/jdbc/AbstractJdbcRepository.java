@@ -205,6 +205,19 @@ public abstract class AbstractJdbcRepository<T> {
         return this.fetchPage(context, select, pageable, this::map);
     }
 
+    public <R extends Record> Select<R> buildPageQuery(DSLContext context, SelectConditionStep<R> select, Pageable pageable){
+        return (Select<R>) this.limit(
+            context.select(DSL.asterisk())
+                .from(this
+                    .sort(select, pageable)
+                    .asTable("page")
+                )
+                .where(DSL.trueCondition()),
+            pageable
+        );
+
+    }
+
     @SneakyThrows
     public List<String> fragments(String query, String yaml) {
         List<String> split = Arrays.asList(StringUtils.split(yaml, "\n"));
@@ -250,9 +263,9 @@ public abstract class AbstractJdbcRepository<T> {
     }
 
     protected <R extends Record> Select<R> limit(SelectConditionStep<R> select, Pageable pageable) {
-       if (pageable == null || pageable.getSize() == -1) {
-           return select;
-       }
+        if (pageable == null || pageable.getSize() == -1) {
+            return select;
+        }
 
         return select
             .limit(pageable.getSize())
