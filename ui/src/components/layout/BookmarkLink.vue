@@ -122,7 +122,7 @@
         border-radius: 4px;
         &:hover{
             color: var(--ks-content-link);
-            background-color: var(--ks-background-button-secondary-hover);
+            background-color: var(--ks-button-background-secondary-hover);
         }
     }
 

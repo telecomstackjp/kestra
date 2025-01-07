@@ -1077,11 +1077,11 @@
     }
 
     &::-webkit-scrollbar-thumb {
-        background: var(--ks-background-button-primary);
+        background: var(--ks-button-background-primary);
         border-radius: 5px;
 
         html.dark & {
-            background:  var(--ks-background-button-primary);
+            background:  var(--ks-button-background-primary);
         }
     }
 

@@ -4,15 +4,6 @@
 html.dark{
 	/* background */
 	#{--ks-background-body}: $base-gray-800;
-	#{--ks-background-button-inactive}: $base-gray-600;
-	#{--ks-background-button-primary}: $base-purple-500;
-	#{--ks-background-button-primary-active}: $base-purple-700;
-	#{--ks-background-button-primary-hover}: $base-purple-400;
-	#{--ks-background-button-secondary}: $base-gray-500;
-	#{--ks-background-button-secondary-active}: $base-gray-700;
-	#{--ks-background-button-secondary-hover}: $base-gray-400;
-	#{--ks-background-button-success}: $base-green-500;
-	#{--ks-background-button-success-hover}: $base-green-400;
 	#{--ks-background-cancelled}: #d1cfe933;
 	#{--ks-background-card}: $base-gray-500;
 	#{--ks-background-card-opacity}: #121319e5;
@@ -62,6 +53,19 @@ html.dark{
 	#{--ks-border-success}: $base-green-400;
 	#{--ks-border-system}: $base-blue-300;
 	#{--ks-border-warning}: $base-orange-300;
+
+	/* button */
+	#{--ks-button-background-inactive}: $base-gray-600;
+	#{--ks-button-background-primary}: $base-purple-500;
+	#{--ks-button-background-primary-active}: $base-purple-600;
+	#{--ks-button-background-primary-hover}: $base-purple-400;
+	#{--ks-button-background-secondary}: $base-gray-500;
+	#{--ks-button-background-secondary-active}: $base-gray-700;
+	#{--ks-button-background-secondary-hover}: $base-gray-400;
+	#{--ks-button-background-success}: $base-green-400;
+	#{--ks-button-background-success-active}: $base-green-500;
+	#{--ks-button-background-success-hover}: $base-green-300;
+	#{--ks-button-content-primary}: $base-white;
 
 	/* chart */
 	#{--ks-chart-cancelled}: $base-gray-700;

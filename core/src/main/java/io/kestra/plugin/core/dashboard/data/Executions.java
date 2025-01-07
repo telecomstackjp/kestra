@@ -34,6 +34,7 @@ public class Executions<C extends ColumnDescriptor<Executions.Fields>> extends D
         DURATION,
         LABELS,
         START_DATE,
-        END_DATE
+        END_DATE,
+        TRIGGER_EXECUTION_ID
     }
 }

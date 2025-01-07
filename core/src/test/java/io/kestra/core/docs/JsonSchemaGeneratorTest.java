@@ -11,6 +11,9 @@ import io.kestra.core.models.flows.Flow;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.models.tasks.VoidOutput;
+import io.kestra.core.models.tasks.logs.LogRecord;
+import io.kestra.core.models.tasks.logs.LogShipper;
+import io.kestra.core.models.tasks.runners.TaskRunner;
 import io.kestra.core.models.triggers.AbstractTrigger;
 import io.kestra.core.plugins.PluginRegistry;
 import io.kestra.core.plugins.RegisteredPlugin;
@@ -33,6 +36,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import reactor.core.publisher.Flux;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -118,6 +122,34 @@ class JsonSchemaGeneratorTest {
             var definitions = (Map<String, Map<String, Object>>) generate.get("definitions");
             var task = definitions.get(Task.class.getName());
             Assertions.assertNotNull(task.get("oneOf"));
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void taskRunner() throws URISyntaxException {
+        Helpers.runApplicationContext((applicationContext) -> {
+            JsonSchemaGenerator jsonSchemaGenerator = applicationContext.getBean(JsonSchemaGenerator.class);
+
+            Map<String, Object> generate = jsonSchemaGenerator.schemas(TaskRunner.class);
+
+            var definitions = (Map<String, Map<String, Object>>) generate.get("definitions");
+            var taskRunner = definitions.get(TaskRunner.class.getName());
+            Assertions.assertNotNull(taskRunner.get("$ref"));
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void logShipper() throws URISyntaxException {
+        Helpers.runApplicationContext((applicationContext) -> {
+            JsonSchemaGenerator jsonSchemaGenerator = applicationContext.getBean(JsonSchemaGenerator.class);
+
+            Map<String, Object> generate = jsonSchemaGenerator.schemas(LogShipper.class);
+
+            var definitions = (Map<String, Map<String, Object>>) generate.get("definitions");
+            var logShipper = definitions.get(LogShipper.class.getName());
+            Assertions.assertNotNull(logShipper.get("$ref"));
         });
     }
 
@@ -320,5 +352,11 @@ class JsonSchemaGeneratorTest {
     public static class BetaTask extends Task {
         @PluginProperty(beta = true)
         private String beta;
+    }
+
+    public static class TestLogShipper extends LogShipper {
+
+        @Override
+        public void sendLogs(Flux<LogRecord> logRecord) {}
     }
 }

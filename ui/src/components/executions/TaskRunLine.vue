@@ -378,7 +378,7 @@
             padding: .5rem;
             height: 100%;
             border: 1px solid rgba($white, .05);
-            background-color: var(--ks-background-button-secondary) !important;
+            background-color: var(--ks-button-background-secondary) !important;
             // FIXME: what does this mean?
             &:not(:hover) {
                 background: rgba($white, .10);

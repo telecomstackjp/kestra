@@ -163,7 +163,7 @@
         }
 
         &:hover, &:focus {
-            background-color: var(--ks-background-button-secondary);
+            background-color: var(--ks-button-background-secondary);
         }
 
         &.success {

@@ -131,12 +131,12 @@
           {
             "name": "base-color-palette/neutral/black",
             "value": "#060709",
-            "var": "",
-            "rootAlias": ""
+            "var": "base-color-palette/neutral/gray-950",
+            "rootAlias": "base-color-palette/neutral/gray-950"
           },
           {
             "name": "base-color-palette/neutral/gray-100",
-            "value": "#ecebef",
+            "value": "#cfd3d6",
             "var": "",
             "rootAlias": ""
           },
@@ -160,7 +160,7 @@
           },
           {
             "name": "base-color-palette/neutral/gray-50",
-            "value": "#f7f7f8",
+            "value": "#f9f9fa",
             "var": "",
             "rootAlias": ""
           },
@@ -448,63 +448,9 @@
           },
           {
             "name": "ks/background-body",
-            "value": "#f7f7f8",
+            "value": "#f9f9fa",
             "var": "base-color-palette/neutral/gray-50",
             "rootAlias": "base-color-palette/neutral/gray-50"
-          },
-          {
-            "name": "ks/background-button-inactive",
-            "value": "#f7f7f8",
-            "var": "base-color-palette/neutral/gray-50",
-            "rootAlias": "base-color-palette/neutral/gray-50"
-          },
-          {
-            "name": "ks/background-button-primary",
-            "value": "#8405ff",
-            "var": "base-color-palette/purple/purple-500",
-            "rootAlias": "base-color-palette/purple/purple-500"
-          },
-          {
-            "name": "ks/background-button-primary-active",
-            "value": "#6300bf",
-            "var": "base-color-palette/purple/purple-700",
-            "rootAlias": "base-color-palette/purple/purple-700"
-          },
-          {
-            "name": "ks/background-button-primary-hover",
-            "value": "#8c4bff",
-            "var": "base-color-palette/purple/purple-400",
-            "rootAlias": "base-color-palette/purple/purple-400"
-          },
-          {
-            "name": "ks/background-button-secondary",
-            "value": "#ffffff",
-            "var": "base-color-palette/neutral/white",
-            "rootAlias": "base-color-palette/neutral/white"
-          },
-          {
-            "name": "ks/background-button-secondary-active",
-            "value": "#f7f7f8",
-            "var": "base-color-palette/neutral/gray-50",
-            "rootAlias": "base-color-palette/neutral/gray-50"
-          },
-          {
-            "name": "ks/background-button-secondary-hover",
-            "value": "#f7f7f8",
-            "var": "base-color-palette/neutral/gray-50",
-            "rootAlias": "base-color-palette/neutral/gray-50"
-          },
-          {
-            "name": "ks/background-button-success",
-            "value": "#029e73",
-            "var": "base-color-palette/green/green-500",
-            "rootAlias": "base-color-palette/green/green-500"
-          },
-          {
-            "name": "ks/background-button-success-hover",
-            "value": "#02be8a",
-            "var": "base-color-palette/green/green-400",
-            "rootAlias": "base-color-palette/green/green-400"
           },
           {
             "name": "ks/background-cancelled",
@@ -550,7 +496,7 @@
           },
           {
             "name": "ks/background-killed",
-            "value": "#f7f7f8",
+            "value": "#f9f9fa",
             "var": "base-color-palette/neutral/gray-50",
             "rootAlias": "base-color-palette/neutral/gray-50"
           },
@@ -616,13 +562,13 @@
           },
           {
             "name": "ks/background-table-header",
-            "value": "#f7f7f8",
+            "value": "#f9f9fa",
             "var": "base-color-palette/neutral/gray-50",
             "rootAlias": "base-color-palette/neutral/gray-50"
           },
           {
             "name": "ks/background-table-row",
-            "value": "#ecebef",
+            "value": "#cfd3d6",
             "var": "base-color-palette/neutral/gray-100",
             "rootAlias": "base-color-palette/neutral/gray-100"
           },
@@ -688,7 +634,7 @@
           },
           {
             "name": "ks/border-inactive",
-            "value": "#ecebef",
+            "value": "#cfd3d6",
             "var": "base-color-palette/neutral/gray-100",
             "rootAlias": "base-color-palette/neutral/gray-100"
           },
@@ -754,7 +700,7 @@
           },
           {
             "name": "ks/border-secondary",
-            "value": "#ecebef",
+            "value": "#cfd3d6",
             "var": "base-color-palette/neutral/gray-100",
             "rootAlias": "base-color-palette/neutral/gray-100"
           },
@@ -775,6 +721,72 @@
             "value": "#e9985b",
             "var": "base-color-palette/orange/orange-300",
             "rootAlias": "base-color-palette/orange/orange-300"
+          },
+          {
+            "name": "ks/button-background-inactive",
+            "value": "#f9f9fa",
+            "var": "base-color-palette/neutral/gray-50",
+            "rootAlias": "base-color-palette/neutral/gray-50"
+          },
+          {
+            "name": "ks/button-background-primary",
+            "value": "#8405ff",
+            "var": "base-color-palette/purple/purple-500",
+            "rootAlias": "base-color-palette/purple/purple-500"
+          },
+          {
+            "name": "ks/button-background-primary-active",
+            "value": "#7400df",
+            "var": "base-color-palette/purple/purple-600",
+            "rootAlias": "base-color-palette/purple/purple-600"
+          },
+          {
+            "name": "ks/button-background-primary-hover",
+            "value": "#8c4bff",
+            "var": "base-color-palette/purple/purple-400",
+            "rootAlias": "base-color-palette/purple/purple-400"
+          },
+          {
+            "name": "ks/button-background-secondary",
+            "value": "#ffffff",
+            "var": "base-color-palette/neutral/white",
+            "rootAlias": "base-color-palette/neutral/white"
+          },
+          {
+            "name": "ks/button-background-secondary-active",
+            "value": "#cfd3d6",
+            "var": "base-color-palette/neutral/gray-100",
+            "rootAlias": "base-color-palette/neutral/gray-100"
+          },
+          {
+            "name": "ks/button-background-secondary-hover",
+            "value": "#f9f9fa",
+            "var": "base-color-palette/neutral/gray-50",
+            "rootAlias": "base-color-palette/neutral/gray-50"
+          },
+          {
+            "name": "ks/button-background-success",
+            "value": "#029e73",
+            "var": "base-color-palette/green/green-500",
+            "rootAlias": "base-color-palette/green/green-500"
+          },
+          {
+            "name": "ks/button-background-success-active",
+            "value": "#017f5c",
+            "var": "base-color-palette/green/green-600",
+            "rootAlias": "base-color-palette/green/green-600"
+          },
+          {
+            "name": "ks/button-background-success-hover",
+            "value": "#02be8a",
+            "var": "base-color-palette/green/green-400",
+            "rootAlias": "base-color-palette/green/green-400"
+          },
+          {
+            "name": "ks/button-content-primary",
+            "value": "#ffffff",
+            "var": "base-color-palette/neutral/white",
+            "rootAlias": "base-color-palette/neutral/white"
           },
           {
             "name": "ks/chart-cancelled",
@@ -864,7 +876,7 @@
             "name": "ks/content-cancelled",
             "value": "#060709",
             "var": "base-color-palette/neutral/black",
-            "rootAlias": "base-color-palette/neutral/black"
+            "rootAlias": "base-color-palette/neutral/gray-950"
           },
           {
             "name": "ks/content-created",
@@ -886,9 +898,9 @@
           },
           {
             "name": "ks/content-inactive",
-            "value": "#404559",
-            "var": "base-color-palette/neutral/gray-400",
-            "rootAlias": "base-color-palette/neutral/gray-400"
+            "value": "#9797a6",
+            "var": "base-color-palette/neutral/gray-300",
+            "rootAlias": "base-color-palette/neutral/gray-300"
           },
           {
             "name": "ks/content-info",
@@ -906,7 +918,7 @@
             "name": "ks/content-killed",
             "value": "#060709",
             "var": "base-color-palette/neutral/black",
-            "rootAlias": "base-color-palette/neutral/black"
+            "rootAlias": "base-color-palette/neutral/gray-950"
           },
           {
             "name": "ks/content-killing",
@@ -936,7 +948,7 @@
             "name": "ks/content-primary",
             "value": "#060709",
             "var": "base-color-palette/neutral/black",
-            "rootAlias": "base-color-palette/neutral/black"
+            "rootAlias": "base-color-palette/neutral/gray-950"
           },
           {
             "name": "ks/content-queued",
@@ -1164,7 +1176,7 @@
             "name": "ks/log-content-trace",
             "value": "#060709",
             "var": "base-color-palette/neutral/black",
-            "rootAlias": "base-color-palette/neutral/black"
+            "rootAlias": "base-color-palette/neutral/gray-950"
           },
           {
             "name": "ks/log-content-warn",
@@ -1174,7 +1186,7 @@
           },
           {
             "name": "ks/select-active",
-            "value": "#f7f7f8",
+            "value": "#f9f9fa",
             "var": "base-color-palette/neutral/gray-50",
             "rootAlias": "base-color-palette/neutral/gray-50"
           },
@@ -1204,7 +1216,7 @@
           },
           {
             "name": "ks/tag-background",
-            "value": "#f7f7f8",
+            "value": "#f9f9fa",
             "var": "base-color-palette/neutral/gray-50",
             "rootAlias": "base-color-palette/neutral/gray-50"
           },
@@ -1365,12 +1377,12 @@
           {
             "name": "base-color-palette/neutral/black",
             "value": "#060709",
-            "var": "",
-            "rootAlias": ""
+            "var": "base-color-palette/neutral/gray-950",
+            "rootAlias": "base-color-palette/neutral/gray-950"
           },
           {
             "name": "base-color-palette/neutral/gray-100",
-            "value": "#ecebef",
+            "value": "#cfd3d6",
             "var": "",
             "rootAlias": ""
           },
@@ -1394,7 +1406,7 @@
           },
           {
             "name": "base-color-palette/neutral/gray-50",
-            "value": "#f7f7f8",
+            "value": "#f9f9fa",
             "var": "",
             "rootAlias": ""
           },
@@ -1685,60 +1697,6 @@
             "value": "#21242e",
             "var": "base-color-palette/neutral/gray-800",
             "rootAlias": "base-color-palette/neutral/gray-800"
-          },
-          {
-            "name": "ks/background-button-inactive",
-            "value": "#2c303f",
-            "var": "base-color-palette/neutral/gray-600",
-            "rootAlias": "base-color-palette/neutral/gray-600"
-          },
-          {
-            "name": "ks/background-button-primary",
-            "value": "#8405ff",
-            "var": "base-color-palette/purple/purple-500",
-            "rootAlias": "base-color-palette/purple/purple-500"
-          },
-          {
-            "name": "ks/background-button-primary-active",
-            "value": "#6300bf",
-            "var": "base-color-palette/purple/purple-700",
-            "rootAlias": "base-color-palette/purple/purple-700"
-          },
-          {
-            "name": "ks/background-button-primary-hover",
-            "value": "#8c4bff",
-            "var": "base-color-palette/purple/purple-400",
-            "rootAlias": "base-color-palette/purple/purple-400"
-          },
-          {
-            "name": "ks/background-button-secondary",
-            "value": "#2f3342",
-            "var": "base-color-palette/neutral/gray-500",
-            "rootAlias": "base-color-palette/neutral/gray-500"
-          },
-          {
-            "name": "ks/background-button-secondary-active",
-            "value": "#21242e",
-            "var": "base-color-palette/neutral/gray-700",
-            "rootAlias": "base-color-palette/neutral/gray-700"
-          },
-          {
-            "name": "ks/background-button-secondary-hover",
-            "value": "#404559",
-            "var": "base-color-palette/neutral/gray-400",
-            "rootAlias": "base-color-palette/neutral/gray-400"
-          },
-          {
-            "name": "ks/background-button-success",
-            "value": "#029e73",
-            "var": "base-color-palette/green/green-500",
-            "rootAlias": "base-color-palette/green/green-500"
-          },
-          {
-            "name": "ks/background-button-success-hover",
-            "value": "#02be8a",
-            "var": "base-color-palette/green/green-400",
-            "rootAlias": "base-color-palette/green/green-400"
           },
           {
             "name": "ks/background-cancelled",
@@ -2011,6 +1969,72 @@
             "rootAlias": "base-color-palette/orange/orange-300"
           },
           {
+            "name": "ks/button-background-inactive",
+            "value": "#2c303f",
+            "var": "base-color-palette/neutral/gray-600",
+            "rootAlias": "base-color-palette/neutral/gray-600"
+          },
+          {
+            "name": "ks/button-background-primary",
+            "value": "#8405ff",
+            "var": "base-color-palette/purple/purple-500",
+            "rootAlias": "base-color-palette/purple/purple-500"
+          },
+          {
+            "name": "ks/button-background-primary-active",
+            "value": "#7400df",
+            "var": "base-color-palette/purple/purple-600",
+            "rootAlias": "base-color-palette/purple/purple-600"
+          },
+          {
+            "name": "ks/button-background-primary-hover",
+            "value": "#8c4bff",
+            "var": "base-color-palette/purple/purple-400",
+            "rootAlias": "base-color-palette/purple/purple-400"
+          },
+          {
+            "name": "ks/button-background-secondary",
+            "value": "#2f3342",
+            "var": "base-color-palette/neutral/gray-500",
+            "rootAlias": "base-color-palette/neutral/gray-500"
+          },
+          {
+            "name": "ks/button-background-secondary-active",
+            "value": "#21242e",
+            "var": "base-color-palette/neutral/gray-700",
+            "rootAlias": "base-color-palette/neutral/gray-700"
+          },
+          {
+            "name": "ks/button-background-secondary-hover",
+            "value": "#404559",
+            "var": "base-color-palette/neutral/gray-400",
+            "rootAlias": "base-color-palette/neutral/gray-400"
+          },
+          {
+            "name": "ks/button-background-success",
+            "value": "#02be8a",
+            "var": "base-color-palette/green/green-400",
+            "rootAlias": "base-color-palette/green/green-400"
+          },
+          {
+            "name": "ks/button-background-success-active",
+            "value": "#029e73",
+            "var": "base-color-palette/green/green-500",
+            "rootAlias": "base-color-palette/green/green-500"
+          },
+          {
+            "name": "ks/button-background-success-hover",
+            "value": "#21ce9c",
+            "var": "base-color-palette/green/green-300",
+            "rootAlias": "base-color-palette/green/green-300"
+          },
+          {
+            "name": "ks/button-content-primary",
+            "value": "#ffffff",
+            "var": "base-color-palette/neutral/white",
+            "rootAlias": "base-color-palette/neutral/white"
+          },
+          {
             "name": "ks/chart-cancelled",
             "value": "#21242e",
             "var": "base-color-palette/neutral/gray-700",
@@ -2134,7 +2158,7 @@
             "name": "ks/content-inverse",
             "value": "#060709",
             "var": "base-color-palette/neutral/black",
-            "rootAlias": "base-color-palette/neutral/black"
+            "rootAlias": "base-color-palette/neutral/gray-950"
           },
           {
             "name": "ks/content-killed",

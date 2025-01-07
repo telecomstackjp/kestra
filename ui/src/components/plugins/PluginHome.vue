@@ -223,7 +223,7 @@
 
         &::-webkit-scrollbar-thumb {
             -webkit-border-radius: 10px;
-            background: var(--ks-background-button-primary);
+            background: var(--ks-button-background-primary);
         }
     }
 
@@ -242,12 +242,12 @@
         cursor: pointer;
 
         border: 1px solid var(--ks-border-primary);
-        background-color: var(--ks-background-button-secondary);
+        background-color: var(--ks-button-background-secondary);
         color: var(--ks-content-primary);
 
         &:hover{
             border-color: var(--ks-border-active);
-            background-color: var(--ks-background-button-secondary-hover);
+            background-color: var(--ks-button-background-secondary-hover);
         }
     }
 

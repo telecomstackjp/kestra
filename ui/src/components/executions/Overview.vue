@@ -341,7 +341,7 @@
         }
 
         &::-webkit-scrollbar-thumb {
-            background: var(--ks-background-button-primary);
+            background: var(--ks-button-background-primary);
             border-radius: 0px;
         }
     }

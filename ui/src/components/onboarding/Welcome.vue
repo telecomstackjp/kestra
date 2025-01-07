@@ -148,7 +148,7 @@
 
     .watch {
         font-weight: 500;
-        background-color: var(--ks-background-button-secondary);
+        background-color: var(--ks-button-background-secondary);
         font-size: var(--el-font-size-small);
     }
 

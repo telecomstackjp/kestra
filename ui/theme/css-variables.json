@@ -1,15 +1,6 @@
 {
   "background": [
     "ks-background-body",
-    "ks-background-button-inactive",
-    "ks-background-button-primary",
-    "ks-background-button-primary-active",
-    "ks-background-button-primary-hover",
-    "ks-background-button-secondary",
-    "ks-background-button-secondary-active",
-    "ks-background-button-secondary-hover",
-    "ks-background-button-success",
-    "ks-background-button-success-hover",
     "ks-background-cancelled",
     "ks-background-card",
     "ks-background-card-opacity",
@@ -59,6 +50,19 @@
     "ks-border-success",
     "ks-border-system",
     "ks-border-warning"
+  ],
+  "button": [
+    "ks-button-background-inactive",
+    "ks-button-background-primary",
+    "ks-button-background-primary-active",
+    "ks-button-background-primary-hover",
+    "ks-button-background-secondary",
+    "ks-button-background-secondary-active",
+    "ks-button-background-secondary-hover",
+    "ks-button-background-success",
+    "ks-button-background-success-active",
+    "ks-button-background-success-hover",
+    "ks-button-content-primary"
   ],
   "chart": [
     "ks-chart-cancelled",
