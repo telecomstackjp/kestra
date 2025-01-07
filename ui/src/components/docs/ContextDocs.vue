@@ -107,7 +107,6 @@
             content = content.replaceAll(/\s*web-share\s*/g, "");
         }
         const parse = await getParser()
-        console.log("parsing content", {parse})
         ast.value = await parse(content);
     }
 </script>
