@@ -1036,6 +1036,7 @@
       "format": "将参数输入为 'key:value'",
       "label": "选择过滤器"
     },
-    "custom value": "自定义值"
+    "custom value": "自定义值",
+    "execution restarted": "此执行已重新启动{nbRestart}次。"
   }
 }

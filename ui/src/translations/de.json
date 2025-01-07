@@ -1036,6 +1036,7 @@
       "format": "Geben Sie den Parameter als 'key:value' ein",
       "label": "Filter auswählen"
     },
-    "custom value": "Benutzerdefinierter Wert"
+    "custom value": "Benutzerdefinierter Wert",
+    "execution restarted": "Diese Ausführung wurde {nbRestart} Mal neu gestartet."
   }
 }

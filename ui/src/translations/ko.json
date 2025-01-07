@@ -1036,6 +1036,7 @@
       "format": "'key:value'로 매개변수 입력",
       "label": "필터 선택"
     },
-    "custom value": "사용자 정의 value"
+    "custom value": "사용자 정의 value",
+    "execution restarted": "이 실행은 {nbRestart}번 다시 시작되었습니다."
   }
 }

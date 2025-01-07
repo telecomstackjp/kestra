@@ -1036,6 +1036,7 @@
       "format": "'key:value' के रूप में पैरामीटर टाइप करें",
       "label": "फिल्टर चुनें"
     },
-    "custom value": "कस्टम value"
+    "custom value": "कस्टम value",
+    "execution restarted": "इस execution को {nbRestart} बार पुनः प्रारंभ किया गया है।"
   }
 }

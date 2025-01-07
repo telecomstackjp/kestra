@@ -1036,6 +1036,7 @@
       "format": "「key:value」としてパラメータを入力してください。",
       "label": "フィルターを選択"
     },
-    "custom value": "カスタム value"
+    "custom value": "カスタム value",
+    "execution restarted": "この実行は{nbRestart}回再開されました。"
   }
 }
