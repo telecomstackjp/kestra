@@ -12,10 +12,7 @@ import com.google.common.annotations.VisibleForTesting;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.IOException;
 import java.io.Serial;
@@ -43,11 +40,6 @@ public class Property<T> {
 
     private String expression;
     private T value;
-
-    //TODO: Temporary to make the ValueExtractor work, but it's not supposed to say here
-    public T getValue(){
-        return this.value;
-    }
 
     // used only by the deserializer and in tests
     @VisibleForTesting
@@ -353,6 +345,11 @@ public class Property<T> {
     // used only by the serializer
     String getExpression() {
         return this.expression;
+    }
+
+    // used only by the value extractor
+    T getValue() {
+        return value;
     }
 
     static class PropertyDeserializer extends StdDeserializer<Property<?>> {
