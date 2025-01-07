@@ -944,7 +944,7 @@
         "sub_title": "Click on the Execute button to start your first workflow execution.",
         "guidance_desc": "Need guidance to execute your flow?",
         "guidance_sub_desc": "Follow the documentation for all the info you need."
-    },    
+    },
     "execution_guide": {
       "get_started": {
         "title": "Get Started ⚡",
@@ -987,6 +987,7 @@
     "cron": "Cron",
     "execution failed header": "Execution failed!",
     "execution failed message": "With last error: <code>{message}</code>",
+    "execution restarted": "This execution has been restarted {nbRestart} time(s).",
     "task run id": "TaskRun ID",
     "active": "Active",
     "flows imported": "Flows imported",

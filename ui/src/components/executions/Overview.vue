@@ -28,6 +28,17 @@
             </el-alert>
         </div>
 
+        <div v-if="isRestarted()">
+            <el-alert type="warning" :closable="false" class="mb-4 main-warning">
+                <template #title>
+                    <div>
+                        <alert class="main-icon" />
+                        {{ $t('execution restarted', {nbRestart: execution?.metadata?.attemptNumber - 1}) }}
+                    </div>
+                </template>
+            </el-alert>
+        </div>
+
         <el-row class="mb-3">
             <el-col :span="12" class="crud-align">
                 <crud type="CREATE" permission="EXECUTION" :detail="{executionId: execution.id}" />
@@ -199,6 +210,9 @@
             },
             isFailed() {
                 return this.execution.state.current === State.FAILED;
+            },
+            isRestarted() {
+                return this.execution.labels?.find( it => it.key === "system.restarted" && (it.value === "true" || it.value === true)) !== undefined;
             },
             load() {
                 this.$store
