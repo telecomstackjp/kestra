@@ -54,4 +54,89 @@ public class DeleteFilesTest {
         // Then
         assertThat(namespace.all("/a/b/", false).size(), is(1));
     }
+
+    @Test
+    void shouldDeleteParentFolder() throws Exception {
+        // Given
+        String namespaceId = "io.kestra." + IdUtils.create();
+
+        DeleteFiles deleteFiles = DeleteFiles.builder()
+            .id(DeleteFiles.class.getSimpleName())
+            .type(DeleteFiles.class.getName())
+            .files(List.of("**/file.txt"))
+            .namespace("{{ inputs.namespace }}")
+            .deleteParentFolder(true)
+            .build();
+
+        final RunContext runContext = TestsUtils.mockRunContext(this.runContextFactory, deleteFiles, Map.of("namespace", namespaceId));
+        final Namespace namespace = runContext.storage().namespace(namespaceId);
+
+        namespace.putFile(Path.of("/folder/file.txt"), new ByteArrayInputStream("content".getBytes(StandardCharsets.UTF_8)));
+
+        assertThat(namespace.all("/folder/", false).size(), is(1));
+
+        // When
+        assertThat(deleteFiles.run(runContext), notNullValue());
+
+        // Then
+        assertThat(namespace.all("/folder/", false).size(), is(0));
+        assertThat(namespace.all("/", false).size(), is(0));
+    }
+
+    @Test
+    void shouldNotDeleteParentFolderWhenFlagIsFalse() throws Exception {
+        // Given
+        String namespaceId = "io.kestra." + IdUtils.create();
+
+        DeleteFiles deleteFiles = DeleteFiles.builder()
+            .id(DeleteFiles.class.getSimpleName())
+            .type(DeleteFiles.class.getName())
+            .files(List.of("**/file.txt"))
+            .namespace("{{ inputs.namespace }}")
+            .deleteParentFolder(false)
+            .build();
+
+        final RunContext runContext = TestsUtils.mockRunContext(this.runContextFactory, deleteFiles, Map.of("namespace", namespaceId));
+        final Namespace namespace = runContext.storage().namespace(namespaceId);
+
+        namespace.putFile(Path.of("/folder/file.txt"), new ByteArrayInputStream("content".getBytes(StandardCharsets.UTF_8)));
+
+        assertThat(namespace.all("/folder/", false).size(), is(1));
+
+        // When
+        assertThat(deleteFiles.run(runContext), notNullValue());
+
+        // Then
+        assertThat(namespace.all("/folder/", false).size(), is(0));
+        assertThat(namespace.all("/", false).size(), is(1)); // Folder should still exist
+    }
+
+    @Test
+    void shouldNotDeleteParentFolderWhenMultipleFilesExist() throws Exception {
+        // Given
+        String namespaceId = "io.kestra." + IdUtils.create();
+
+        DeleteFiles deleteFiles = DeleteFiles.builder()
+            .id(DeleteFiles.class.getSimpleName())
+            .type(DeleteFiles.class.getName())
+            .files(List.of("**/file1.txt"))
+            .namespace("{{ inputs.namespace }}")
+            .deleteParentFolder(true)
+            .build();
+
+        final RunContext runContext = TestsUtils.mockRunContext(this.runContextFactory, deleteFiles, Map.of("namespace", namespaceId));
+        final Namespace namespace = runContext.storage().namespace(namespaceId);
+
+        namespace.putFile(Path.of("/folder/file1.txt"), new ByteArrayInputStream("content1".getBytes(StandardCharsets.UTF_8)));
+        namespace.putFile(Path.of("/folder/file2.txt"), new ByteArrayInputStream("content2".getBytes(StandardCharsets.UTF_8)));
+
+        assertThat(namespace.all("/folder/", false).size(), is(2));
+
+        // When
+        assertThat(deleteFiles.run(runContext), notNullValue());
+
+        // Then
+        assertThat(namespace.all("/folder/", false).size(), is(1)); // One file should still exist
+        assertThat(namespace.all("/", false).size(), is(1)); // Folder should still exist
+    }
 }
