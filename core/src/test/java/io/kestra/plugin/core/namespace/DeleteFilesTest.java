@@ -1,12 +1,11 @@
 package io.kestra.plugin.core.namespace;
 
+import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.storages.Namespace;
-import io.kestra.core.storages.StorageInterface;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
-import io.kestra.core.junit.annotations.KestraTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
@@ -22,9 +21,6 @@ import static org.hamcrest.Matchers.notNullValue;
 
 @KestraTest
 public class DeleteFilesTest {
-    @Inject
-    StorageInterface storageInterface;
-
     @Inject
     RunContextFactory runContextFactory;
 
@@ -108,7 +104,7 @@ public class DeleteFilesTest {
 
         // Then
         assertThat(namespace.all("/folder/", false).size(), is(0));
-        assertThat(namespace.all("/", false).size(), is(1)); // Folder should still exist
+        assertThat(namespace.all("/", true).size(), is(1)); // Folder should still exist
     }
 
     @Test
