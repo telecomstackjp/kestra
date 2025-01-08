@@ -6,6 +6,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.DeserializationException;
+import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.metrics.MetricRegistry;
 import io.kestra.core.models.Label;
 import io.kestra.core.models.executions.*;
@@ -18,10 +19,7 @@ import io.kestra.core.server.*;
 import io.kestra.core.services.LabelService;
 import io.kestra.core.services.LogService;
 import io.kestra.core.services.WorkerGroupService;
-import io.kestra.core.utils.Await;
-import io.kestra.core.utils.Either;
-import io.kestra.core.utils.ExecutorsUtils;
-import io.kestra.core.utils.Hashing;
+import io.kestra.core.utils.*;
 import io.kestra.plugin.core.flow.WorkingDirectory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.event.ApplicationEventPublisher;
@@ -170,7 +168,7 @@ public class Worker implements Service, Runnable, AutoCloseable {
 
     @PostConstruct
     void initMetrics() {
-        String[] tags = this.workerGroup == null ? new String[0] : new String[] { MetricRegistry.TAG_WORKER_GROUP, this.workerGroup };
+        String[] tags = this.workerGroup == null ? new String[0] : new String[]{MetricRegistry.TAG_WORKER_GROUP, this.workerGroup};
         // create metrics to store thread count, pending jobs and running jobs, so we can have autoscaling easily
         this.metricRegistry.gauge(MetricRegistry.METRIC_WORKER_JOB_THREAD_COUNT, numThreads, tags);
         this.metricRegistry.gauge(MetricRegistry.METRIC_WORKER_JOB_PENDING_COUNT, pendingJobCount, tags);
@@ -354,7 +352,20 @@ public class Worker implements Service, Runnable, AutoCloseable {
                     );
 
                     // all tasks will be handled immediately by the worker
-                    WorkerTaskResult workerTaskResult = this.run(currentWorkerTask, false);
+                    WorkerTaskResult workerTaskResult = null;
+                    try {
+                        if (!TruthUtils.isTruthy(runContext.render(currentWorkerTask.getTask().getRunIf()))) {
+                            workerTaskResult = new WorkerTaskResult(currentWorkerTask.getTaskRun().withState(SKIPPED));
+                            this.workerTaskResultQueue.emit(workerTaskResult);
+                        } else {
+                            workerTaskResult = this.run(currentWorkerTask, false);
+                        }
+                    } catch (IllegalVariableEvaluationException e) {
+                        RunContextLogger contextLogger = runContextLoggerFactory.create(currentWorkerTask.getTaskRun(), currentWorkerTask.getTask());
+                        contextLogger.logger().error("Failed evaluating runIf: {}", e.getMessage(), e);
+                    } catch (QueueException e) {
+                        log.error("Unable to emit the worker task result for task {} taskrun {}", currentWorkerTask.getTask().getId(), currentWorkerTask.getTaskRun().getId(), e);
+                    }
 
                     if (workerTaskResult.getTaskRun().getState().isFailed() && !currentWorkerTask.getTask().isAllowFailure()) {
                         break;
@@ -507,7 +518,7 @@ public class Worker implements Service, Runnable, AutoCloseable {
                         .gauge(MetricRegistry.METRIC_WORKER_TRIGGER_RUNNING_COUNT, new AtomicInteger(0), metricRegistry.tags(workerTrigger, workerGroup)));
                     this.evaluateTriggerRunningCount.get(workerTrigger.getTriggerContext().uid()).addAndGet(1);
 
-                    DefaultRunContext runContext = (DefaultRunContext)workerTrigger.getConditionContext().getRunContext();
+                    DefaultRunContext runContext = (DefaultRunContext) workerTrigger.getConditionContext().getRunContext();
                     runContextInitializer.forWorker(runContext, workerTrigger);
                     try {
 
@@ -654,7 +665,7 @@ public class Worker implements Service, Runnable, AutoCloseable {
         } catch (QueueException e) {
             // If there is a QueueException it can either be caused by the message limit or another queue issue.
             // We fail the task and try to resend it.
-            TaskRun failed  = workerTask.fail();
+            TaskRun failed = workerTask.fail();
             if (e instanceof MessageTooBigException) {
                 // If it's a message too big, we remove the outputs
                 failed = failed.withOutputs(Collections.emptyMap());
@@ -735,7 +746,7 @@ public class Worker implements Service, Runnable, AutoCloseable {
     }
 
     private WorkerTask runAttempt(final WorkerTask workerTask) throws QueueException {
-        DefaultRunContext runContext = runContextInitializer.forWorker((DefaultRunContext) workerTask.getRunContext(), workerTask);;
+        DefaultRunContext runContext = runContextInitializer.forWorker((DefaultRunContext) workerTask.getRunContext(), workerTask);
 
         Logger logger = runContext.logger();
 
@@ -920,7 +931,6 @@ public class Worker implements Service, Runnable, AutoCloseable {
                 }
             }
         );
-
 
         // wait for task completion
         Await.until(
