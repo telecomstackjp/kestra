@@ -1,5 +1,7 @@
 package io.kestra.core.models.tasks.logs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.api.common.Value;
 import io.opentelemetry.api.logs.Severity;
@@ -17,6 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Getter
+@JsonSerialize(using = LogRecordSerializer.class)
 public class LogRecord implements LogRecordData {
 
     Resource resource;
@@ -30,7 +33,9 @@ public class LogRecord implements LogRecordData {
     Attributes attributes;
     int totalAttributeCount;
 
+    @JsonIgnore
     public Body getBody(){
         throw new UnsupportedOperationException();
     }
+
 }
