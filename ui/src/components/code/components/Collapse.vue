@@ -6,7 +6,7 @@
             :name="item.title"
             :title="item.title"
         >
-            <component :is="item.component" />
+            <slot name="content" />
         </el-collapse-item>
     </el-collapse>
 </template>
@@ -35,7 +35,11 @@
 
         .el-collapse-item__header,
         .el-collapse-item__content {
-            padding-left: 0;
+            padding: 0.5rem 0;
+        }
+
+        .el-collapse-item__header.is-active {
+            color: $code-primary;
         }
     }
 }

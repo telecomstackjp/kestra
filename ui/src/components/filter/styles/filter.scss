@@ -32,8 +32,8 @@ $filters-font-xs: var(--el-font-size-extra-small);
 
     .scroller {
         &::-webkit-scrollbar {
-            height: 5px;
-            width: 5px;
+            height: 3px;
+            width: 3px;
         }
 
         &::-webkit-scrollbar-track {

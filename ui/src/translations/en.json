@@ -13,7 +13,6 @@
     "theme": "Theme",
     "flows": "Flows",
     "flow": "Flow",
-    "flow_id": "Flow ID",
     "invalid source": "Invalid source code",
     "update": "Update",
     "update ok": "is updated",
@@ -1055,7 +1054,27 @@
     },
     "custom value": "Custom value",
     "no_code": {
-      "general": "General properties"
+      "sections": {
+        "main": "Main properties",
+        "general": "General properties"
+      },
+      "fields": {
+        "main": {
+          "flow_id": "Flow ID",
+          "namespace": "Namespace",
+          "description": "Description"
+        },
+        "general": {
+          "retry": "Retry",
+          "labels": "Labels",
+          "inputs": "Inputs",
+          "outputs": "Outputs",
+          "variables": "Variables",
+          "concurrency": "Concurrency",
+          "plugin_defaults": "Plugin Defaults",
+          "disabled": "Disabled"
+        }
+      }
     }
   }
 }

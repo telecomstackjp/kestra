@@ -1,10 +1,23 @@
 import {defineComponent} from "vue";
 
-type Field = {
+export type Schemas = {
+    $ref?: string;
+    $schema?: string;
+    definitions?: {
+        [key: string]: object;
+    };
+};
+
+export type Field = {
+    component: ReturnType<typeof defineComponent>;
     value: string | number | boolean | undefined;
     label: string;
     required?: boolean;
     disabled?: boolean;
+
+    // Concurrency related
+    root?: string;
+    schema?: object;
 };
 
 type Main = {
@@ -13,8 +26,20 @@ type Main = {
     description: Field;
 };
 
+type General = {
+    retry: Field;
+    labels: Field;
+    inputs: Field;
+    outputs: Field;
+    variables: Field;
+    concurrency: Field;
+    pluginDefaults: Field;
+    disabled: Field;
+};
+
 export type Fields = {
     main: Main;
+    general: General;
 };
 
 export type Breadcrumb = {
@@ -26,5 +51,4 @@ export type Breadcrumb = {
 
 export type CollapseItem = {
     title: string;
-    component: ReturnType<typeof defineComponent>;
 };

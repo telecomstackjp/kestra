@@ -1,8 +1,12 @@
 <template>
-    <span v-if="required" class="me-1 text-danger">*</span>
-    <span class="label">{{ label }}</span>
-    <div class="mt-1 mb-2 wrapper">
-        <el-input v-model="input" @input="handleInput" :disabled />
+    <div class="py-3">
+        <span v-if="required" class="me-1 text-danger">*</span>
+        <span class="me-3 label">{{ label }}:</span>
+        <span class="wrapper">
+            <el-switch v-model="input" @input="handleInput" :disabled />
+        </span>
+
+        <slot />
     </div>
 </template>
 
