@@ -1,4 +1,5 @@
 import {defineComponent} from "vue";
+import type {RouteRecordName, RouteParams} from "vue-router";
 
 export type Schemas = {
     $ref?: string;
@@ -46,7 +47,8 @@ export type Fields = {
 export type Breadcrumb = {
     label: string;
     to: {
-        name?: string;
+        name: RouteRecordName;
+        params: RouteParams;
     };
 };
 

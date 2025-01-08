@@ -11,7 +11,7 @@
 <script setup lang="ts">
     import {onBeforeMount, computed, ref} from "vue";
 
-    import {Schemas} from "../utils/types";
+    import {Schemas} from "./utils/types";
 
     import YamlUtils from "../../utils/yamlUtils";
 
