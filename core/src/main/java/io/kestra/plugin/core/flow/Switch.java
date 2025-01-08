@@ -54,12 +54,12 @@ import static io.kestra.core.utils.Rethrow.throwPredicate;
             code = """
                 id: switch
                 namespace: company.team
-                
+
                 inputs:
                   - id: string
                     type: STRING
                     required: true
-                
+
                 tasks:
                   - id: switch
                     type: io.kestra.plugin.core.flows.Switch
@@ -113,6 +113,9 @@ public class Switch extends Task implements FlowableTask<Switch.Output> {
     @PluginProperty
     protected List<Task> errors;
 
+    @Valid
+    protected List<Task> always;
+
     private String rendererValue(RunContext runContext) throws IllegalVariableEvaluationException {
         return runContext.render(this.value);
     }
@@ -124,7 +127,10 @@ public class Switch extends Task implements FlowableTask<Switch.Output> {
                 this.defaults != null ? this.defaults.stream() : Stream.empty(),
                 Stream.concat(
                     this.cases != null ? this.cases.values().stream().flatMap(Collection::stream) : Stream.empty(),
-                    this.errors != null ? this.errors.stream() : Stream.empty()
+                    Stream.concat(
+                        this.errors != null ? this.errors.stream() : Stream.empty(),
+                        this.always != null ? this.always.stream() : Stream.empty()
+                    )
                 )
             )
             .toList();
@@ -168,6 +174,7 @@ public class Switch extends Task implements FlowableTask<Switch.Output> {
             execution,
             this.childTasks(runContext, parentTaskRun),
             FlowableUtils.resolveTasks(this.getErrors(), parentTaskRun),
+            FlowableUtils.resolveTasks(this.getAlways(), parentTaskRun),
             parentTaskRun,
             runContext,
             this.isAllowFailure(),
@@ -181,6 +188,7 @@ public class Switch extends Task implements FlowableTask<Switch.Output> {
             execution,
             this.childTasks(runContext, parentTaskRun),
             FlowableUtils.resolveTasks(this.errors, parentTaskRun),
+            FlowableUtils.resolveTasks(this.always, parentTaskRun),
             parentTaskRun
         );
     }

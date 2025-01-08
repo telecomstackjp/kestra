@@ -104,6 +104,9 @@ public class Dag extends Task implements FlowableTask<VoidOutput> {
     @PluginProperty
     protected List<Task> errors;
 
+    @Valid
+    protected List<Task> always;
+
     @Override
     public GraphCluster tasksTree(Execution execution, TaskRun taskRun, List<String> parentValues) throws IllegalVariableEvaluationException {
         GraphCluster subGraph = new GraphCluster(this, taskRun, parentValues, RelationType.DYNAMIC);
@@ -138,7 +141,10 @@ public class Dag extends Task implements FlowableTask<VoidOutput> {
         return Stream
             .concat(
                 this.tasks != null ? this.tasks.stream().map(DagTask::getTask) : Stream.empty(),
-                this.errors != null ? this.errors.stream() : Stream.empty()
+                Stream.concat(
+                    this.errors != null ? this.errors.stream() : Stream.empty(),
+                    this.always != null ? this.always.stream() : Stream.empty()
+                )
             )
             .toList();
     }
@@ -156,6 +162,7 @@ public class Dag extends Task implements FlowableTask<VoidOutput> {
             execution,
             this.childTasks(runContext, parentTaskRun),
             FlowableUtils.resolveTasks(this.errors, parentTaskRun),
+            FlowableUtils.resolveTasks(this.always, parentTaskRun),
             parentTaskRun,
             this.concurrent,
             this.tasks

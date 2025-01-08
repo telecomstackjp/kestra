@@ -59,11 +59,13 @@ public class AllowFailure extends Sequential implements FlowableTask<VoidOutput>
     public Optional<State.Type> resolveState(RunContext runContext, Execution execution, TaskRun parentTaskRun) throws IllegalVariableEvaluationException {
         List<ResolvedTask> resolvedTasks = this.childTasks(runContext, parentTaskRun);
         List<ResolvedTask> resolvedErrors = FlowableUtils.resolveTasks(this.getErrors(), parentTaskRun);
+        List<ResolvedTask> resolvedAlways = FlowableUtils.resolveTasks(this.getAlways(), parentTaskRun);
 
         Optional<State.Type> type = FlowableUtils.resolveState(
             execution,
             resolvedTasks,
             resolvedErrors,
+            resolvedAlways,
             parentTaskRun,
             runContext,
             this.isAllowFailure(),
@@ -77,6 +79,7 @@ public class AllowFailure extends Sequential implements FlowableTask<VoidOutput>
                 execution,
                 resolvedTasks,
                 null,
+                resolvedAlways,
                 parentTaskRun,
                 runContext,
                 this.isAllowFailure(),

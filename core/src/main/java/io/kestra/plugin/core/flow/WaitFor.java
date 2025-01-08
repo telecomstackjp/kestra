@@ -74,6 +74,9 @@ public class WaitFor extends Task implements FlowableTask<WaitFor.Output> {
     protected List<Task> errors;
 
     @Valid
+    protected List<Task> always;
+
+    @Valid
     @PluginProperty
     @NotNull
     private List<Task> tasks;
@@ -120,7 +123,10 @@ public class WaitFor extends Task implements FlowableTask<WaitFor.Output> {
         return Stream
             .concat(
                 tasks.stream(),
-                this.getErrors() != null ? this.getErrors().stream() : Stream.empty()
+                Stream.concat(
+                    this.getErrors() != null ? this.getErrors().stream() : Stream.empty(),
+                    this.getAlways() != null ? this.getAlways().stream() : Stream.empty()
+                )
             )
             .toList();
     }
@@ -137,6 +143,7 @@ public class WaitFor extends Task implements FlowableTask<WaitFor.Output> {
             execution,
             this.childTasks(runContext, parentTaskRun),
             FlowableUtils.resolveTasks(this.getErrors(), parentTaskRun),
+            FlowableUtils.resolveTasks(this.getAlways(), parentTaskRun),
             parentTaskRun
         );
     }
@@ -193,6 +200,7 @@ public class WaitFor extends Task implements FlowableTask<WaitFor.Output> {
             execution,
             this.childTasks(runContext, parentTaskRun),
             FlowableUtils.resolveTasks(this.getErrors(), parentTaskRun),
+            FlowableUtils.resolveTasks(this.getAlways(), parentTaskRun),
             parentTaskRun,
             runContext,
             isAllowFailure(),

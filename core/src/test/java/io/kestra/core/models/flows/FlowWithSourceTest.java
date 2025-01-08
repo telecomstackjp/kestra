@@ -101,6 +101,13 @@ class FlowWithSourceTest {
                     .message("Error")
                     .build()
             ))
+            .always(List.of(
+                Log.builder()
+                    .id(IdUtils.create())
+                    .type(Log.class.getName())
+                    .message("Always")
+                    .build()
+            ))
             .listeners(List.of(
                 Listener.builder()
                     .conditions(List.of(Expression.builder().expression("true").build()))

@@ -99,6 +99,9 @@ public class If extends Task implements FlowableTask<If.Output> {
     )
     private List<Task> errors;
 
+    @Valid
+    protected List<Task> always;
+
     @Override
     public List<Task> getErrors() {
         return errors;
@@ -127,7 +130,11 @@ public class If extends Task implements FlowableTask<If.Output> {
                 this.then != null ? this.then.stream() : Stream.empty(),
                 Stream.concat(
                     this._else != null ? this._else.stream() : Stream.empty(),
-                    this.errors != null ? this.errors.stream() : Stream.empty())
+                    Stream.concat(
+                        this.errors != null ? this.errors.stream() : Stream.empty(),
+                        this.always != null ? this.always.stream() : Stream.empty()
+                    )
+                )
             )
             .toList();
     }
@@ -157,6 +164,7 @@ public class If extends Task implements FlowableTask<If.Output> {
             execution,
             this.childTasks(runContext, parentTaskRun),
             FlowableUtils.resolveTasks(this.errors, parentTaskRun),
+            FlowableUtils.resolveTasks(this.always, parentTaskRun),
             parentTaskRun
         );
     }
@@ -175,6 +183,7 @@ public class If extends Task implements FlowableTask<If.Output> {
             execution,
             childTasks,
             FlowableUtils.resolveTasks(this.getErrors(), parentTaskRun),
+            FlowableUtils.resolveTasks(this.getAlways(), parentTaskRun),
             parentTaskRun,
             runContext,
             this.isAllowFailure(),

@@ -66,6 +66,9 @@ public class PluginDefaultsCaseTest {
         protected List<Task> errors;
 
         @Valid
+        protected List<Task> always;
+
+        @Valid
         @NotEmpty
         private List<Task> tasks;
 
@@ -91,7 +94,10 @@ public class PluginDefaultsCaseTest {
             return Stream
                 .concat(
                     this.tasks != null ? this.tasks.stream() : Stream.empty(),
-                    this.errors != null ? this.errors.stream() : Stream.empty()
+                    Stream.concat(
+                        this.errors != null ? this.errors.stream() : Stream.empty(),
+                        this.always != null ? this.always.stream() : Stream.empty()
+                    )
                 )
                 .toList();
         }
@@ -107,6 +113,7 @@ public class PluginDefaultsCaseTest {
                 execution,
                 this.childTasks(runContext, parentTaskRun),
                 FlowableUtils.resolveTasks(this.errors, parentTaskRun),
+                FlowableUtils.resolveTasks(this.always, parentTaskRun),
                 parentTaskRun
             );
         }

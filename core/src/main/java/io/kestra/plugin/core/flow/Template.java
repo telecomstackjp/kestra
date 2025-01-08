@@ -92,6 +92,9 @@ public class Template extends Task implements FlowableTask<Template.Output> {
     @PluginProperty
     protected List<Task> errors;
 
+    @Valid
+    protected List<Task> always;
+
     @NotNull
     @Schema(
         title = "The namespace of the template."
@@ -175,6 +178,7 @@ public class Template extends Task implements FlowableTask<Template.Output> {
             execution,
             this.childTasks(runContext, parentTaskRun),
             FlowableUtils.resolveTasks(template.getErrors(), parentTaskRun),
+            FlowableUtils.resolveTasks(template.getAlways(), parentTaskRun),
             parentTaskRun
         );
     }

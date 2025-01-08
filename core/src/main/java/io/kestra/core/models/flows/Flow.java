@@ -82,6 +82,9 @@ public class Flow extends AbstractFlow implements HasUID {
     List<Task> errors;
 
     @Valid
+    List<Task> always;
+
+    @Valid
     @Deprecated
     List<Listener> listeners;
 
@@ -188,6 +191,7 @@ public class Flow extends AbstractFlow implements HasUID {
         return Stream.of(
                 this.tasks != null ? this.tasks : new ArrayList<Task>(),
                 this.errors != null ? this.errors : new ArrayList<Task>(),
+                this.always != null ? this.always : new ArrayList<Task>(),
                 this.listenersTasks()
             )
             .flatMap(Collection::stream);

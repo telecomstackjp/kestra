@@ -137,6 +137,7 @@ public class EachSequential extends Sequential implements FlowableTask<VoidOutpu
             execution,
             childTasks,
             FlowableUtils.resolveTasks(this.getErrors(), parentTaskRun),
+            FlowableUtils.resolveTasks(this.getAlways(), parentTaskRun),
             parentTaskRun,
             runContext,
             this.isAllowFailure(),
@@ -150,6 +151,7 @@ public class EachSequential extends Sequential implements FlowableTask<VoidOutpu
             execution,
             FlowableUtils.resolveEachTasks(runContext, parentTaskRun, this.getTasks(), this.value),
             FlowableUtils.resolveTasks(this.errors, parentTaskRun),
+            FlowableUtils.resolveTasks(this.always, parentTaskRun),
             parentTaskRun
         );
     }

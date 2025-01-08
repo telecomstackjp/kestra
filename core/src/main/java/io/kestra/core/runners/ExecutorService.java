@@ -270,7 +270,8 @@ public class ExecutorService {
                 // Then wait for completion (KILLED or whatever) on child tasks to KILLED the parent one.
                 List<ResolvedTask> currentTasks = execution.findTaskDependingFlowState(
                     flowableParent.childTasks(runContext, parentTaskRun),
-                    FlowableUtils.resolveTasks(flowableParent.getErrors(), parentTaskRun)
+                    FlowableUtils.resolveTasks(flowableParent.getErrors(), parentTaskRun),
+                    FlowableUtils.resolveTasks(flowableParent.getAlways(), parentTaskRun)
                 );
 
                 List<TaskRun> taskRunByTasks = execution.findTaskRunByTasks(currentTasks, parentTaskRun);
@@ -426,7 +427,8 @@ public class ExecutorService {
             .resolveSequentialNexts(
                 executor.getExecution(),
                 ResolvedTask.of(executor.getFlow().getTasks()),
-                ResolvedTask.of(executor.getFlow().getErrors())
+                ResolvedTask.of(executor.getFlow().getErrors()),
+                ResolvedTask.of(executor.getFlow().getAlways())
             );
 
         if (nextTaskRuns.isEmpty()) {
@@ -686,7 +688,8 @@ public class ExecutorService {
 
         List<ResolvedTask> currentTasks = executor.getExecution().findTaskDependingFlowState(
             ResolvedTask.of(executor.getFlow().getTasks()),
-            ResolvedTask.of(executor.getFlow().getErrors())
+            ResolvedTask.of(executor.getFlow().getErrors()),
+            ResolvedTask.of(executor.getFlow().getAlways())
         );
 
         if (!executor.getExecution().isTerminated(currentTasks)) {

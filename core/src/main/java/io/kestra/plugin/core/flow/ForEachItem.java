@@ -317,6 +317,9 @@ public class ForEachItem extends Task implements FlowableTask<VoidOutput>, Child
     @Valid
     private List<Task> errors;
 
+    @Valid
+    protected List<Task> always;
+
     @Schema(
         title = "What to do when a failed execution is restarting.",
         description = """
@@ -348,7 +351,10 @@ public class ForEachItem extends Task implements FlowableTask<VoidOutput>, Child
         return Stream
             .concat(
                 this.getTasks() != null ? this.getTasks().stream() : Stream.empty(),
-                this.errors != null ? this.errors.stream() : Stream.empty()
+                Stream.concat(
+                    this.errors != null ? this.errors.stream() : Stream.empty(),
+                    this.always != null ? this.always.stream() : Stream.empty()
+                )
             )
             .toList();
     }
@@ -364,6 +370,7 @@ public class ForEachItem extends Task implements FlowableTask<VoidOutput>, Child
             execution,
             this.childTasks(runContext, parentTaskRun),
             FlowableUtils.resolveTasks(this.errors, parentTaskRun),
+            FlowableUtils.resolveTasks(this.always, parentTaskRun),
             parentTaskRun
         );
     }

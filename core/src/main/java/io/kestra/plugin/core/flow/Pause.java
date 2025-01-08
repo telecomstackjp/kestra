@@ -157,6 +157,9 @@ public class Pause extends Task implements FlowableTask<Pause.Output> {
     protected List<Task> errors;
 
     @Valid
+    protected List<Task> always;
+
+    @Valid
     @PluginProperty
     @Deprecated
     private List<Task> tasks;
@@ -185,7 +188,10 @@ public class Pause extends Task implements FlowableTask<Pause.Output> {
         return Stream
             .concat(
                 this.getTasks() != null ? this.getTasks().stream() : Stream.empty(),
-                this.getErrors() != null ? this.getErrors().stream() : Stream.empty()
+                Stream.concat(
+                    this.getErrors() != null ? this.getErrors().stream() : Stream.empty(),
+                    this.getAlways() != null ? this.getAlways().stream() : Stream.empty()
+                )
             )
             .toList();
     }
@@ -205,6 +211,7 @@ public class Pause extends Task implements FlowableTask<Pause.Output> {
             execution,
             this.childTasks(runContext, parentTaskRun),
             FlowableUtils.resolveTasks(this.errors, parentTaskRun),
+            FlowableUtils.resolveTasks(this.always, parentTaskRun),
             parentTaskRun
         );
     }

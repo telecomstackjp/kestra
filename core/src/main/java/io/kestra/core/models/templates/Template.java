@@ -67,6 +67,9 @@ public class Template implements DeletedInterface, TenantInterface, HasUID {
     @Valid
     private List<Task> errors;
 
+    @Valid
+    private List<Task> always;
+
     @NotNull
     @Builder.Default
     private final boolean deleted = false;
@@ -138,6 +141,7 @@ public class Template implements DeletedInterface, TenantInterface, HasUID {
             this.description,
             this.tasks,
             this.errors,
+            this.always,
             true
         );
     }
