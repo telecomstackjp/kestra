@@ -37,6 +37,7 @@
                 label: props.flow.id ?? t("create_flow"),
                 to: {name: route.name, params},
             },
+        // TODO: Add breadcrumb for second segment
         ];
     });
 </script>

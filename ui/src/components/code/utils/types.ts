@@ -56,7 +56,11 @@ export type CollapseItem = {
     title: string;
 };
 
+export type Segment = CollapseItem & {
+    section: string;
+};
+
 export type Sections = {
     main: CollapseItem[];
-    segments: CollapseItem[];
+    segments: Segment[];
 };

@@ -29,7 +29,7 @@
 <script setup lang="ts">
     import {ref, shallowRef} from "vue";
 
-    import {Field, Fields, Sections} from "../utils/types";
+    import {Field, Fields, Segment, Sections} from "../utils/types";
 
     import Collapse from "../components/collapse/Collapse.vue";
     import InputText from "../components/inputs/InputText.vue";
@@ -122,16 +122,20 @@
         },
     });
 
-    const getSectionTitle = (section: string, array = []) => {
-        const title = t(`no_code.sections.${section}`);
-        return {title: `${title} (${array.length})`};
+    const getSectionTitle = (
+        label: string,
+        section: string,
+        array = [],
+    ): Segment => {
+        const title = t(`no_code.sections.${label}`);
+        return {title: `${title} (${array.length})`, section};
     };
     const sections = ref<Sections>({
         main: [{title: t("no_code.sections.general")}],
         segments: [
-            getSectionTitle("tasks", props.flow.tasks),
-            getSectionTitle("triggers", props.flow.triggers),
-            getSectionTitle("error_handlers", props.flow.errors),
+            getSectionTitle("tasks", "tasks", props.flow.tasks),
+            getSectionTitle("triggers", "triggers", props.flow.triggers),
+            getSectionTitle("error_handlers", "errors", props.flow.errors),
         ],
     });
 </script>

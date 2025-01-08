@@ -8,7 +8,10 @@
             :class="{creation: props.creation}"
         >
             <template #icon>
-                <Creation v-if="creation" />
+                <Creation
+                    v-if="creation"
+                    :section="(item as Segment).section"
+                />
             </template>
             <slot name="content" />
         </el-collapse-item>
@@ -18,12 +21,15 @@
 <script setup lang="ts">
     import {PropType, ref} from "vue";
 
-    import {CollapseItem} from "../../utils/types";
+    import {CollapseItem, Segment} from "../../utils/types";
 
     import Creation from "./buttons/Creation.vue";
 
     const props = defineProps({
-        items: {type: Array as PropType<CollapseItem[]>, required: true},
+        items: {
+            type: Array as PropType<CollapseItem[] | Segment[]>,
+            required: true,
+        },
         creation: {type: Boolean, default: false},
     });
     const expanded = ref([]);
