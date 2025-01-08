@@ -872,7 +872,8 @@
       "not_auth": "Sie haben nicht die erforderlichen Berechtigungen, um dieses Widget anzuzeigen.",
       "see_all": "Alle anzeigen",
       "success_ratio_tooltip": "Erfolgsquote ist die Summe der SUCCESS, CANCELLED und WARNING Ausführungen, geteilt durch die Gesamtanzahl der Ausführungen in einem beendeten Zustand.",
-      "failure_ratio_tooltip": "Der Fehlerrate ist die Summe der FAILED, KILLED und RETRIED Ausführungen, geteilt durch die Gesamtanzahl der Ausführungen in einem beendeten Zustand."
+      "failure_ratio_tooltip": "Der Fehlerrate ist die Summe der FAILED, KILLED und RETRIED Ausführungen, geteilt durch die Gesamtanzahl der Ausführungen in einem beendeten Zustand.",
+      "preview": "Dashboard-Vorschau"
     },
     "delete_log": "Sind Sie sicher, dass Sie das Log löschen möchten?",
     "docs": "Dokumentation",
@@ -1037,6 +1038,9 @@
       "label": "Filter auswählen"
     },
     "custom value": "Benutzerdefinierter Wert",
-    "execution restarted": "Diese Ausführung wurde {nbRestart} Mal neu gestartet."
+    "execution restarted": "Diese Ausführung wurde {nbRestart} Mal neu gestartet.",
+    "chart": "Diagramm",
+    "source only": "Nur Quelle",
+    "chart preview": "Diagrammvorschau"
   }
 }

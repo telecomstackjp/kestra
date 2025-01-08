@@ -872,7 +872,8 @@
       "not_auth": "Nie masz niezbędnych uprawnień, aby wyświetlić ten widget.",
       "see_all": "Zobacz wszystkie",
       "success_ratio_tooltip": "Wskaźnik Sukcesu to suma wykonań w stanach SUCCESS, CANCELLED i WARNING podzielona przez całkowitą liczbę wykonań w stanie zakończonym.",
-      "failure_ratio_tooltip": "Stosunek niepowodzeń to suma wykonań w stanach FAILED, KILLED i RETRIED podzielona przez całkowitą liczbę wykonań w stanie zakończonym."
+      "failure_ratio_tooltip": "Stosunek niepowodzeń to suma wykonań w stanach FAILED, KILLED i RETRIED podzielona przez całkowitą liczbę wykonań w stanie zakończonym.",
+      "preview": "Podgląd dashboardu"
     },
     "delete_log": "Czy na pewno chcesz usunąć log?",
     "docs": "Dokumentacja",
@@ -1037,6 +1038,9 @@
       "label": "Wybierz filtry"
     },
     "custom value": "Wartość niestandardowa",
-    "execution restarted": "Ta wykonanie zostało ponownie uruchomione {nbRestart} raz(y)."
+    "execution restarted": "Ta wykonanie zostało ponownie uruchomione {nbRestart} raz(y).",
+    "chart": "Wykres",
+    "source only": "Tylko źródło",
+    "chart preview": "Podgląd wykresu"
   }
 }

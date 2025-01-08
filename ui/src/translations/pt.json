@@ -872,7 +872,8 @@
       "not_auth": "Você não tem as permissões necessárias para visualizar este widget.",
       "see_all": "Ver todos",
       "success_ratio_tooltip": "A Taxa de Sucesso é a soma das execuções em estados SUCCESS, CANCELLED e WARNING dividida pelo número total de execuções em um estado terminado.",
-      "failure_ratio_tooltip": "A proporção de falhas é a soma das execuções FAILED, KILLED e RETRIED dividida pelo número total de execuções em um estado terminado."
+      "failure_ratio_tooltip": "A proporção de falhas é a soma das execuções FAILED, KILLED e RETRIED dividida pelo número total de execuções em um estado terminado.",
+      "preview": "Pré-visualização do Dashboard"
     },
     "delete_log": "Tem certeza de que deseja excluir o log?",
     "docs": "Documentos",
@@ -1037,6 +1038,9 @@
       "label": "Escolher filtros"
     },
     "custom value": "Valor personalizado",
-    "execution restarted": "Esta execução foi reiniciada {nbRestart} vez(es)."
+    "execution restarted": "Esta execução foi reiniciada {nbRestart} vez(es).",
+    "chart": "Gráfico",
+    "source only": "Somente fonte",
+    "chart preview": "Visualização do gráfico"
   }
 }
