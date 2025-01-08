@@ -1041,6 +1041,8 @@
     "execution restarted": "Ta wykonanie zostało ponownie uruchomione {nbRestart} raz(y).",
     "chart": "Wykres",
     "source only": "Tylko źródło",
-    "chart preview": "Podgląd wykresu"
+    "chart preview": "Podgląd wykresu",
+    "execution replayed": "To wykonanie zostało odtworzone.",
+    "execution replay": "To wykonanie jest powtórką <code>{originalId}</code>."
   }
 }

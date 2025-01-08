@@ -1041,6 +1041,8 @@
     "execution restarted": "この実行は{nbRestart}回再開されました。",
     "chart": "チャート",
     "source only": "ソースのみ",
-    "chart preview": "チャートプレビュー"
+    "chart preview": "チャートプレビュー",
+    "execution replayed": "この実行は再実行されました。",
+    "execution replay": "この実行は<code>{originalId}</code>のリプレイです。"
   }
 }

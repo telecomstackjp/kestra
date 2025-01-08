@@ -1041,6 +1041,8 @@
     "execution restarted": "इस execution को {nbRestart} बार पुनः प्रारंभ किया गया है।",
     "chart": "चार्ट",
     "source only": "केवल स्रोत",
-    "chart preview": "चार्ट पूर्वावलोकन"
+    "chart preview": "चार्ट पूर्वावलोकन",
+    "execution replayed": "इस execution को पुनः चलाया गया है।",
+    "execution replay": "यह execution <code>{originalId}</code> का पुनरावर्तन है।"
   }
 }

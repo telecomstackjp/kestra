@@ -1041,6 +1041,8 @@
     "execution restarted": "Это выполнение было перезапущено {nbRestart} раз(а).",
     "chart": "Диаграмма",
     "source only": "Только источник",
-    "chart preview": "Предварительный просмотр диаграммы"
+    "chart preview": "Предварительный просмотр диаграммы",
+    "execution replayed": "Это выполнение было воспроизведено.",
+    "execution replay": "Это выполнение является повтором <code>{originalId}</code>."
   }
 }

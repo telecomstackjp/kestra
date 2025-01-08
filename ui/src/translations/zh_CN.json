@@ -1041,6 +1041,8 @@
     "execution restarted": "此执行已重新启动{nbRestart}次。",
     "chart": "图表",
     "source only": "仅限来源",
-    "chart preview": "图表预览"
+    "chart preview": "图表预览",
+    "execution replayed": "此执行已被重放。",
+    "execution replay": "此执行是 <code>{originalId}</code> 的重放。"
   }
 }

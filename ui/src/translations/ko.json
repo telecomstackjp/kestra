@@ -1041,6 +1041,8 @@
     "execution restarted": "이 실행은 {nbRestart}번 다시 시작되었습니다.",
     "chart": "차트",
     "source only": "소스 전용",
-    "chart preview": "차트 미리보기"
+    "chart preview": "차트 미리보기",
+    "execution replayed": "이 실행은 재생되었습니다.",
+    "execution replay": "이 실행은 <code>{originalId}</code>의 재실행입니다."
   }
 }

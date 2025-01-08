@@ -1041,6 +1041,8 @@
     "execution restarted": "Diese Ausführung wurde {nbRestart} Mal neu gestartet.",
     "chart": "Diagramm",
     "source only": "Nur Quelle",
-    "chart preview": "Diagrammvorschau"
+    "chart preview": "Diagrammvorschau",
+    "execution replayed": "Diese Ausführung wurde erneut abgespielt.",
+    "execution replay": "Diese Ausführung ist eine Wiederholung von <code>{originalId}</code>."
   }
 }

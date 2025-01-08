@@ -1041,6 +1041,8 @@
     "execution restarted": "Esta ejecución se ha reiniciado {nbRestart} vez/veces.",
     "chart": "Gráfico",
     "source only": "Solo fuente",
-    "chart preview": "Vista previa del gráfico"
+    "chart preview": "Vista previa del gráfico",
+    "execution replayed": "Esta ejecución ha sido reproducida.",
+    "execution replay": "Esta ejecución es una repetición de <code>{originalId}</code>."
   }
 }
