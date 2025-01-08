@@ -39,6 +39,26 @@
             </el-alert>
         </div>
 
+        <div v-if="isReplayed()">
+            <el-alert type="info" :closable="false" class="mb-4 main-info">
+                <template #title>
+                    <div>
+                        {{ $t('execution replayed') }}
+                    </div>
+                </template>
+            </el-alert>
+        </div>
+
+        <div v-if="isReplay()">
+            <el-alert type="info" :closable="false" class="mb-4 main-info">
+                <template #title>
+                    <div>
+                        <span v-html="$t('execution replay', {originalId: execution?.originalId})" />
+                    </div>
+                </template>
+            </el-alert>
+        </div>
+
         <el-row class="mb-3">
             <el-col :span="12" class="crud-align">
                 <crud type="CREATE" permission="EXECUTION" :detail="{executionId: execution.id}" />
@@ -213,6 +233,12 @@
             },
             isRestarted() {
                 return this.execution.labels?.find( it => it.key === "system.restarted" && (it.value === "true" || it.value === true)) !== undefined;
+            },
+            isReplayed() {
+                return this.execution.labels?.find( it => it.key === "system.replayed" && (it.value === "true" || it.value === true)) !== undefined;
+            },
+            isReplay() {
+                return this.execution.labels?.find( it => it.key === "system.replay" && (it.value === "true" || it.value === true)) !== undefined;
             },
             load() {
                 this.$store
