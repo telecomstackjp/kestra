@@ -91,6 +91,12 @@
                 ? moment().toISOString(true)
                 : route.query.endDate || moment().toISOString(true),
         };
+        if (route.query.namespace) {
+            params.namespace = route.query.namespace;
+        }
+        if (route.query.labels) {
+            params.labels = Object.fromEntries(route.query.labels.map(l => l.split(":")));
+        }
 
         if (props.chart.chartOptions?.pagination?.enabled) {
             params.pageNumber = currentPage.value;

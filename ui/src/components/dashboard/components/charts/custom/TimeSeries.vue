@@ -218,6 +218,7 @@
                         fill: false,
                         pointRadius: 0,
                         borderWidth: 0.75,
+                        label: label,
                         borderColor: getConsistentHEXColor(label),
                     },
                     ...yDatasetData,
@@ -245,6 +246,12 @@
                 ? moment().toISOString(true)
                 : route.query.endDate || moment().toISOString(true),
         };
+        if (route.query.namespace) {
+            params.namespace = route.query.namespace;
+        }
+        if (route.query.labels) {
+            params.labels = Object.fromEntries(route.query.labels.map(l => l.split(":")));
+        }
 
         generated.value = await store.dispatch("dashboard/generate", params);
     };
