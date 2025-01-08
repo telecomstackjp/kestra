@@ -5,23 +5,32 @@
             :key="index"
             :name="item.title"
             :title="item.title"
+            :class="{creation: props.creation}"
         >
+            <template #icon>
+                <Creation v-if="creation" />
+            </template>
             <slot name="content" />
         </el-collapse-item>
     </el-collapse>
 </template>
 
 <script setup lang="ts">
-    import {ref} from "vue";
+    import {PropType, ref} from "vue";
 
-    import {CollapseItem} from "../utils/types";
+    import {CollapseItem} from "../../utils/types";
 
-    const props = defineProps<{ items: CollapseItem[] }>();
+    import Creation from "./buttons/Creation.vue";
+
+    const props = defineProps({
+        items: {type: Array as PropType<CollapseItem[]>, required: true},
+        creation: {type: Boolean, default: false},
+    });
     const expanded = ref([]);
 </script>
 
 <style scoped lang="scss">
-@import "../styles/code.scss";
+@import "../../styles/code.scss";
 
 .wrapper {
     & * {
@@ -38,8 +47,12 @@
             padding: 0.5rem 0;
         }
 
-        .el-collapse-item__header.is-active {
-            color: $code-primary;
+        .el-collapse-item__header {
+            justify-content: space-between;
+
+            &.is-active {
+                color: $code-primary;
+            }
         }
     }
 }

@@ -14,10 +14,11 @@ export type Field = {
     label: string;
     required?: boolean;
     disabled?: boolean;
+};
 
-    // Concurrency related
-    root?: string;
-    schema?: object;
+type ConcurrencyField = Field & {
+    root: string;
+    schema: object;
 };
 
 type Main = {
@@ -32,7 +33,7 @@ type General = {
     inputs: Field;
     outputs: Field;
     variables: Field;
-    concurrency: Field;
+    concurrency: ConcurrencyField;
     pluginDefaults: Field;
     disabled: Field;
 };
@@ -51,4 +52,9 @@ export type Breadcrumb = {
 
 export type CollapseItem = {
     title: string;
+};
+
+export type Sections = {
+    main: CollapseItem[];
+    segments: CollapseItem[];
 };

@@ -940,10 +940,10 @@
     "behavior": "Behavior",
     "concurrency": "Concurrency",
     "no-executions-view": {
-        "title": "Start automating with ",
-        "sub_title": "Click on the Execute button to start your first workflow execution.",
-        "guidance_desc": "Need guidance to execute your flow?",
-        "guidance_sub_desc": "Follow the documentation for all the info you need."
+      "title": "Start automating with ",
+      "sub_title": "Click on the Execute button to start your first workflow execution.",
+      "guidance_desc": "Need guidance to execute your flow?",
+      "guidance_sub_desc": "Follow the documentation for all the info you need."
     },
     "execution_guide": {
       "get_started": {
@@ -1056,7 +1056,10 @@
     "no_code": {
       "sections": {
         "main": "Main properties",
-        "general": "General properties"
+        "general": "General properties",
+        "tasks": "Tasks",
+        "triggers": "Triggers",
+        "error_handlers": "Error Handlers"
       },
       "fields": {
         "main": {

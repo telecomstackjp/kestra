@@ -4,7 +4,7 @@
 
         <hr class="m-0">
 
-        <Editor :creation="!props.flow.id" :metadata :schemas />
+        <Editor :creation="!props.flow.id" :flow :metadata :schemas />
     </div>
 </template>
 
