@@ -1,9 +1,6 @@
 package io.kestra.core.models.executions;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.kestra.core.models.DeletedInterface;
 import io.kestra.core.models.TenantInterface;
 import io.kestra.core.models.flows.Flow;
@@ -12,7 +9,6 @@ import io.kestra.core.models.triggers.TriggerContext;
 import io.micronaut.core.annotation.Nullable;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Builder;
-import lombok.SneakyThrows;
 import lombok.Value;
 import org.slf4j.event.Level;
 
@@ -28,46 +24,36 @@ import java.util.stream.Stream;
 public class LogEntry implements DeletedInterface, TenantInterface {
     @Hidden
     @Pattern(regexp = "^[a-z0-9][a-z0-9_-]*")
-    @JsonView(MessageView.class)
     String tenantId;
 
     @NotNull
-    @JsonView(MessageView.class)
     String namespace;
 
     @NotNull
-    @JsonView(MessageView.class)
     String flowId;
 
     @Nullable
-    @JsonView(MessageView.class)
     String taskId;
 
     @Nullable
-    @JsonView(MessageView.class)
     String executionId;
 
     @Nullable
-    @JsonView(MessageView.class)
     String taskRunId;
 
     @Nullable
     @JsonInclude
-    @JsonView(MessageView.class)
     Integer attemptNumber;
 
     @Nullable
-    @JsonView(MessageView.class)
     String triggerId;
 
     Instant timestamp;
 
     Level level;
 
-    @JsonView(MessageView.class)
     String thread;
 
-    @JsonView(MessageView.class)
     String message;
 
     @NotNull
@@ -142,16 +128,12 @@ public class LogEntry implements DeletedInterface, TenantInterface {
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    @SneakyThrows
-    public String toJson(){
-        JsonMapper mapper = JsonMapper.builder()
-            .configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false)
-            .serializationInclusion(JsonInclude.Include.ALWAYS)
-            .build();
-        return mapper.writerWithView(MessageView.class)
-            .writeValueAsString(this);
+    public Map<String, String> toLogMap() {
+        Map<String, String> map = this.toMap();
+        map.put("attemptNumber", this.attemptNumber != null ? String.valueOf(this.attemptNumber) : null);
+        map.put("thread", this.thread);
+        map.put("message", this.message);
+        return map;
     }
-
-    public static class MessageView{}
 
 }

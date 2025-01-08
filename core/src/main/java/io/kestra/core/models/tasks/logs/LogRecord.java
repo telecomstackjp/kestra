@@ -1,8 +1,8 @@
 package io.kestra.core.models.tasks.logs;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.opentelemetry.api.common.Attributes;
+import io.opentelemetry.api.common.KeyValue;
 import io.opentelemetry.api.common.Value;
 import io.opentelemetry.api.logs.Severity;
 import io.opentelemetry.api.trace.SpanContext;
@@ -10,6 +10,7 @@ import io.opentelemetry.sdk.common.InstrumentationScopeInfo;
 import io.opentelemetry.sdk.logs.data.Body;
 import io.opentelemetry.sdk.logs.data.LogRecordData;
 import io.opentelemetry.sdk.resources.Resource;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Getter
-@JsonSerialize(using = LogRecordSerializer.class)
 public class LogRecord implements LogRecordData {
 
     Resource resource;
@@ -29,9 +29,9 @@ public class LogRecord implements LogRecordData {
     SpanContext spanContext;
     Severity severity;
     String severityText;
-    Value<String> bodyValue;
     Attributes attributes;
     int totalAttributeCount;
+    Value<List<KeyValue>> bodyValue;
 
     @JsonIgnore
     public Body getBody(){
