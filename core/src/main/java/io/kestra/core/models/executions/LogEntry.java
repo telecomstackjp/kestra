@@ -128,9 +128,9 @@ public class LogEntry implements DeletedInterface, TenantInterface {
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public Map<String, String> toLogMap() {
-        Map<String, String> map = this.toMap();
-        map.put("attemptNumber", this.attemptNumber != null ? String.valueOf(this.attemptNumber) : null);
+    public Map<String, Object> toLogMap() {
+        Map<String, Object> map = new HashMap<>(this.toMap());
+        map.put("attemptNumber", this.attemptNumber);
         map.put("thread", this.thread);
         map.put("message", this.message);
         return map;

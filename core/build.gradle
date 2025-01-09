@@ -54,9 +54,6 @@ dependencies {
         exclude group: 'com.fasterxml.jackson.core'
     }
 
-    //Open telemetry
-    api 'io.opentelemetry:opentelemetry-sdk-logs:1.45.0'
-
     // test
     testAnnotationProcessor project(':processor')
     testImplementation project(':tests')
