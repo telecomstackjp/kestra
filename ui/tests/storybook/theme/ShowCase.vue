@@ -216,8 +216,7 @@
     import Message from "vue-material-design-icons/Message.vue"
     import Star from "vue-material-design-icons/Star.vue"
     import Delete from "vue-material-design-icons/Delete.vue"
-    // @ts-expect-error Tabs is not yet TS
-    import Tabs from "../src/components/Tabs.vue"
+    import Tabs from "../../../src/components/Tabs.vue"
 
     const app = getCurrentInstance()?.appContext.config.globalProperties as any
 
