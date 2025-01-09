@@ -138,7 +138,7 @@
         top: 0;
         position: sticky;
         z-index: 1000;
-        padding: var(--spacer) calc(2 * var(--spacer));
+        padding: 1rem 2rem;
         border-bottom: 1px solid var(--ks-border-primary);
         background: var(--ks-background-card);
 
@@ -156,7 +156,7 @@
         }
 
         .star-button{
-            margin-left: var(--spacer);
+            margin-left: 1rem;
             border: none;
         }
 
@@ -183,7 +183,7 @@
                 button, :deep(button), a, :deep(a) {
                     border: none;
                     font-size: var(--font-size-lg);
-                    padding: calc(var(--spacer) / 4);
+                    padding: .25rem;
                 }
             }
 

@@ -136,6 +136,11 @@ public class State {
     }
 
     @JsonIgnore
+    public boolean isTerminatedNoFail() {
+        return this.current.isTerminatedNoFail();
+    }
+
+    @JsonIgnore
     public boolean isRunning() {
         return this.current.isRunning();
     }
@@ -214,6 +219,10 @@ public class State {
 
         public boolean isTerminated() {
             return this == Type.FAILED || this == Type.WARNING || this == Type.SUCCESS || this == Type.KILLED || this == Type.CANCELLED || this == Type.RETRIED || this == Type.SKIPPED;
+        }
+
+        public boolean isTerminatedNoFail() {
+            return this == Type.WARNING || this == Type.SUCCESS || this == Type.RETRIED || this == Type.SKIPPED;
         }
 
         public boolean isCreated() {

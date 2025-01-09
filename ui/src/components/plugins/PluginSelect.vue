@@ -78,7 +78,7 @@
         display: inline-block;
         width: 20px;
         height: 20px;
-        margin-right: var(--spacer);
+        margin-right: 1rem;
     }
 
     :deep(.el-input__prefix-inner) {

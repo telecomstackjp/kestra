@@ -692,7 +692,7 @@
         }
 
         :deep(> .vue-recycle-scroller__item-wrapper > .vue-recycle-scroller__item-view > div) {
-            padding-bottom: var(--spacer);
+            padding-bottom: 1rem;
         }
 
         :deep(.line) {

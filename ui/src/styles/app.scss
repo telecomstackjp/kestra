@@ -34,13 +34,13 @@ html {
     }
 
     &.menu-collapsed {
-        #{--offset-from-menu}: var(--spacer);
+        #{--offset-from-menu}: 1rem;
     }
 
     &.menu-not-collapsed {
-        #{--offset-from-menu}: var(--spacer);
+        #{--offset-from-menu}: 1rem;
         @include mixin.res(lg) {
-            #{--offset-from-menu}: calc(var(--spacer) * 4);
+            #{--offset-from-menu}: 4rem;
         }
     }
 }

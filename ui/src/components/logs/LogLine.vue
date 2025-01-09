@@ -166,7 +166,7 @@
                 let markdown = await Markdown.render(this.message, {onlyLink: true});
 
                 // Avoid rendering non-existent properties in the template by VRuntimeTemplate
-                markdown = markdown.replace(/{{/g, "{{").replace(/}}/g, "}}");
+                markdown = markdown.replace(/{{/g, "&lcub;&lcub;").replace(/}}/g, "&rcub;&rcub;");
 
                 return markdown;
             },
@@ -200,7 +200,7 @@ div.line {
     }
 
     .log-level {
-        padding: calc(var(--spacer) / 4);
+        padding: .25rem;
     }
 
     .log-content {
