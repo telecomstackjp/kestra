@@ -76,7 +76,7 @@ public abstract class AbstractRunnerTest {
     protected ForEachItemCaseTest forEachItemCaseTest;
 
     @Inject
-    private WaitForCaseTest waitForTestCaseTest;
+    protected WaitForCaseTest waitForTestCaseTest;
 
     @Inject
     private FlowConcurrencyCaseTest flowConcurrencyCaseTest;
@@ -171,6 +171,12 @@ public abstract class AbstractRunnerTest {
     @LoadFlows({"flows/valids/failed-first.yaml"})
     void restartMultiple() throws Exception {
         restartCaseTest.restartMultiple();
+    }
+
+    @Test
+    @LoadFlows({"flows/valids/restart-parent.yaml", "flows/valids/restart-child.yaml"})
+    void restartSubflow() throws Exception {
+        restartCaseTest.restartSubflow();
     }
 
     @RetryingTest(5)

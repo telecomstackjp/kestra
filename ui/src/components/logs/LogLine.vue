@@ -143,7 +143,7 @@
             },
             iconColor() {
                 const logLevel = this.log.level?.toLowerCase();
-                return `var(--ks-content-${logLevel}) !important`; // Use CSS variable for icon color
+                return `var(--ks-log-content-${logLevel}) !important`; // Use CSS variable for icon color
             },
             message() {
                 let logMessage = !this.log.message
@@ -166,7 +166,7 @@
                 let markdown = await Markdown.render(this.message, {onlyLink: true});
 
                 // Avoid rendering non-existent properties in the template by VRuntimeTemplate
-                markdown = markdown.replace(/{{/g, "{{").replace(/}}/g, "}}");
+                markdown = markdown.replace(/{{/g, "&lcub;&lcub;").replace(/}}/g, "&rcub;&rcub;");
 
                 return markdown;
             },

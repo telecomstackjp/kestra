@@ -193,3 +193,7 @@ html.full-screen {
     #{--font-size-base}: global-var.$font-size-base;
     #{--font-size-lg}: global-var.$font-size-lg;
 }
+
+body{
+    background-color: var(--ks-background-body);
+}

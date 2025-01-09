@@ -70,7 +70,8 @@ public class DocumentationGenerator {
         result.addAll(this.generate(registeredPlugin, registeredPlugin.getTasks(), Task.class, "tasks"));
         result.addAll(this.generate(registeredPlugin, registeredPlugin.getTriggers(), AbstractTrigger.class, "triggers"));
         result.addAll(this.generate(registeredPlugin, registeredPlugin.getConditions(), Condition.class, "conditions"));
-        result.addAll(this.generate(registeredPlugin, registeredPlugin.getTaskRunners(), TaskRunner.class, "task-runners"));
+        //noinspection unchecked
+        result.addAll(this.generate(registeredPlugin, registeredPlugin.getTaskRunners(), (Class) TaskRunner.class, "task-runners"));
         result.addAll(this.generate(registeredPlugin, registeredPlugin.getLogShippers(), LogShipper.class, "log-shipper"));
 
         result.addAll(guides(registeredPlugin));

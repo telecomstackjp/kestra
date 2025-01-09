@@ -3,6 +3,7 @@ package io.kestra.plugin.core.http;
 import com.devskiller.friendly_id.FriendlyId;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
+import io.kestra.core.http.client.HttpClientRequestException;
 import io.kestra.core.http.client.HttpClientResponseException;
 import io.kestra.core.http.client.configurations.*;
 import io.kestra.core.junit.annotations.KestraTest;
@@ -13,6 +14,7 @@ import io.kestra.core.storages.StorageInterface;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
 import io.micronaut.context.ApplicationContext;
+import io.micronaut.context.env.Environment;
 import io.micronaut.http.*;
 import io.micronaut.http.annotation.*;
 import io.micronaut.http.multipart.StreamingFileUpload;
@@ -187,28 +189,58 @@ class RequestTest {
 
     @Test
     void selfSigned() throws Exception {
-        final String url = "https://self-signed.badssl.com/";
+        try (
+            ApplicationContext applicationContext = ApplicationContext.run(Environment.TEST, "testssl");
+            EmbeddedServer server = applicationContext.getBean(EmbeddedServer.class).start();
 
-        Request task = Request.builder()
-            .id(RequestTest.class.getSimpleName())
-            .type(RequestTest.class.getName())
-            .uri(url)
-            .headers(Map.of("bla", "sdfsdf"))
-            .options(HttpConfiguration.builder()
-                .allowFailed(true)
-                .timeout(TimeoutConfiguration.builder().readIdleTimeout(Duration.ofSeconds(30)).build())
-                .ssl(SslOptions.builder().insecureTrustAllCertificates(true).build())
-                .build()
-            )
-            .build();
+        ) {
+            Request task = Request.builder()
+                .id(RequestTest.class.getSimpleName())
+                .type(RequestTest.class.getName())
+                .uri(server.getURL().toString() + "/hello")
+                .options(HttpConfiguration.builder()
+                    .timeout(TimeoutConfiguration.builder().readIdleTimeout(Duration.ofSeconds(30)).build())
+                    .ssl(SslOptions.builder().insecureTrustAllCertificates(true).build())
+                    .build()
+                )
+                .build();
 
-        RunContext runContext = TestsUtils.mockRunContext(this.runContextFactory, task, ImmutableMap.of());
+            RunContext runContext = TestsUtils.mockRunContext(this.runContextFactory, task, ImmutableMap.of());
 
-        Request.Output output = task.run(runContext);
+            Request.Output output = task.run(runContext);
 
-        assertThat(output.getUri(), is(URI.create(url)));
-        assertThat((String) output.getBody(), containsString("self-signed.<br>badssl.com"));
-        assertThat(output.getCode(), is(200));
+            assertThat(output.getBody(), is("{ \"hello\": \"world\" }"));
+            assertThat(output.getCode(), is(200));
+        }
+    }
+
+    @Test
+    void selfSignedFailed() {
+        try (
+            ApplicationContext applicationContext = ApplicationContext.run(Environment.TEST, "testssl");
+            EmbeddedServer server = applicationContext.getBean(EmbeddedServer.class).start();
+
+        ) {
+            Request task = Request.builder()
+                .id(RequestTest.class.getSimpleName())
+                .type(RequestTest.class.getName())
+                .uri(server.getURL().toString() + "/hello")
+                .options(HttpConfiguration.builder()
+                    .allowFailed(true)
+                    .timeout(TimeoutConfiguration.builder().readIdleTimeout(Duration.ofSeconds(30)).build())
+                    .build()
+                )
+                .build();
+
+            RunContext runContext = TestsUtils.mockRunContext(this.runContextFactory, task, ImmutableMap.of());
+
+            HttpClientRequestException exception = assertThrows(
+                HttpClientRequestException.class,
+                () -> task.run(runContext)
+            );
+
+            assertThat(exception.getMessage(), containsString("unable to find valid certification path"));
+        }
     }
 
     @Test

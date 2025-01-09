@@ -192,8 +192,6 @@
                             </el-table-column>
                         </template>
                     </select-table>
-
-                    <NoData v-else />
                 </template>
             </data-table>
         </div>
@@ -209,7 +207,6 @@
     import TrashCan from "vue-material-design-icons/TrashCan.vue";
     import FileDocumentRemoveOutline from "vue-material-design-icons/FileDocumentRemoveOutline.vue";
     import FileDocumentCheckOutline from "vue-material-design-icons/FileDocumentCheckOutline.vue";
-    import NoData from "../layout/NoData.vue";
 
     import KestraFilter from "../filter/KestraFilter.vue"
 </script>

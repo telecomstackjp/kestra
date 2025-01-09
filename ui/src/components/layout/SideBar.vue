@@ -195,6 +195,7 @@
         position: static;
         z-index: 1039;
         border-right: 1px solid var(--ks-border-primary);
+        background-color: var(--ks-background-left-menu);
 
         .logo {
             overflow: hidden;
@@ -219,27 +220,9 @@
                     transition: 0.2s all;
 
                     html.dark & {
-                        background: url(../../assets/logo-white.svg) 0 0 no-repeat;
-                        background-size: 179px 55px;
+                        background-image: url(../../assets/logo-white.svg);
                     }
                 }
-            }
-        }
-
-
-
-
-        span.version {
-            transition: 0.2s all;
-            white-space: nowrap;
-            font-size: var(--font-size-xs);
-            text-align: center;
-            display: block;
-            color: var(--bs-gray-600);
-            width: auto;
-
-            html.dark & {
-                color: var(--bs-gray-800);
             }
         }
 
@@ -272,10 +255,7 @@
             margin-bottom: 0.3rem;
             border-radius: var(--bs-border-radius-lg);
             transition: padding 0.2s ease;
-
-            html.dark & {
-                color: var(--bs-white);
-            }
+            color: var(--ks-content-primary);
 
             &_disabled {
                 pointer-events: auto;
@@ -301,23 +281,6 @@
             }
         }
 
-        .vsm--toggle-btn {
-            padding-top: 16px;
-            padding-bottom: 16px;
-            font-size: 20px;
-            background: transparent;
-            color: var(--ks-content-secondary);
-            border-top: 1px solid var(--ks-border-primary);
-
-            .el-button {
-                padding: 8px;
-                margin-right: 15px;
-                transition: margin-right 0.2s ease;
-                html.dark & {
-                    background: var(--bs-gray-500);
-                }
-            }
-        }
 
 
         a.vsm--link_active[href="#"] {
@@ -325,7 +288,7 @@
         }
 
         .vsm--dropdown {
-            background-color: var(--bs-gray-100);
+            background-color: var(--ks-background-left-menu);
             border-radius: 4px;
             margin-bottom: .5rem;
 
@@ -333,15 +296,6 @@
                 top: 3px;
             }
         }
-
-        html.dark & {
-            background-color: var(--bs-gray-100);
-
-            .vsm--dropdown {
-                background-color: var(--bs-gray-100);
-            }
-        }
-
 
         .vsm--mobile-bg {
             border-radius: 0 var(--bs-border-radius) var(--bs-border-radius) 0;
@@ -353,7 +307,7 @@
                     left: 8px;
 
                     span.img {
-                        background-size: 207px 55px !important;
+                        background-size: 207px 55px;
                     }
                 }
             }
@@ -368,12 +322,6 @@
 
             .el-button {
                 margin-right: 0;
-            }
-
-            span.version {
-                opacity: 0;
-                width: 0;
-                overflow: hidden;
             }
         }
 

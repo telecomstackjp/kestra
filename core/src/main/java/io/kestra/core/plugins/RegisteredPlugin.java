@@ -40,7 +40,7 @@ public class RegisteredPlugin {
     private final List<Class<? extends Condition>> conditions;
     private final List<Class<? extends StorageInterface>> storages;
     private final List<Class<? extends SecretPluginInterface>> secrets;
-    private final List<Class<? extends TaskRunner>> taskRunners;
+    private final List<Class<? extends TaskRunner<?>>> taskRunners;
     private final List<Class<? extends AppPluginInterface>> apps;
     private final List<Class<? extends AppBlockInterface>> appBlocks;
     private final List<Class<? extends Chart<?>>> charts;

@@ -40,6 +40,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.function.Consumer;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLHandshakeException;
 
 @Slf4j
 public class HttpClient implements Closeable {
@@ -252,6 +253,10 @@ public class HttpClient implements Closeable {
         } catch (SocketException e) {
             throw new HttpClientRequestException(e.getMessage(), request, e);
         } catch (IOException e) {
+            if (e instanceof SSLHandshakeException) {
+                throw new HttpClientRequestException(e.getMessage(), request, e);
+            }
+
             if (e.getCause() instanceof HttpClientException httpClientException) {
                 throw httpClientException;
             }
