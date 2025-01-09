@@ -14,9 +14,7 @@
     import {useI18n} from "vue-i18n";
     const {t} = useI18n({useScope: "global"});
 
-    const props = defineProps({section: {type: String, required: true}});
-
     const handleClick = () => {
-        router.replace({query: {...route.query, section: props.section}});
+        router.replace({query: {...route.query, section: "sada"}});
     };
 </script>

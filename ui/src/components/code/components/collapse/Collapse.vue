@@ -1,5 +1,5 @@
 <template>
-    <el-collapse v-model="expanded" class="mt-3 wrapper">
+    <el-collapse v-model="expanded" class="mt-3 collapse">
         <el-collapse-item
             v-for="(item, index) in props.items"
             :key="index"
@@ -8,10 +8,7 @@
             :class="{creation: props.creation}"
         >
             <template #icon>
-                <Creation
-                    v-if="creation"
-                    :section="(item as Segment).section"
-                />
+                <Creation v-if="creation" />
             </template>
             <slot name="content" />
         </el-collapse-item>
@@ -21,13 +18,13 @@
 <script setup lang="ts">
     import {PropType, ref} from "vue";
 
-    import {CollapseItem, Segment} from "../../utils/types";
+    import {CollapseItem} from "../../utils/types";
 
     import Creation from "./buttons/Creation.vue";
 
     const props = defineProps({
         items: {
-            type: Array as PropType<CollapseItem[] | Segment[]>,
+            type: Array as PropType<CollapseItem[]>,
             required: true,
         },
         creation: {type: Boolean, default: false},
@@ -38,7 +35,7 @@
 <style scoped lang="scss">
 @import "../../styles/code.scss";
 
-.wrapper {
+.collapse {
     & * {
         font-size: $code-font-sm;
     }
