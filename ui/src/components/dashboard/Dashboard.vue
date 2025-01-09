@@ -16,7 +16,7 @@
             :prefix="custom.shown ? 'custom_dashboard' : 'dashboard'"
             :include="
                 custom.shown
-                    ? ['relative_date', 'absolute_date']
+                    ? ['relative_date', 'absolute_date', 'namespace', 'labels']
                     : [
                         'namespace',
                         'state',
@@ -44,7 +44,7 @@
         <el-row class="custom">
             <el-col
                 v-for="(chart, index) in custom.dashboard.charts"
-                :key="index"
+                :key="index + JSON.stringify(route.query)"
                 :xs="24"
                 :sm="12"
             >

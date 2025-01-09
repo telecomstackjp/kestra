@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
+import io.kestra.core.models.dashboards.GlobalFilter;
+import io.kestra.core.models.dashboards.filters.*;
 import io.kestra.core.repositories.ExecutionRepositoryInterface;
 import io.kestra.core.repositories.QueryBuilderInterface;
 import io.kestra.core.validations.ExecutionsDataFilterValidation;
@@ -11,6 +13,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuperBuilder(toBuilder = true)
 @Getter
@@ -23,6 +28,30 @@ public class Executions<C extends ColumnDescriptor<Executions.Fields>> extends D
     @Override
     public Class<? extends QueryBuilderInterface<Executions.Fields>> repositoryClass() {
         return ExecutionRepositoryInterface.class;
+    }
+
+    @Override
+    public void setGlobalFilter(GlobalFilter globalFilter) {
+        List<AbstractFilter<Fields>> where = this.getWhere() != null ? new ArrayList<>(this.getWhere()) : new ArrayList<>();
+
+        if (globalFilter.getNamespace() != null) {
+            where.removeIf(f -> f.getField().equals(Fields.NAMESPACE));
+            where.add(EqualTo.<Executions.Fields>builder().field(Fields.NAMESPACE).value(globalFilter.getNamespace()).build());
+        }
+        if (globalFilter.getLabels() != null) {
+            where.removeIf(f -> f.getField().equals(Fields.LABELS));
+            where.add(Contains.<Executions.Fields>builder().field(Fields.LABELS).value(globalFilter.getLabels()).build());
+        }
+        if (globalFilter.getStartDate() != null) {
+            where.removeIf(f -> f.getField().equals(Fields.START_DATE));
+            where.add(GreaterThanOrEqualTo.<Executions.Fields>builder().field(Fields.START_DATE).value(globalFilter.getStartDate().toOffsetDateTime()).build());
+        }
+        if (globalFilter.getEndDate() != null) {
+            where.removeIf(f -> f.getField().equals(Fields.END_DATE));
+            where.add(LessThanOrEqualTo.<Executions.Fields>builder().field(Fields.END_DATE).value(globalFilter.getEndDate().toOffsetDateTime()).build());
+        }
+
+        this.setWhere(where);
     }
 
     public enum Fields {

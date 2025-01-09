@@ -22,6 +22,9 @@ public class FlowForExecution extends AbstractFlow {
     List<TaskForExecution> tasks;
 
     @Valid
+    List<TaskForExecution> errors;
+
+    @Valid
     List<AbstractTriggerForExecution> triggers;
 
     public static FlowForExecution of(Flow flow) {
@@ -32,6 +35,7 @@ public class FlowForExecution extends AbstractFlow {
             .revision(flow.getRevision())
             .inputs(flow.getInputs())
             .tasks(flow.getTasks().stream().map(TaskForExecution::of).toList())
+            .errors(ListUtils.emptyOnNull(flow.getErrors()).stream().map(TaskForExecution::of).toList())
             .triggers(ListUtils.emptyOnNull(flow.getTriggers()).stream().map(AbstractTriggerForExecution::of).toList())
             .disabled(flow.isDisabled())
             .deleted(flow.isDeleted())

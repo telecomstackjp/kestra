@@ -417,6 +417,7 @@
         const mapped = {};
 
         getTaskIcons(store.state.execution?.flow?.tasks || [], mapped);
+        getTaskIcons(store.state.execution?.flow?.errors || [], mapped);
 
         return mapped;
     });

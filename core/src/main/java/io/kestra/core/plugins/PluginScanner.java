@@ -101,7 +101,7 @@ public class PluginScanner {
         List<Class<? extends Condition>> conditions = new ArrayList<>();
         List<Class<? extends StorageInterface>> storages = new ArrayList<>();
         List<Class<? extends SecretPluginInterface>> secrets = new ArrayList<>();
-        List<Class<? extends TaskRunner>> taskRunners = new ArrayList<>();
+        List<Class<? extends TaskRunner<?>>> taskRunners = new ArrayList<>();
         List<Class<? extends AppPluginInterface>> apps = new ArrayList<>();
         List<Class<? extends AppBlockInterface>> appBlocks = new ArrayList<>();
         List<Class<? extends Chart<?>>> charts = new ArrayList<>();
@@ -142,9 +142,10 @@ public class PluginScanner {
                         log.debug("Loading SecretPlugin plugin: '{}'", plugin.getClass());
                         secrets.add(storage.getClass());
                     }
-                    case TaskRunner runner -> {
+                    case TaskRunner<?> runner -> {
                         log.debug("Loading TaskRunner plugin: '{}'", plugin.getClass());
-                        taskRunners.add(runner.getClass());
+                        //noinspection unchecked
+                        taskRunners.add((Class<? extends TaskRunner<?>>) runner.getClass());
                     }
                     case AppPluginInterface app -> {
                         log.debug("Loading AppPlugin plugin: '{}'", plugin.getClass());

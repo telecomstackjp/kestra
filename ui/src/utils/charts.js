@@ -163,6 +163,10 @@ export function backgroundFromState(state, alpha = 1) {
 }
 
 export function getConsistentHEXColor(value) {
+    // if (!value) {
+    //     return "#ffffff";
+    // }
+
     const hex = State.color()[value];
 
     if (hex) return hex;

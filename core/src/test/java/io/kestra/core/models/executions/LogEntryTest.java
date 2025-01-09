@@ -3,12 +3,13 @@ package io.kestra.core.models.executions;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 public class LogEntryTest {
 
     @Test
-    public void should_format_to_json_full_log_entry(){
+    public void should_format_to_log_map(){
         LogEntry logEntry = LogEntry.builder()
             .tenantId("tenantId")
             .namespace("namespace")
@@ -21,15 +22,24 @@ public class LogEntryTest {
             .thread("thread")
             .message("message")
             .build();
-        assertThat(logEntry.toJson(), is("{\"tenantId\":\"tenantId\",\"namespace\":\"namespace\",\"flowId\":\"flowId\",\"taskId\":\"taskId\",\"executionId\":\"executionId\",\"taskRunId\":\"taskRunId\",\"attemptNumber\":1,\"triggerId\":\"triggerId\",\"thread\":\"thread\",\"message\":\"message\"}"));
+        Map<String, String> logMap = logEntry.toLogMap();
+        assertThat(logMap.get("tenantId"), is("tenantId"));
+        assertThat(logMap.get("namespace"), is("namespace"));
+        assertThat(logMap.get("flowId"), is("flowId"));
+        assertThat(logMap.get("taskId"), is("taskId"));
+        assertThat(logMap.get("executionId"), is("executionId"));
+        assertThat(logMap.get("taskRunId"), is("taskRunId"));
+        assertThat(logMap.get("attemptNumber"), is("1"));
+        assertThat(logMap.get("triggerId"), is("triggerId"));
+        assertThat(logMap.get("thread"), is("thread"));
+        assertThat(logMap.get("message"), is("message"));
     }
 
     @Test
-    public void should_format_to_json_empty_log_entry(){
+    public void should_format_to_log_map_empty_log_entry(){
         LogEntry logEntry = LogEntry.builder().build();
-        assertThat(logEntry.toJson(), is("{\"tenantId\":null,\"namespace\":null,\"flowId\":null,\"taskId\":null,\"executionId\":null,\"taskRunId\":null,\"attemptNumber\":null,\"triggerId\":null,\"thread\":null,\"message\":null}"));
+        Map<String, String> map = logEntry.toMap();
+        assertThat(map.size(), is(0));
     }
-
-
 
 }

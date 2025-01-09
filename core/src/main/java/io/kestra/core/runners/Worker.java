@@ -615,13 +615,13 @@ public class Worker implements Service, Runnable, AutoCloseable {
 
         try {
             // run
-            WorkerTask workerTaskAttempt = this.runAttempt(workerTask);
+            workerTask = this.runAttempt(workerTask);
 
             // get last state
-            TaskRunAttempt lastAttempt = workerTaskAttempt.getTaskRun().lastAttempt();
+            TaskRunAttempt lastAttempt = workerTask.getTaskRun().lastAttempt();
             if (lastAttempt == null) {
                 throw new IllegalStateException("Can find lastAttempt on taskRun '" +
-                    workerTaskAttempt.getTaskRun().toString(true) + "'"
+                    workerTask.getTaskRun().toString(true) + "'"
                 );
             }
             io.kestra.core.models.flows.State.Type state = lastAttempt.getState().getCurrent();
@@ -634,7 +634,7 @@ public class Worker implements Service, Runnable, AutoCloseable {
                 state = WARNING;
             }
 
-            if (workerTask.getTask().isAllowFailure() && !workerTaskAttempt.getTaskRun().shouldBeRetried(workerTask.getTask().getRetry()) && state.isFailed()) {
+            if (workerTask.getTask().isAllowFailure() && !workerTask.getTaskRun().shouldBeRetried(workerTask.getTask().getRetry()) && state.isFailed()) {
                 state = WARNING;
             }
 
@@ -643,9 +643,12 @@ public class Worker implements Service, Runnable, AutoCloseable {
             }
 
             // emit
-            List<WorkerTaskResult> dynamicWorkerResults = workerTaskAttempt.getRunContext().dynamicWorkerResults();
+            List<WorkerTaskResult> dynamicWorkerResults = workerTask.getRunContext().dynamicWorkerResults();
             List<TaskRun> dynamicTaskRuns = dynamicWorkerResults(dynamicWorkerResults);
-            WorkerTaskResult workerTaskResult = new WorkerTaskResult(workerTaskAttempt.getTaskRun().withState(state), dynamicTaskRuns);
+
+            workerTask = workerTask.withTaskRun(workerTask.getTaskRun().withState(state));
+
+            WorkerTaskResult workerTaskResult = new WorkerTaskResult(workerTask.getTaskRun(), dynamicTaskRuns);
             this.workerTaskResultQueue.emit(workerTaskResult);
             return workerTaskResult;
         } catch (QueueException e) {
