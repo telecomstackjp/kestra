@@ -3,7 +3,7 @@
 @use 'element-plus/theme-chalk/src/mixins/var' as *;
 
 @import "@kestra-io/ui-libs/src/scss/variables.scss";
-@import "../color-palette.scss";
+@import "@kestra-io/ui-libs/src/scss/color-palette.scss";
 
 // use bootstrap for main style
 :root {
