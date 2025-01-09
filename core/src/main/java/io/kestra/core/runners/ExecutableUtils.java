@@ -69,7 +69,8 @@ public final class ExecutableUtils {
         Property<ZonedDateTime> scheduleDate
     ) throws IllegalVariableEvaluationException {
         // If we are in a flow that is restarted, we search for existing run of the task to restart them
-        if (currentExecution.getLabels().contains(new Label(Label.RESTARTED, "true")) && currentTask.getRestartBehavior() == ExecutableTask.RestartBehavior.RETRY_FAILED) {
+        if (currentExecution.getLabels() != null && currentExecution.getLabels().contains(new Label(Label.RESTARTED, "true"))
+            && currentTask.getRestartBehavior() == ExecutableTask.RestartBehavior.RETRY_FAILED) {
             ExecutionRepositoryInterface executionRepository = ((DefaultRunContext) runContext).getApplicationContext().getBean(ExecutionRepositoryInterface.class);
 
             Optional<Execution> existingSubflowExecution = Optional.empty();

@@ -55,7 +55,7 @@ dependencies {
     }
 
     //Open telemetry
-    implementation 'io.opentelemetry:opentelemetry-sdk-logs:1.45.0'
+    api 'io.opentelemetry:opentelemetry-sdk-logs:1.45.0'
 
     // test
     testAnnotationProcessor project(':processor')
