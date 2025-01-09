@@ -320,7 +320,7 @@
     import {SECTIONS} from "../../utils/constants.js";
     import LowCodeEditor from "../inputs/LowCodeEditor.vue";
     import {editorViewTypes} from "../../utils/constants";
-    import Utils from "@kestra-io/ui-libs/src/utils/Utils";
+    import {Utils} from "@kestra-io/ui-libs";
     import {apiUrl} from "override/utils/route";
     import EditorButtons from "./EditorButtons.vue";
     import Drawer from "../Drawer.vue";

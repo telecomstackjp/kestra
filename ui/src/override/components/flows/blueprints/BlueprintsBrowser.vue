@@ -99,7 +99,7 @@
 
 <script>
     import DataTable from "../../../../components/layout/DataTable.vue";
-    import TaskIcon from "@kestra-io/ui-libs/src/components/misc/TaskIcon.vue";
+    import {TaskIcon} from "@kestra-io/ui-libs";
     import DataTableActions from "../../../../mixins/dataTableActions";
     import {shallowRef} from "vue";
     import ContentCopy from "vue-material-design-icons/ContentCopy.vue";

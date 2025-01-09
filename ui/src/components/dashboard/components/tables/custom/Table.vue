@@ -40,7 +40,7 @@
     import moment from "moment";
 
     import {useRoute} from "vue-router";
-    import Utils from "@kestra-io/ui-libs/src/utils/Utils";
+    import {Utils} from "@kestra-io/ui-libs";
 
     const {t} = useI18n({useScope: "global"});
 

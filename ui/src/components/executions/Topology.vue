@@ -25,8 +25,8 @@
 <script>
     import LowCodeEditor from "../inputs/LowCodeEditor.vue";
     import {mapGetters, mapState} from "vuex";
-    import {CLUSTER_PREFIX} from "@kestra-io/ui-libs/src/utils/constants";
-    import Utils from "@kestra-io/ui-libs/src/utils/Utils";
+    import {CLUSTER_PREFIX} from "@kestra-io/ui-libs/src/utils/constants.ts";
+    import {Utils} from "@kestra-io/ui-libs";
     import STATE from "../../utils/state";
     import throttle from "lodash/throttle";
     export default {

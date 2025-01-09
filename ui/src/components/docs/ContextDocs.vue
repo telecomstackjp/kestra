@@ -31,7 +31,7 @@
 
     import OpenInNew from "vue-material-design-icons/OpenInNew.vue";
 
-    import MDCRenderer from "@kestra-io/ui-libs/src/components/content/MDCRenderer.vue";
+    import {MDCRenderer} from "@kestra-io/ui-libs";
     import DocsLayout from "./DocsLayout.vue";
     import ContextDocsLink from "./ContextDocsLink.vue";
     import ContextChildCard from "./ContextChildCard.vue";

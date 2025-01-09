@@ -52,7 +52,7 @@
 </template>
 
 <script>
-    import TaskIcon from "@kestra-io/ui-libs/src/components/misc/TaskIcon.vue";
+    import {TaskIcon} from "@kestra-io/ui-libs";
     import {mapState} from "vuex";
 
     export default {

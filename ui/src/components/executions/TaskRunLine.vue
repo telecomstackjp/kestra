@@ -156,7 +156,7 @@
     import {SECTIONS} from "../../utils/constants";
     import Download from "vue-material-design-icons/Download.vue";
     import _groupBy from "lodash/groupBy";
-    import TaskIcon from "@kestra-io/ui-libs/src/components/misc/TaskIcon.vue";
+    import {TaskIcon} from "@kestra-io/ui-libs";
     import Duration from "../layout/Duration.vue";
     import Utils from "../../utils/utils";
     import Delete from "vue-material-design-icons/Delete.vue";

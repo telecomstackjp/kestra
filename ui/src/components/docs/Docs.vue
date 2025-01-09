@@ -14,7 +14,7 @@
 </template>
 
 <script>
-    import MDCRenderer from "@kestra-io/ui-libs/src/components/content/MDCRenderer.vue";
+    import {MDCRenderer} from "@kestra-io/ui-libs";
     import TopNavBar from "../layout/TopNavBar.vue";
     import {mapGetters} from "vuex";
     import DocsLayout from "./DocsLayout.vue";
