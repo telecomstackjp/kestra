@@ -111,6 +111,7 @@ public class WaitFor extends Task implements FlowableTask<WaitFor.Output> {
             subGraph,
             tasks,
             this.errors,
+            this.always,
             taskRun,
             execution
         );

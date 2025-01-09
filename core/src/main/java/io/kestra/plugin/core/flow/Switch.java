@@ -149,6 +149,7 @@ public class Switch extends Task implements FlowableTask<Switch.Output> {
                 )
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)),
             this.errors,
+            this.always,
             taskRun,
             execution
         );

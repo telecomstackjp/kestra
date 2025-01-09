@@ -83,6 +83,7 @@ public class Sequential extends Task implements FlowableTask<VoidOutput> {
             subGraph,
             this.getTasks(),
             this.errors,
+            this.always,
             taskRun,
             execution
         );

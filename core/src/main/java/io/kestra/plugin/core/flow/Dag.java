@@ -117,6 +117,7 @@ public class Dag extends Task implements FlowableTask<VoidOutput> {
             subGraph,
             this.getTasks(),
             this.errors,
+            this.always,
             taskRun,
             execution
         );

@@ -26,6 +26,9 @@ public class GraphCluster extends AbstractGraph {
     private final GraphClusterRoot root;
 
     @JsonIgnore
+    private final GraphClusterAlways always;
+
+    @JsonIgnore
     private final GraphClusterEnd end;
 
     @Setter
@@ -41,17 +44,22 @@ public class GraphCluster extends AbstractGraph {
 
         this.relationType = null;
         this.root = new GraphClusterRoot();
+        this.always = new GraphClusterAlways();
         this.end = new GraphClusterEnd();
         this.taskNode = null;
 
         this.addNode(this.root);
+        this.addNode(this.always);
         this.addNode(this.end);
+
+        this.addEdge(this.getAlways(), this.getEnd(), new Relation());
     }
 
     public GraphCluster(Task task, TaskRun taskRun, List<String> values, RelationType relationType) {
         this(new GraphTask(task.getId(), task, taskRun, values, relationType), task.getId(), relationType);
 
         this.addNode(this.taskNode, false);
+
         this.addEdge(this.getRoot(), this.taskNode, new Relation());
     }
 
@@ -60,11 +68,15 @@ public class GraphCluster extends AbstractGraph {
 
         this.relationType = relationType;
         this.root = new GraphClusterRoot();
+        this.always = new GraphClusterAlways();
         this.end = new GraphClusterEnd();
         this.taskNode = taskNode;
 
         this.addNode(this.root);
+        this.addNode(this.always);
         this.addNode(this.end);
+
+        this.addEdge(this.getAlways(), this.getEnd(), new Relation());
     }
 
     public void addNode(AbstractGraph node) {

@@ -140,6 +140,7 @@ public class Template extends Task implements FlowableTask<Template.Output> {
             subGraph,
             template.getTasks(),
             template.getErrors(),
+            template.getAlways(),
             taskRun,
             execution
         );

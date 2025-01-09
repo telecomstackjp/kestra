@@ -148,6 +148,7 @@ public class EachParallel extends Parallel implements FlowableTask<VoidOutput> {
             subGraph,
             this.getTasks(),
             this.errors,
+            this.always,
             taskRun,
             execution
         );

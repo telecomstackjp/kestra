@@ -82,6 +82,7 @@ public class PluginDefaultsCaseTest {
                 subGraph,
                 this.tasks,
                 this.errors,
+                this.always,
                 taskRun,
                 execution
             );

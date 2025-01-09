@@ -4,6 +4,7 @@ public enum RelationType {
     SEQUENTIAL,
     CHOICE,
     ERROR,
+    ALWAYS,
     PARALLEL,
     DYNAMIC
 }

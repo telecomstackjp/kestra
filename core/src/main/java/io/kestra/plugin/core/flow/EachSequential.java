@@ -112,6 +112,7 @@ public class EachSequential extends Sequential implements FlowableTask<VoidOutpu
             subGraph,
             this.getTasks(),
             this.errors,
+            this.always,
             taskRun,
             execution
         );

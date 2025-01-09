@@ -339,6 +339,7 @@ public class ForEachItem extends Task implements FlowableTask<VoidOutput>, Child
             subGraph,
             this.getTasks(),
             this.errors,
+            this.always,
             taskRun,
             execution
         );

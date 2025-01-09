@@ -94,6 +94,7 @@ public class Parallel extends Task implements FlowableTask<VoidOutput> {
             subGraph,
             this.tasks,
             this.errors,
+            this.always,
             taskRun,
             execution
         );

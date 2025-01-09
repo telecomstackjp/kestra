@@ -174,6 +174,7 @@ public class ForEach extends Sequential implements FlowableTask<VoidOutput> {
                 subGraph,
                 this.getTasks(),
                 this.getErrors(),
+                this.getAlways(),
                 taskRun,
                 execution
             );
@@ -182,6 +183,7 @@ public class ForEach extends Sequential implements FlowableTask<VoidOutput> {
                 subGraph,
                 this.getTasks(),
                 this.getErrors(),
+                this.getAlways(),
                 taskRun,
                 execution
             );

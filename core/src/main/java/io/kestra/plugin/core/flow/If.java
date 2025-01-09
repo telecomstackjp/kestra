@@ -115,6 +115,7 @@ public class If extends Task implements FlowableTask<If.Output> {
             subGraph,
             this.then,
             this._else,
+            this.always,
             this.errors,
             taskRun,
             execution

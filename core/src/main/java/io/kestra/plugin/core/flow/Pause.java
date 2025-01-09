@@ -176,6 +176,7 @@ public class Pause extends Task implements FlowableTask<Pause.Output> {
             subGraph,
             this.tasks,
             this.errors,
+            this.always,
             taskRun,
             execution
         );
