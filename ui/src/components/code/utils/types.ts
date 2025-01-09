@@ -54,6 +54,7 @@ export type Breadcrumb = {
 
 export type CollapseItem = {
     title: string;
+    length?: number;
 };
 
 export type Sections = {

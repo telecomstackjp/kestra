@@ -37,7 +37,17 @@
                 label: props.flow.id ?? t("create_flow"),
                 to: {name: route.name, params},
             },
-        // TODO: Add breadcrumb for second segment
+            ...(route.query.section
+                ? [
+                    {
+                        label:
+                            route.query.identifier === "new"
+                                ? t(`no_code.creation.${route.query.section}`)
+                                : route.query.identifier,
+                        to: {name: route.name, params},
+                    },
+                ]
+                : []),
         ];
     });
 </script>

@@ -124,7 +124,7 @@
 
     const getSectionTitle = (label: string, array = []) => {
         const title = t(`no_code.sections.${label}`);
-        return {title: `${title} (${array.length})`};
+        return {title, length: array.length};
     };
     const sections = ref<Sections>({
         main: [{title: t("no_code.sections.general")}],

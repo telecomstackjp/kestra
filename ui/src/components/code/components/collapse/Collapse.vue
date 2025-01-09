@@ -1,14 +1,14 @@
 <template>
-    <el-collapse v-model="expanded" class="mt-3 collapse">
+    <el-collapse v-model="expanded" accordion class="mt-3 collapse">
         <el-collapse-item
             v-for="(item, index) in props.items"
             :key="index"
             :name="item.title"
-            :title="item.title"
+            :title="`${item.title}${item.length ? ` (${item.length})` : ''}`"
             :class="{creation: props.creation}"
         >
             <template #icon>
-                <Creation v-if="creation" />
+                <Creation v-if="creation" :section="item.title" />
             </template>
             <slot name="content" />
         </el-collapse-item>
