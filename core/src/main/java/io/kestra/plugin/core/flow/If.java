@@ -100,7 +100,13 @@ public class If extends Task implements FlowableTask<If.Output> {
     private List<Task> errors;
 
     @Valid
-    protected List<Task> always;
+    @JsonProperty("finally")
+    @Getter(AccessLevel.NONE)
+    protected List<Task> _finally;
+
+    public List<Task> getFinally() {
+        return this._finally;
+    }
 
     @Override
     public List<Task> getErrors() {
@@ -115,7 +121,7 @@ public class If extends Task implements FlowableTask<If.Output> {
             subGraph,
             this.then,
             this._else,
-            this.always,
+            this._finally,
             this.errors,
             taskRun,
             execution
@@ -133,7 +139,7 @@ public class If extends Task implements FlowableTask<If.Output> {
                     this._else != null ? this._else.stream() : Stream.empty(),
                     Stream.concat(
                         this.errors != null ? this.errors.stream() : Stream.empty(),
-                        this.always != null ? this.always.stream() : Stream.empty()
+                        this._finally != null ? this._finally.stream() : Stream.empty()
                     )
                 )
             )
@@ -165,7 +171,7 @@ public class If extends Task implements FlowableTask<If.Output> {
             execution,
             this.childTasks(runContext, parentTaskRun),
             FlowableUtils.resolveTasks(this.errors, parentTaskRun),
-            FlowableUtils.resolveTasks(this.always, parentTaskRun),
+            FlowableUtils.resolveTasks(this._finally, parentTaskRun),
             parentTaskRun
         );
     }
@@ -184,7 +190,7 @@ public class If extends Task implements FlowableTask<If.Output> {
             execution,
             childTasks,
             FlowableUtils.resolveTasks(this.getErrors(), parentTaskRun),
-            FlowableUtils.resolveTasks(this.getAlways(), parentTaskRun),
+            FlowableUtils.resolveTasks(this.getFinally(), parentTaskRun),
             parentTaskRun,
             runContext,
             this.isAllowFailure(),

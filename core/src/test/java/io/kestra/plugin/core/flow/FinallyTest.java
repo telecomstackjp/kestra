@@ -1,7 +1,5 @@
 package io.kestra.plugin.core.flow;
 
-import io.kestra.core.exceptions.InternalException;
-import io.kestra.core.junit.annotations.ExecuteFlow;
 import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.junit.annotations.LoadFlows;
 import io.kestra.core.models.executions.Execution;
@@ -22,7 +20,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 @KestraTest(startRunner = true)
-class AlwaysTest {
+class FinallyTest {
     @Inject
     protected RunnerUtils runnerUtils;
 
@@ -30,11 +28,11 @@ class AlwaysTest {
     private FlowInputOutput flowIO;
 
     @Test
-    @LoadFlows({"flows/valids/always-sequential.yaml"})
+    @LoadFlows({"flows/valids/finally-sequential.yaml"})
     void sequentialWithoutErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-sequential", null,
+            "io.kestra.tests", "finally-sequential", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", false)),
             Duration.ofSeconds(60)
         );
@@ -47,11 +45,11 @@ class AlwaysTest {
     }
 
     @Test
-    @LoadFlows({"flows/valids/always-sequential.yaml"})
+    @LoadFlows({"flows/valids/finally-sequential.yaml"})
     void sequentialWithErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-sequential", null,
+            "io.kestra.tests", "finally-sequential", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", true)),
             Duration.ofSeconds(60)
         );
@@ -64,11 +62,11 @@ class AlwaysTest {
     }
 
     @Test
-    @LoadFlows({"flows/valids/always-sequential-error.yaml"})
+    @LoadFlows({"flows/valids/finally-sequential-error.yaml"})
     void sequentialErrorBlockWithoutErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-sequential-error", null,
+            "io.kestra.tests", "finally-sequential-error", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", false)),
             Duration.ofSeconds(60)
         );
@@ -81,11 +79,11 @@ class AlwaysTest {
     }
 
     @Test
-    @LoadFlows({"flows/valids/always-sequential-error.yaml"})
+    @LoadFlows({"flows/valids/finally-sequential-error.yaml"})
     void sequentialErrorBlockWithErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-sequential-error", null,
+            "io.kestra.tests", "finally-sequential-error", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", true)),
             Duration.ofSeconds(60)
         );
@@ -100,11 +98,11 @@ class AlwaysTest {
     }
 
     @Test
-    @LoadFlows({"flows/valids/always-allowfailure.yaml"})
+    @LoadFlows({"flows/valids/finally-allowfailure.yaml"})
     void allowFailureWithoutErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-allowfailure", null,
+            "io.kestra.tests", "finally-allowfailure", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", false)),
             Duration.ofSeconds(60)
         );
@@ -117,11 +115,11 @@ class AlwaysTest {
     }
 
     @Test
-    @LoadFlows({"flows/valids/always-allowfailure.yaml"})
+    @LoadFlows({"flows/valids/finally-allowfailure.yaml"})
     void allowFailureWithErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-allowfailure", null,
+            "io.kestra.tests", "finally-allowfailure", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", true)),
             Duration.ofSeconds(60)
         );
@@ -136,11 +134,11 @@ class AlwaysTest {
     }
 
     @Test
-    @LoadFlows({"flows/valids/always-parallel.yaml"})
+    @LoadFlows({"flows/valids/finally-parallel.yaml"})
     void parallelWithoutErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-parallel", null,
+            "io.kestra.tests", "finally-parallel", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", false)),
             Duration.ofSeconds(60)
         );
@@ -153,11 +151,11 @@ class AlwaysTest {
     }
 
     @Test
-    @LoadFlows({"flows/valids/always-parallel.yaml"})
+    @LoadFlows({"flows/valids/finally-parallel.yaml"})
     void parallelWithErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-parallel", null,
+            "io.kestra.tests", "finally-parallel", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", true)),
             Duration.ofSeconds(60)
         );
@@ -172,13 +170,13 @@ class AlwaysTest {
     }
 
     // @FIXME
-    @Disabled("ForEach is not working with errors neither always")
+    @Disabled("ForEach is not working with errors neither finally")
     @Test
-    @LoadFlows({"flows/valids/always-foreach.yaml"})
+    @LoadFlows({"flows/valids/finally-foreach.yaml"})
     void forEachWithoutErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-foreach", null,
+            "io.kestra.tests", "finally-foreach", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", false)),
             Duration.ofSeconds(60)
         );
@@ -191,13 +189,13 @@ class AlwaysTest {
     }
 
     // @FIXME
-    @Disabled("ForEach is not working with errors neither always")
+    @Disabled("ForEach is not working with errors neither finally")
     @Test
-    @LoadFlows({"flows/valids/always-foreach.yaml"})
+    @LoadFlows({"flows/valids/finally-foreach.yaml"})
     void forEachWithErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-foreach", null,
+            "io.kestra.tests", "finally-foreach", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", true)),
             Duration.ofSeconds(60)
         );
@@ -212,11 +210,11 @@ class AlwaysTest {
     }
 
     @Test
-    @LoadFlows({"flows/valids/always-eachparallel.yaml"})
+    @LoadFlows({"flows/valids/finally-eachparallel.yaml"})
     void eachParallelWithoutErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-eachparallel", null,
+            "io.kestra.tests", "finally-eachparallel", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", false)),
             Duration.ofSeconds(60)
         );
@@ -229,11 +227,11 @@ class AlwaysTest {
     }
 
     @Test
-    @LoadFlows({"flows/valids/always-eachparallel.yaml"})
+    @LoadFlows({"flows/valids/finally-eachparallel.yaml"})
     void eachParallelWithErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-eachparallel", null,
+            "io.kestra.tests", "finally-eachparallel", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", true)),
             Duration.ofSeconds(60)
         );
@@ -248,11 +246,11 @@ class AlwaysTest {
     }
 
     @Test
-    @LoadFlows({"flows/valids/always-dag.yaml"})
+    @LoadFlows({"flows/valids/finally-dag.yaml"})
     void dagWithoutErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-dag", null,
+            "io.kestra.tests", "finally-dag", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", false)),
             Duration.ofSeconds(60)
         );
@@ -265,11 +263,11 @@ class AlwaysTest {
     }
 
     @Test
-    @LoadFlows({"flows/valids/always-dag.yaml"})
+    @LoadFlows({"flows/valids/finally-dag.yaml"})
     void dagWithErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-dag", null,
+            "io.kestra.tests", "finally-dag", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", true)),
             Duration.ofSeconds(60)
         );
@@ -284,11 +282,11 @@ class AlwaysTest {
     }
 
     @Test
-    @LoadFlows({"flows/valids/always-flow.yaml"})
+    @LoadFlows({"flows/valids/finally-flow.yaml"})
     void flowWithoutErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-flow", null,
+            "io.kestra.tests", "finally-flow", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", false)),
             Duration.ofSeconds(60)
         );
@@ -301,11 +299,11 @@ class AlwaysTest {
     }
 
     @Test
-    @LoadFlows({"flows/valids/always-flow.yaml"})
+    @LoadFlows({"flows/valids/finally-flow.yaml"})
     void flowWithErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-flow", null,
+            "io.kestra.tests", "finally-flow", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", true)),
             Duration.ofSeconds(60)
         );
@@ -318,11 +316,11 @@ class AlwaysTest {
     }
 
     @Test
-    @LoadFlows({"flows/valids/always-flow-error.yaml"})
+    @LoadFlows({"flows/valids/finally-flow-error.yaml"})
     void flowErrorBlockWithoutErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-flow-error", null,
+            "io.kestra.tests", "finally-flow-error", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", false)),
             Duration.ofSeconds(60)
         );
@@ -335,11 +333,11 @@ class AlwaysTest {
     }
 
     @Test
-    @LoadFlows({"flows/valids/always-flow-error.yaml"})
+    @LoadFlows({"flows/valids/finally-flow-error.yaml"})
     void flowErrorBlockWithErrors() throws QueueException, TimeoutException {
         Execution execution = runnerUtils.runOne(
             null,
-            "io.kestra.tests", "always-flow-error", null,
+            "io.kestra.tests", "finally-flow-error", null,
             (flow, execution1) -> flowIO.readExecutionInputs(flow, execution1, Map.of("failed", true)),
             Duration.ofSeconds(60)
         );

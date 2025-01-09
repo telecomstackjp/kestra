@@ -25,7 +25,7 @@ public class FlowForExecution extends AbstractFlow {
     List<TaskForExecution> errors;
 
     @Valid
-    List<TaskForExecution> always;
+    List<TaskForExecution> _finally;
 
     @Valid
     List<AbstractTriggerForExecution> triggers;
@@ -39,7 +39,7 @@ public class FlowForExecution extends AbstractFlow {
             .inputs(flow.getInputs())
             .tasks(flow.getTasks().stream().map(TaskForExecution::of).toList())
             .errors(ListUtils.emptyOnNull(flow.getErrors()).stream().map(TaskForExecution::of).toList())
-            .always(ListUtils.emptyOnNull(flow.getAlways()).stream().map(TaskForExecution::of).toList())
+            ._finally(ListUtils.emptyOnNull(flow.getFinally()).stream().map(TaskForExecution::of).toList())
             .triggers(ListUtils.emptyOnNull(flow.getTriggers()).stream().map(AbstractTriggerForExecution::of).toList())
             .disabled(flow.isDisabled())
             .deleted(flow.isDeleted())

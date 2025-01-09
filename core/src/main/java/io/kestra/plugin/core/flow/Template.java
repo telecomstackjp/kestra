@@ -1,5 +1,6 @@
 package io.kestra.plugin.core.flow;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.kestra.core.exceptions.DeserializationException;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.exceptions.InternalException;
@@ -93,7 +94,13 @@ public class Template extends Task implements FlowableTask<Template.Output> {
     protected List<Task> errors;
 
     @Valid
-    protected List<Task> always;
+    @JsonProperty("finally")
+    @Getter(AccessLevel.NONE)
+    protected List<Task> _finally;
+
+    public List<Task> getFinally() {
+        return this._finally;
+    }
 
     @NotNull
     @Schema(
@@ -140,7 +147,7 @@ public class Template extends Task implements FlowableTask<Template.Output> {
             subGraph,
             template.getTasks(),
             template.getErrors(),
-            template.getAlways(),
+            template.getFinally(),
             taskRun,
             execution
         );
@@ -179,7 +186,7 @@ public class Template extends Task implements FlowableTask<Template.Output> {
             execution,
             this.childTasks(runContext, parentTaskRun),
             FlowableUtils.resolveTasks(template.getErrors(), parentTaskRun),
-            FlowableUtils.resolveTasks(template.getAlways(), parentTaskRun),
+            FlowableUtils.resolveTasks(template.getFinally(), parentTaskRun),
             parentTaskRun
         );
     }

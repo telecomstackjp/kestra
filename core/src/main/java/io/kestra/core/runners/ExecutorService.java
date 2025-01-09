@@ -271,7 +271,7 @@ public class ExecutorService {
                 List<ResolvedTask> currentTasks = execution.findTaskDependingFlowState(
                     flowableParent.childTasks(runContext, parentTaskRun),
                     FlowableUtils.resolveTasks(flowableParent.getErrors(), parentTaskRun),
-                    FlowableUtils.resolveTasks(flowableParent.getAlways(), parentTaskRun)
+                    FlowableUtils.resolveTasks(flowableParent.getFinally(), parentTaskRun)
                 );
 
                 List<TaskRun> taskRunByTasks = execution.findTaskRunByTasks(currentTasks, parentTaskRun);
@@ -428,7 +428,7 @@ public class ExecutorService {
                 executor.getExecution(),
                 ResolvedTask.of(executor.getFlow().getTasks()),
                 ResolvedTask.of(executor.getFlow().getErrors()),
-                ResolvedTask.of(executor.getFlow().getAlways())
+                ResolvedTask.of(executor.getFlow().getFinally())
             );
 
         if (nextTaskRuns.isEmpty()) {
@@ -689,7 +689,7 @@ public class ExecutorService {
         List<ResolvedTask> currentTasks = executor.getExecution().findTaskDependingFlowState(
             ResolvedTask.of(executor.getFlow().getTasks()),
             ResolvedTask.of(executor.getFlow().getErrors()),
-            ResolvedTask.of(executor.getFlow().getAlways())
+            ResolvedTask.of(executor.getFlow().getFinally())
         );
 
         if (!executor.getExecution().isTerminated(currentTasks)) {

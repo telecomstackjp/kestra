@@ -33,19 +33,19 @@ public class FlowableUtils {
         Execution execution,
         List<ResolvedTask> tasks,
         List<ResolvedTask> errors,
-        List<ResolvedTask> always
+        List<ResolvedTask> _finally
     ) {
-        return resolveSequentialNexts(execution, tasks, errors, always, null);
+        return resolveSequentialNexts(execution, tasks, errors, _finally, null);
     }
 
     public static List<NextTaskRun> resolveSequentialNexts(
         Execution execution,
         List<ResolvedTask> tasks,
         List<ResolvedTask> errors,
-        List<ResolvedTask> always,
+        List<ResolvedTask> _finally,
         TaskRun parentTaskRun
     ) {
-        List<ResolvedTask> currentTasks = execution.findTaskDependingFlowState(tasks, errors, always, parentTaskRun);
+        List<ResolvedTask> currentTasks = execution.findTaskDependingFlowState(tasks, errors, _finally, parentTaskRun);
 
         return FlowableUtils.innerResolveSequentialNexts(execution, currentTasks, parentTaskRun);
     }
@@ -95,10 +95,10 @@ public class FlowableUtils {
         Execution execution,
         List<ResolvedTask> tasks,
         List<ResolvedTask> errors,
-        List<ResolvedTask> always,
+        List<ResolvedTask> _finally,
         TaskRun parentTaskRun
     ) {
-        List<ResolvedTask> currentTasks = execution.findTaskDependingFlowState(tasks, errors, always, parentTaskRun);
+        List<ResolvedTask> currentTasks = execution.findTaskDependingFlowState(tasks, errors, _finally, parentTaskRun);
 
         // nothing
         if (currentTasks == null || currentTasks.isEmpty() || execution.getState().getCurrent() == State.Type.KILLING) {
@@ -144,13 +144,13 @@ public class FlowableUtils {
         Execution execution,
         List<ResolvedTask> tasks,
         List<ResolvedTask> errors,
-        List<ResolvedTask> always,
+        List<ResolvedTask> _finally,
         TaskRun parentTaskRun,
         RunContext runContext,
         boolean allowFailure,
         boolean allowWarning
     ) {
-        List<ResolvedTask> currentTasks = execution.findTaskDependingFlowState(tasks, errors, always, parentTaskRun);
+        List<ResolvedTask> currentTasks = execution.findTaskDependingFlowState(tasks, errors, _finally, parentTaskRun);
 
         if (currentTasks == null) {
             runContext.logger().warn(
@@ -202,7 +202,7 @@ public class FlowableUtils {
         Execution execution,
         List<ResolvedTask> tasks,
         List<ResolvedTask> errors,
-        List<ResolvedTask> always,
+        List<ResolvedTask> _finally,
         TaskRun parentTaskRun,
         Integer concurrency
     ) {
@@ -210,7 +210,7 @@ public class FlowableUtils {
             execution,
             tasks,
             errors,
-            always,
+            _finally,
             parentTaskRun,
             concurrency,
             (nextTaskRunStream, taskRuns) -> nextTaskRunStream
@@ -225,7 +225,7 @@ public class FlowableUtils {
         Execution execution,
         List<ResolvedTask> tasks,
         List<ResolvedTask> errors,
-        List<ResolvedTask> always,
+        List<ResolvedTask> _finally,
         TaskRun parentTaskRun,
         Integer concurrency
     ) {
@@ -236,7 +236,7 @@ public class FlowableUtils {
         List<ResolvedTask> allTasks = execution.findTaskDependingFlowState(
             tasks,
             errors,
-            always,
+            _finally,
             parentTaskRun
         );
 
@@ -292,7 +292,7 @@ public class FlowableUtils {
         Execution execution,
         List<ResolvedTask> tasks,
         List<ResolvedTask> errors,
-        List<ResolvedTask> always,
+        List<ResolvedTask> _finally,
         TaskRun parentTaskRun,
         Integer concurrency,
         List<Dag.DagTask> taskDependencies
@@ -301,7 +301,7 @@ public class FlowableUtils {
             execution,
             tasks,
             errors,
-            always,
+            _finally,
             parentTaskRun,
             concurrency,
             (nextTaskRunStream, taskRuns) -> nextTaskRunStream
@@ -334,7 +334,7 @@ public class FlowableUtils {
         Execution execution,
         List<ResolvedTask> tasks,
         List<ResolvedTask> errors,
-        List<ResolvedTask> always,
+        List<ResolvedTask> _finally,
         TaskRun parentTaskRun,
         Integer concurrency,
         BiFunction<Stream<NextTaskRun>, List<TaskRun>, Stream<NextTaskRun>> nextTaskRunFunction
@@ -346,7 +346,7 @@ public class FlowableUtils {
         List<ResolvedTask> currentTasks = execution.findTaskDependingFlowState(
             tasks,
             errors,
-            always,
+            _finally,
             parentTaskRun
         );
 

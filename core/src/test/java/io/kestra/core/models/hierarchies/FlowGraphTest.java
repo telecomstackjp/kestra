@@ -296,22 +296,22 @@ class FlowGraphTest {
     }
 
     @Test
-    void alwaysSequential() throws IllegalVariableEvaluationException, IOException {
-        FlowWithSource flow = this.parse("flows/valids/always-sequential.yaml");
+    void finallySequential() throws IllegalVariableEvaluationException, IOException {
+        FlowWithSource flow = this.parse("flows/valids/finally-sequential.yaml");
         FlowGraph flowGraph = GraphUtils.flowGraph(flow, null);
 
         assertThat(flowGraph.getNodes().size(), is(13));
         assertThat(flowGraph.getEdges().size(), is(13));
         assertThat(flowGraph.getClusters().size(), is(2));
 
-        assertThat(edge(flowGraph, ".*seq.always.*", ".*seq.a1").getRelation().getRelationType(), is(RelationType.SEQUENTIAL));
-        assertThat(edge(flowGraph, ".*seq.a1", ".*seq.a2").getRelation().getRelationType(), is(RelationType.ALWAYS));
+        assertThat(edge(flowGraph, ".*seq.finally.*", ".*seq.a1").getRelation().getRelationType(), is(RelationType.SEQUENTIAL));
+        assertThat(edge(flowGraph, ".*seq.a1", ".*seq.a2").getRelation().getRelationType(), is(RelationType.FINALLY));
         assertThat(edge(flowGraph, ".*seq.a2", ".*seq.end.*").getRelation().getRelationType(), is(nullValue()));
     }
 
     @Test
-    void alwaysSequentialError() throws IllegalVariableEvaluationException, IOException {
-        FlowWithSource flow = this.parse("flows/valids/always-sequential-error.yaml");
+    void finallySequentialError() throws IllegalVariableEvaluationException, IOException {
+        FlowWithSource flow = this.parse("flows/valids/finally-sequential-error.yaml");
         FlowGraph flowGraph = GraphUtils.flowGraph(flow, null);
 
         assertThat(flowGraph.getNodes().size(), is(15));
@@ -319,15 +319,15 @@ class FlowGraphTest {
         assertThat(flowGraph.getClusters().size(), is(2));
 
         assertThat(edge(flowGraph, ".*seq.e1", ".*seq.e2").getRelation().getRelationType(), is(RelationType.ERROR));
-        assertThat(edge(flowGraph, ".*seq.e2", ".*seq.always.*").getRelation().getRelationType(), is(nullValue()));
-        assertThat(edge(flowGraph, ".*seq.always.*", ".*seq.a1").getRelation().getRelationType(), is(RelationType.SEQUENTIAL));
-        assertThat(edge(flowGraph, ".*seq.a1", ".*seq.a2").getRelation().getRelationType(), is(RelationType.ALWAYS));
+        assertThat(edge(flowGraph, ".*seq.e2", ".*seq.finally.*").getRelation().getRelationType(), is(nullValue()));
+        assertThat(edge(flowGraph, ".*seq.finally.*", ".*seq.a1").getRelation().getRelationType(), is(RelationType.SEQUENTIAL));
+        assertThat(edge(flowGraph, ".*seq.a1", ".*seq.a2").getRelation().getRelationType(), is(RelationType.FINALLY));
         assertThat(edge(flowGraph, ".*seq.a2", ".*seq.end.*").getRelation().getRelationType(), is(nullValue()));
     }
 
     @Test
-    void alwaysDag() throws IllegalVariableEvaluationException, IOException {
-        FlowWithSource flow = this.parse("flows/valids/always-dag.yaml");
+    void finallyDag() throws IllegalVariableEvaluationException, IOException {
+        FlowWithSource flow = this.parse("flows/valids/finally-dag.yaml");
         FlowGraph flowGraph = GraphUtils.flowGraph(flow, null);
 
         assertThat(flowGraph.getNodes().size(), is(17));
@@ -335,8 +335,8 @@ class FlowGraphTest {
         assertThat(flowGraph.getClusters().size(), is(2));
 
         assertThat(edge(flowGraph, ".*dag.e1", ".*dag.e2").getRelation().getRelationType(), is(RelationType.ERROR));
-        assertThat(edge(flowGraph, ".*dag.e2", ".*dag.always.*").getRelation().getRelationType(), is(nullValue()));
-        assertThat(edge(flowGraph, ".*dag.always.*", ".*dag.a1").getRelation().getRelationType(), is(RelationType.DYNAMIC));
+        assertThat(edge(flowGraph, ".*dag.e2", ".*dag.finally.*").getRelation().getRelationType(), is(nullValue()));
+        assertThat(edge(flowGraph, ".*dag.finally.*", ".*dag.a1").getRelation().getRelationType(), is(RelationType.DYNAMIC));
         assertThat(edge(flowGraph, ".*dag.a1", ".*dag.a2").getRelation().getRelationType(), is(RelationType.DYNAMIC));
         assertThat(edge(flowGraph, ".*dag.a2", ".*dag.end.*").getRelation().getRelationType(), is(nullValue()));
     }

@@ -174,7 +174,7 @@ public class ForEach extends Sequential implements FlowableTask<VoidOutput> {
                 subGraph,
                 this.getTasks(),
                 this.getErrors(),
-                this.getAlways(),
+                this.getFinally(),
                 taskRun,
                 execution
             );
@@ -183,7 +183,7 @@ public class ForEach extends Sequential implements FlowableTask<VoidOutput> {
                 subGraph,
                 this.getTasks(),
                 this.getErrors(),
-                this.getAlways(),
+                this.getFinally(),
                 taskRun,
                 execution
             );
@@ -211,7 +211,7 @@ public class ForEach extends Sequential implements FlowableTask<VoidOutput> {
             execution,
             childTasks,
             FlowableUtils.resolveTasks(this.getErrors(), parentTaskRun),
-            FlowableUtils.resolveTasks(this.getAlways(), parentTaskRun),
+            FlowableUtils.resolveTasks(this.getFinally(), parentTaskRun),
             parentTaskRun,
             runContext,
             this.isAllowFailure(),
@@ -226,7 +226,7 @@ public class ForEach extends Sequential implements FlowableTask<VoidOutput> {
                 execution,
                 this.childTasks(runContext, parentTaskRun),
                 FlowableUtils.resolveTasks(this.errors, parentTaskRun),
-                FlowableUtils.resolveTasks(this.always, parentTaskRun),
+                FlowableUtils.resolveTasks(this._finally, parentTaskRun),
                 parentTaskRun
             );
         }
@@ -235,7 +235,7 @@ public class ForEach extends Sequential implements FlowableTask<VoidOutput> {
             execution,
             FlowableUtils.resolveEachTasks(runContext, parentTaskRun, this.getTasks(), this.values),
             FlowableUtils.resolveTasks(this.errors, parentTaskRun),
-            FlowableUtils.resolveTasks(this.always, parentTaskRun),
+            FlowableUtils.resolveTasks(this._finally, parentTaskRun),
             parentTaskRun,
             this.concurrencyLimit
         );

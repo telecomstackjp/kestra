@@ -148,7 +148,7 @@ public class EachParallel extends Parallel implements FlowableTask<VoidOutput> {
             subGraph,
             this.getTasks(),
             this.errors,
-            this.always,
+            this._finally,
             taskRun,
             execution
         );
@@ -175,7 +175,7 @@ public class EachParallel extends Parallel implements FlowableTask<VoidOutput> {
             execution,
             childTasks,
             FlowableUtils.resolveTasks(this.getErrors(), parentTaskRun),
-            FlowableUtils.resolveTasks(this.getAlways(), parentTaskRun),
+            FlowableUtils.resolveTasks(this.getFinally(), parentTaskRun),
             parentTaskRun,
             runContext,
             this.isAllowFailure(),
@@ -189,7 +189,7 @@ public class EachParallel extends Parallel implements FlowableTask<VoidOutput> {
             execution,
             FlowableUtils.resolveEachTasks(runContext, parentTaskRun, this.getTasks(), this.value),
             FlowableUtils.resolveTasks(this.errors, parentTaskRun),
-            FlowableUtils.resolveTasks(this.always, parentTaskRun),
+            FlowableUtils.resolveTasks(this._finally, parentTaskRun),
             parentTaskRun,
             this.concurrent
         );

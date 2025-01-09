@@ -101,11 +101,11 @@ class FlowWithSourceTest {
                     .message("Error")
                     .build()
             ))
-            .always(List.of(
+            ._finally(List.of(
                 Log.builder()
                     .id(IdUtils.create())
                     .type(Log.class.getName())
-                    .message("Always")
+                    .message("Finally")
                     .build()
             ))
             .listeners(List.of(

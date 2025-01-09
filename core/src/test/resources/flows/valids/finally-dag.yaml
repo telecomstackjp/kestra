@@ -1,4 +1,4 @@
-id: always-dag
+id: finally-dag
 namespace: io.kestra.tests
 
 inputs:
@@ -43,7 +43,7 @@ tasks:
         type: io.kestra.plugin.core.debug.Return
         format: "{{ task.id }}"
 
-    always:
+    finally:
       - id: a1
         type: io.kestra.plugin.core.debug.Return
         format: "{{ task.id }}"

@@ -1,4 +1,4 @@
-id: always-sequential
+id: finally-sequential
 namespace: io.kestra.tests
 
 inputs:
@@ -21,7 +21,7 @@ tasks:
           - id: ko
             type: io.kestra.plugin.core.execution.Fail
 
-    always:
+    finally:
       - id: a1
         type: io.kestra.plugin.core.debug.Return
         format: "{{ task.id }}"

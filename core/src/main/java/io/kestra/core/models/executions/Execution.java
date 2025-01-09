@@ -353,27 +353,27 @@ public class Execution implements DeletedInterface, TenantInterface {
      *
      * @param resolvedTasks normal tasks
      * @param resolvedErrors errors tasks
-     * @param resolvedAlways afters tasks
+     * @param resolvedFinally afters tasks
      * @param parentTaskRun the parent task
      * @return the flow we need to follow
      */
     public List<ResolvedTask> findTaskDependingFlowState(
         List<ResolvedTask> resolvedTasks,
         @Nullable List<ResolvedTask> resolvedErrors,
-        @Nullable List<ResolvedTask> resolvedAlways,
+        @Nullable List<ResolvedTask> resolvedFinally,
         TaskRun parentTaskRun
     ) {
         resolvedTasks = removeDisabled(resolvedTasks);
         resolvedErrors = removeDisabled(resolvedErrors);
-        resolvedAlways = removeDisabled(resolvedAlways);
+        resolvedFinally = removeDisabled(resolvedFinally);
 
 
         List<TaskRun> errorsFlow = this.findTaskRunByTasks(resolvedErrors, parentTaskRun);
-        List<TaskRun> alwaysFlow = this.findTaskRunByTasks(resolvedAlways, parentTaskRun);
+        List<TaskRun> finallyFlow = this.findTaskRunByTasks(resolvedFinally, parentTaskRun);
 
-        // always is already started, just continue theses always
-        if (!alwaysFlow.isEmpty()) {
-            return resolvedAlways == null ? Collections.emptyList() : resolvedAlways;
+        // finally is already started, just continue theses finally
+        if (!finallyFlow.isEmpty()) {
+            return resolvedFinally == null ? Collections.emptyList() : resolvedFinally;
         }
 
         // Check if flow has failed task
@@ -383,15 +383,15 @@ public class Execution implements DeletedInterface, TenantInterface {
                 return Collections.emptyList();
             }
 
-            if (resolvedAlways != null && resolvedErrors != null && !this.isTerminated(resolvedErrors, parentTaskRun)) {
+            if (resolvedFinally != null && resolvedErrors != null && !this.isTerminated(resolvedErrors, parentTaskRun)) {
                 return resolvedErrors;
-            } else if (resolvedAlways == null) {
+            } else if (resolvedFinally == null) {
                 return resolvedErrors == null ? Collections.emptyList() : resolvedErrors;
             }
         }
 
-        if (this.isTerminated(resolvedTasks, parentTaskRun) && resolvedAlways != null) {
-            return resolvedAlways;
+        if (this.isTerminated(resolvedTasks, parentTaskRun) && resolvedFinally != null) {
+            return resolvedFinally;
         }
 
         return resolvedTasks;

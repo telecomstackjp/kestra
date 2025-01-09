@@ -1,4 +1,4 @@
-id: always-sequential-error
+id: finally-eachparallel
 namespace: io.kestra.tests
 
 inputs:
@@ -7,8 +7,9 @@ inputs:
     defaults: false
 
 tasks:
-  - id: seq
-    type: io.kestra.plugin.core.flow.Sequential
+  - id: each
+    type: io.kestra.plugin.core.flow.EachParallel
+    value: '["1", "2", "3"]'
     tasks:
       - id: if
         type: io.kestra.plugin.core.flow.If
@@ -30,7 +31,7 @@ tasks:
         type: io.kestra.plugin.core.debug.Return
         format: "{{ task.id }}"
 
-    always:
+    finally:
       - id: a1
         type: io.kestra.plugin.core.debug.Return
         format: "{{ task.id }}"

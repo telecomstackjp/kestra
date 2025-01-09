@@ -3,7 +3,7 @@ package io.kestra.core.models.hierarchies;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.kestra.core.models.executions.TaskRun;
 import io.kestra.core.models.tasks.Task;
-import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +26,12 @@ public class GraphCluster extends AbstractGraph {
     private final GraphClusterRoot root;
 
     @JsonIgnore
-    private final GraphClusterAlways always;
+    @Getter(AccessLevel.NONE)
+    private final GraphClusterFinally _finally;
+
+    public GraphClusterFinally getFinally() {
+        return _finally;
+    }
 
     @JsonIgnore
     private final GraphClusterEnd end;
@@ -44,15 +49,15 @@ public class GraphCluster extends AbstractGraph {
 
         this.relationType = null;
         this.root = new GraphClusterRoot();
-        this.always = new GraphClusterAlways();
+        this._finally = new GraphClusterFinally();
         this.end = new GraphClusterEnd();
         this.taskNode = null;
 
         this.addNode(this.root);
-        this.addNode(this.always);
+        this.addNode(this._finally);
         this.addNode(this.end);
 
-        this.addEdge(this.getAlways(), this.getEnd(), new Relation());
+        this.addEdge(this.getFinally(), this.getEnd(), new Relation());
     }
 
     public GraphCluster(Task task, TaskRun taskRun, List<String> values, RelationType relationType) {
@@ -68,15 +73,15 @@ public class GraphCluster extends AbstractGraph {
 
         this.relationType = relationType;
         this.root = new GraphClusterRoot();
-        this.always = new GraphClusterAlways();
+        this._finally = new GraphClusterFinally();
         this.end = new GraphClusterEnd();
         this.taskNode = taskNode;
 
         this.addNode(this.root);
-        this.addNode(this.always);
+        this.addNode(this._finally);
         this.addNode(this.end);
 
-        this.addEdge(this.getAlways(), this.getEnd(), new Relation());
+        this.addEdge(this.getFinally(), this.getEnd(), new Relation());
     }
 
     public void addNode(AbstractGraph node) {

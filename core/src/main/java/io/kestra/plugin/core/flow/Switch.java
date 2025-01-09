@@ -1,5 +1,6 @@
 package io.kestra.plugin.core.flow;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.Example;
@@ -114,7 +115,13 @@ public class Switch extends Task implements FlowableTask<Switch.Output> {
     protected List<Task> errors;
 
     @Valid
-    protected List<Task> always;
+    @JsonProperty("finally")
+    @Getter(AccessLevel.NONE)
+    protected List<Task> _finally;
+
+    public List<Task> getFinally() {
+        return this._finally;
+    }
 
     private String rendererValue(RunContext runContext) throws IllegalVariableEvaluationException {
         return runContext.render(this.value);
@@ -129,7 +136,7 @@ public class Switch extends Task implements FlowableTask<Switch.Output> {
                     this.cases != null ? this.cases.values().stream().flatMap(Collection::stream) : Stream.empty(),
                     Stream.concat(
                         this.errors != null ? this.errors.stream() : Stream.empty(),
-                        this.always != null ? this.always.stream() : Stream.empty()
+                        this._finally != null ? this._finally.stream() : Stream.empty()
                     )
                 )
             )
@@ -149,7 +156,7 @@ public class Switch extends Task implements FlowableTask<Switch.Output> {
                 )
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)),
             this.errors,
-            this.always,
+            this._finally,
             taskRun,
             execution
         );
@@ -175,7 +182,7 @@ public class Switch extends Task implements FlowableTask<Switch.Output> {
             execution,
             this.childTasks(runContext, parentTaskRun),
             FlowableUtils.resolveTasks(this.getErrors(), parentTaskRun),
-            FlowableUtils.resolveTasks(this.getAlways(), parentTaskRun),
+            FlowableUtils.resolveTasks(this.getFinally(), parentTaskRun),
             parentTaskRun,
             runContext,
             this.isAllowFailure(),
@@ -189,7 +196,7 @@ public class Switch extends Task implements FlowableTask<Switch.Output> {
             execution,
             this.childTasks(runContext, parentTaskRun),
             FlowableUtils.resolveTasks(this.errors, parentTaskRun),
-            FlowableUtils.resolveTasks(this.always, parentTaskRun),
+            FlowableUtils.resolveTasks(this._finally, parentTaskRun),
             parentTaskRun
         );
     }

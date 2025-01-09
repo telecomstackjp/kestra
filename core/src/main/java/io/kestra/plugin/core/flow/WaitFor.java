@@ -1,5 +1,6 @@
 package io.kestra.plugin.core.flow;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
@@ -74,7 +75,13 @@ public class WaitFor extends Task implements FlowableTask<WaitFor.Output> {
     protected List<Task> errors;
 
     @Valid
-    protected List<Task> always;
+    @JsonProperty("finally")
+    @Getter(AccessLevel.NONE)
+    protected List<Task> _finally;
+
+    public List<Task> getFinally() {
+        return this._finally;
+    }
 
     @Valid
     @PluginProperty
@@ -111,7 +118,7 @@ public class WaitFor extends Task implements FlowableTask<WaitFor.Output> {
             subGraph,
             tasks,
             this.errors,
-            this.always,
+            this._finally,
             taskRun,
             execution
         );
@@ -126,7 +133,7 @@ public class WaitFor extends Task implements FlowableTask<WaitFor.Output> {
                 tasks.stream(),
                 Stream.concat(
                     this.getErrors() != null ? this.getErrors().stream() : Stream.empty(),
-                    this.getAlways() != null ? this.getAlways().stream() : Stream.empty()
+                    this.getFinally() != null ? this.getFinally().stream() : Stream.empty()
                 )
             )
             .toList();
@@ -144,7 +151,7 @@ public class WaitFor extends Task implements FlowableTask<WaitFor.Output> {
             execution,
             this.childTasks(runContext, parentTaskRun),
             FlowableUtils.resolveTasks(this.getErrors(), parentTaskRun),
-            FlowableUtils.resolveTasks(this.getAlways(), parentTaskRun),
+            FlowableUtils.resolveTasks(this.getFinally(), parentTaskRun),
             parentTaskRun
         );
     }
@@ -201,7 +208,7 @@ public class WaitFor extends Task implements FlowableTask<WaitFor.Output> {
             execution,
             this.childTasks(runContext, parentTaskRun),
             FlowableUtils.resolveTasks(this.getErrors(), parentTaskRun),
-            FlowableUtils.resolveTasks(this.getAlways(), parentTaskRun),
+            FlowableUtils.resolveTasks(this.getFinally(), parentTaskRun),
             parentTaskRun,
             runContext,
             isAllowFailure(),

@@ -1,5 +1,6 @@
 package io.kestra.plugin.core.flow;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.kestra.core.models.annotations.PluginProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -21,7 +22,6 @@ import io.kestra.core.runners.RunContext;
 import io.kestra.core.utils.GraphUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -84,7 +84,13 @@ public class Parallel extends Task implements FlowableTask<VoidOutput> {
     protected List<Task> errors;
 
     @Valid
-    protected List<Task> always;
+    @JsonProperty("finally")
+    @Getter(AccessLevel.NONE)
+    protected List<Task> _finally;
+
+    public List<Task> getFinally() {
+        return this._finally;
+    }
 
     @Override
     public GraphCluster tasksTree(Execution execution, TaskRun taskRun, List<String> parentValues) throws IllegalVariableEvaluationException {
@@ -94,7 +100,7 @@ public class Parallel extends Task implements FlowableTask<VoidOutput> {
             subGraph,
             this.tasks,
             this.errors,
-            this.always,
+            this._finally,
             taskRun,
             execution
         );
@@ -109,7 +115,7 @@ public class Parallel extends Task implements FlowableTask<VoidOutput> {
                 this.tasks != null ? this.tasks.stream() : Stream.empty(),
                 Stream.concat(
                     this.errors != null ? this.errors.stream() : Stream.empty(),
-                    this.always != null ? this.always.stream() : Stream.empty()
+                    this._finally != null ? this._finally.stream() : Stream.empty()
                 )
             )
             .toList();
@@ -126,7 +132,7 @@ public class Parallel extends Task implements FlowableTask<VoidOutput> {
             execution,
             this.childTasks(runContext, parentTaskRun),
             FlowableUtils.resolveTasks(this.errors, parentTaskRun),
-            FlowableUtils.resolveTasks(this.always, parentTaskRun),
+            FlowableUtils.resolveTasks(this._finally, parentTaskRun),
             parentTaskRun,
             this.concurrent
         );

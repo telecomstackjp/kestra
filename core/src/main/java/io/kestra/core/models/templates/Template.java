@@ -2,6 +2,7 @@ package io.kestra.core.models.templates;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
@@ -68,7 +69,13 @@ public class Template implements DeletedInterface, TenantInterface, HasUID {
     private List<Task> errors;
 
     @Valid
-    private List<Task> always;
+    @JsonProperty("finally")
+    @Getter(AccessLevel.NONE)
+    protected List<Task> _finally;
+
+    public List<Task> getFinally() {
+        return this._finally;
+    }
 
     @NotNull
     @Builder.Default
@@ -141,7 +148,7 @@ public class Template implements DeletedInterface, TenantInterface, HasUID {
             this.description,
             this.tasks,
             this.errors,
-            this.always,
+            this._finally,
             true
         );
     }
