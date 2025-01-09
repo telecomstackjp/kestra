@@ -1,4 +1,5 @@
 import OnlyLeftMenuLayout from "../components/layout/OnlyLeftMenuLayout.vue"
+import Errors from "../components/errors/Errors.vue"
 
 export default [
     //Initial
@@ -54,5 +55,5 @@ export default [
     {name: "admin/stats", path: "/:tenant?/admin/stats", component: () => import("override/components/admin/stats/Stats.vue")},
 
     //Errors
-    {name: "errors/404-wildcard", path: "/:pathMatch(.*)", component: () => import("../components/errors/Errors.vue"), props: {code: 404}},
+    {name: "errors/404-wildcard", path: "/:pathMatch(.*)", component: Errors, props: {code: 404}},
 ];
