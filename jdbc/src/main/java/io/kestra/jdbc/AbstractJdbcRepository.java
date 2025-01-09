@@ -9,6 +9,7 @@ import io.kestra.core.repositories.ArrayListTotal;
 import io.kestra.core.utils.IdUtils;
 import io.micronaut.data.model.Pageable;
 import io.micronaut.data.model.Sort;
+import io.micronaut.data.model.Sort.Order;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -205,16 +206,13 @@ public abstract class AbstractJdbcRepository<T> {
         return this.fetchPage(context, select, pageable, this::map);
     }
 
-    public <R extends Record> Select<R> buildPageQuery(DSLContext context, SelectConditionStep<R> select, Pageable pageable){
-        return (Select<R>) this.limit(
-            context.select(DSL.asterisk())
+    public <R extends Record> Select<R> buildPageQuery(DSLContext context, SelectConditionStep<R> select){
+        return (Select<R>) context.select(DSL.asterisk())
                 .from(this
-                    .sort(select, pageable)
+                    .sort(select, Pageable.from(Sort.of(Order.asc("timestamp"))))
                     .asTable("page")
                 )
-                .where(DSL.trueCondition()),
-            pageable
-        );
+                .where(DSL.trueCondition());
 
     }
 

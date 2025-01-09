@@ -31,7 +31,7 @@ public class LogRecord implements LogRecordData {
     String severityText;
     Attributes attributes;
     int totalAttributeCount;
-    Value<List<KeyValue>> bodyValue;
+    Value<String> bodyValue;
 
     @JsonIgnore
     public Body getBody(){
