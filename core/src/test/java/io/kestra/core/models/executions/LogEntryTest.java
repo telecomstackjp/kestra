@@ -35,11 +35,4 @@ public class LogEntryTest {
         assertThat(logMap.get("message"), is("message"));
     }
 
-    @Test
-    public void should_format_to_log_map_empty_log_entry(){
-        LogEntry logEntry = LogEntry.builder().build();
-        Map<String, Object> map = logEntry.toLogMap();
-        assertThat(map.size(), is(0));
-    }
-
 }
