@@ -31,7 +31,7 @@
 
     import OpenInNew from "vue-material-design-icons/OpenInNew.vue";
 
-    import {MDCRenderer} from "@kestra-io/ui-libs";
+    import {MDCRenderer, getMDCParser} from "@kestra-io/ui-libs";
     import DocsLayout from "./DocsLayout.vue";
     import ContextDocsLink from "./ContextDocsLink.vue";
     import ContextChildCard from "./ContextChildCard.vue";
@@ -49,12 +49,6 @@
     const routeInfo = computed(() => ({
         title: pageMetadata.value?.title ?? t("docs"),
     }))
-
-    async function getParser() {
-        const {default: useMarkdownParser} = await import("@kestra-io/ui-libs/src/composables/useMarkdownParser")
-        const parser = await useMarkdownParser();
-        return parser
-    }
 
     onUnmounted(() => {
         ast.value = undefined
@@ -106,7 +100,7 @@
         if (!("canShare" in navigator)) {
             content = content.replaceAll(/\s*web-share\s*/g, "");
         }
-        const parse = await getParser()
+        const parse = await getMDCParser()
         ast.value = await parse(content);
     }
 </script>
