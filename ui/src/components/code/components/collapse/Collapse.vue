@@ -15,6 +15,7 @@
                 <Element
                     v-for="(element, elementIndex) in item.elements"
                     :key="elementIndex"
+                    :section="item.title"
                     :element
                 />
             </template>

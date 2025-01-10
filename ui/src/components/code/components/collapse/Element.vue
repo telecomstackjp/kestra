@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex my-2 p-2 rounded element">
+    <div @click="handleClick" class="d-flex my-2 p-2 rounded element">
         <div class="me-2 icon">
             <TaskIcon :cls="props.element.type" :icons only-icon />
         </div>
@@ -13,20 +13,39 @@
 <script setup lang="ts">
     import {computed} from "vue";
 
-    import TaskIcon from "@kestra-io/ui-libs";
+    // TODO: Update import once https://github.com/kestra-io/kestra/pull/6643 is merged
+    import TaskIcon from "@kestra-io/ui-libs/src/components/misc/TaskIcon.vue";
 
-    const props = defineProps({element: {type: Object, required: true}});
+    const props = defineProps({
+        section: {type: String, required: true},
+        element: {type: Object, required: true},
+    });
 
     import {useStore} from "vuex";
     const store = useStore();
 
     const icons = computed(() => store.state.plugin.icons);
+
+    import {useRouter, useRoute} from "vue-router";
+    const router = useRouter();
+    const route = useRoute();
+
+    const handleClick = () => {
+        router.replace({
+            query: {
+                ...route.query,
+                section: props.section.toLowerCase(),
+                identifier: props.element.id,
+            },
+        });
+    };
 </script>
 
 <style scoped lang="scss">
 @import "../../styles/code.scss";
 
 .element {
+    cursor: pointer;
     background-color: $code-card-color;
     border: 1px solid $code-border-color;
 
@@ -35,6 +54,7 @@
     }
 
     & > .label {
+        color: initial;
         font-size: $code-font-sm;
     }
 }
