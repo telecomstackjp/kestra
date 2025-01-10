@@ -1081,7 +1081,8 @@
       "creation": {
         "tasks": "Add a task",
         "triggers": "Add a trigger",
-        "error handlers": "Add an error handler"
+        "error handlers": "Add an error handler",
+        "select": "Select a {section}"
       }
     }
   }

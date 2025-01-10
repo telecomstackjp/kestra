@@ -54,7 +54,7 @@ export type Breadcrumb = {
 
 export type CollapseItem = {
     title: string;
-    length?: number;
+    elements?: Record<string, any>[];
 };
 
 export type Sections = {
