@@ -28,7 +28,7 @@ import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.Output;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.models.tasks.common.EncryptedString;
-import io.kestra.core.models.tasks.logs.LogShipper;
+import io.kestra.core.models.tasks.logs.LogExporter;
 import io.kestra.core.models.tasks.runners.TaskRunner;
 import io.kestra.core.models.triggers.AbstractTrigger;
 import io.kestra.core.plugins.PluginRegistry;
@@ -483,10 +483,10 @@ public class JsonSchemaGenerator {
                 .filter(Predicate.not(io.kestra.core.models.Plugin::isInternal))
                 .flatMap(clz -> safelyResolveSubtype(declaredType, clz, typeContext).stream())
                 .toList();
-        } else if (declaredType.getErasedType() == LogShipper.class) {
+        } else if (declaredType.getErasedType() == LogExporter.class) {
             return getRegisteredPlugins()
                 .stream()
-                .flatMap(registeredPlugin -> registeredPlugin.getLogShippers().stream())
+                .flatMap(registeredPlugin -> registeredPlugin.getLogExporters().stream())
                 .filter(Predicate.not(io.kestra.core.models.Plugin::isInternal))
                 .flatMap(clz -> safelyResolveSubtype(declaredType, clz, typeContext).stream())
                 .toList();
