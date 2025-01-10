@@ -104,7 +104,7 @@
 
 <script>
     import LogLine from "./LogLine.vue";
-    import State from "../../utils/state";
+    import {State} from "@kestra-io/ui-libs"
     import _xor from "lodash/xor";
     import _groupBy from "lodash/groupBy";
     import moment from "moment";

@@ -156,7 +156,7 @@
     import Unqueue from "./Unqueue.vue";
     import ForceRun from "./ForceRun.vue";
     import Kill from "./Kill.vue";
-    import State from "../../utils/state";
+    import {State} from "@kestra-io/ui-libs"
     import DateAgo from "../layout/DateAgo.vue";
     import Crud from "override/components/auth/Crud.vue";
     import Duration from "../layout/Duration.vue";

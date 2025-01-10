@@ -236,7 +236,7 @@
     import moment from "moment";
 
     import {apiUrl} from "override/utils/route";
-    import State from "../../utils/state";
+    import {State} from "@kestra-io/ui-libs"
 
     import Header from "./components/Header.vue";
     import Card from "./components/Card.vue";

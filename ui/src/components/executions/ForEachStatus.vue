@@ -30,7 +30,7 @@
 <script>
     import {cssVariable} from "@kestra-io/ui-libs";
     import {stateDisplayValues} from "../../utils/constants";
-    import State from "../../utils/state";
+    import {State} from "@kestra-io/ui-libs"
     import throttle from "lodash/throttle"
 
     export default {

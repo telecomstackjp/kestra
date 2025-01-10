@@ -150,7 +150,7 @@
     import ChevronDown from "vue-material-design-icons/ChevronDown.vue";
     import Clock from "vue-material-design-icons/Clock.vue";
     import Outputs from "./Outputs.vue";
-    import State from "../../utils/state";
+    import {State} from "@kestra-io/ui-libs"
     import FlowUtils from "../../utils/flowUtils";
     import {mapState} from "vuex";
     import {SECTIONS} from "../../utils/constants";
