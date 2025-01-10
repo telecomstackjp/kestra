@@ -163,15 +163,17 @@ public class If extends Task implements FlowableTask<If.Output> {
 
     @Override
     public Optional<State.Type> resolveState(RunContext runContext, Execution execution, TaskRun parentTaskRun) throws IllegalVariableEvaluationException {
-        List<ResolvedTask> childTask = this.childTasks(runContext, parentTaskRun);
-        if (ListUtils.isEmpty(childTask)) {
+        List<ResolvedTask> childTasks = ListUtils.emptyOnNull(this.childTasks(runContext, parentTaskRun)).stream()
+            .filter(resolvedTask -> !resolvedTask.getTask().getDisabled())
+            .toList();
+        if (ListUtils.isEmpty(childTasks)) {
             // no next task to run, we guess the state from the parent task
             return Optional.of(execution.guessFinalState(null, parentTaskRun, this.isAllowFailure(), this.isAllowWarning()));
         }
 
         return FlowableUtils.resolveState(
             execution,
-            this.childTasks(runContext, parentTaskRun),
+            childTasks,
             FlowableUtils.resolveTasks(this.getErrors(), parentTaskRun),
             parentTaskRun,
             runContext,
