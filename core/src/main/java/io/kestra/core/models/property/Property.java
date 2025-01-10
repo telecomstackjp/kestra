@@ -41,8 +41,6 @@ public class Property<T> {
     private String expression;
     private T value;
 
-    // used only by the deserializer and in tests
-    @VisibleForTesting
     public Property(String expression) {
         this.expression = expression;
     }
