@@ -51,6 +51,10 @@ export default {
                 commit("setChartErrors", errors);
                 return errors;
             });
+        },
+        chartPreview(_, chart) {
+            return this.$http.post(`${apiUrl(this)}/dashboards/charts/preview`, chart, yamlContentHeader)
+                .then(response => response.data);
         }
     },
     mutations: {

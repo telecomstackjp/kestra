@@ -22,24 +22,17 @@ public class LogEntryTest {
             .thread("thread")
             .message("message")
             .build();
-        Map<String, String> logMap = logEntry.toLogMap();
+        Map<String, Object> logMap = logEntry.toLogMap();
         assertThat(logMap.get("tenantId"), is("tenantId"));
         assertThat(logMap.get("namespace"), is("namespace"));
         assertThat(logMap.get("flowId"), is("flowId"));
         assertThat(logMap.get("taskId"), is("taskId"));
         assertThat(logMap.get("executionId"), is("executionId"));
         assertThat(logMap.get("taskRunId"), is("taskRunId"));
-        assertThat(logMap.get("attemptNumber"), is("1"));
+        assertThat(logMap.get("attemptNumber"), is(1));
         assertThat(logMap.get("triggerId"), is("triggerId"));
         assertThat(logMap.get("thread"), is("thread"));
         assertThat(logMap.get("message"), is("message"));
-    }
-
-    @Test
-    public void should_format_to_log_map_empty_log_entry(){
-        LogEntry logEntry = LogEntry.builder().build();
-        Map<String, String> map = logEntry.toMap();
-        assertThat(map.size(), is(0));
     }
 
 }

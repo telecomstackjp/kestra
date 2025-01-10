@@ -363,7 +363,7 @@ public class JdbcExecutor implements ExecutorInterface, Service {
                     } else {
                         try {
                             workerTaskQueue.emit(WorkerTask.builder()
-                                .taskRun(workerTaskRunning.getTaskRun())
+                                .taskRun(workerTaskRunning.getTaskRun().onRunningResend())
                                 .task(workerTaskRunning.getTask())
                                 .runContext(workerTaskRunning.getRunContext())
                                 .build()

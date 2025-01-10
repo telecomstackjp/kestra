@@ -73,6 +73,7 @@
                                         :source="chart.data.content"
                                         :chart="chart.data"
                                         :identifier="chart.data.id"
+                                        is-preview
                                     />
                                 </div>
                             </div>
@@ -131,6 +132,7 @@
                                     :source="selectedChart.content"
                                     :chart="selectedChart"
                                     :identifier="selectedChart.id"
+                                    is-preview
                                 />
                             </div>
                         </div>
@@ -272,7 +274,7 @@
                         if (errors.constraints) {
                             result.error = errors.constraints;
                         } else {
-                            result.data = chart;
+                            result.data = {...chart, content: yamlChart};
                         }
                     });
                 return result;
