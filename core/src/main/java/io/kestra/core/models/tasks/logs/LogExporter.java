@@ -2,7 +2,6 @@ package io.kestra.core.models.tasks.logs;
 
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.tasks.Output;
-import io.kestra.core.models.tasks.runners.TaskRunnerDetailResult;
 import io.kestra.core.runners.RunContext;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,7 +15,7 @@ import reactor.core.publisher.Flux;
 @SuperBuilder(toBuilder = true)
 @Getter
 @NoArgsConstructor
-public abstract class LogShipper<T extends Output>  implements io.kestra.core.models.Plugin {
+public abstract class LogExporter<T extends Output>  implements io.kestra.core.models.Plugin {
     @NotNull
     @NotBlank
     @Pattern(regexp="^[a-zA-Z0-9][a-zA-Z0-9_-]*")

@@ -7,7 +7,7 @@ import io.kestra.core.models.conditions.Condition;
 import io.kestra.core.models.dashboards.DataFilter;
 import io.kestra.core.models.dashboards.charts.Chart;
 import io.kestra.core.models.tasks.Task;
-import io.kestra.core.models.tasks.logs.LogShipper;
+import io.kestra.core.models.tasks.logs.LogExporter;
 import io.kestra.core.models.tasks.runners.TaskRunner;
 import io.kestra.core.models.triggers.AbstractTrigger;
 import io.kestra.core.secret.SecretPluginInterface;
@@ -46,7 +46,7 @@ public class RegisteredPlugin {
     private final List<Class<? extends Chart<?>>> charts;
     private final List<Class<? extends DataFilter<?, ?>>> dataFilters;
     private final List<String> guides;
-    private final List<Class<? extends LogShipper>> logShippers;
+    private final List<Class<? extends LogExporter>> logExporters;
     // Map<lowercasealias, <Alias, Class>>
     private final Map<String, Map.Entry<String, Class<?>>> aliases;
 
@@ -61,7 +61,7 @@ public class RegisteredPlugin {
             !appBlocks.isEmpty() ||
             !charts.isEmpty() ||
             !dataFilters.isEmpty() ||
-            !logShippers.isEmpty()
+            !logExporters.isEmpty()
         ;
     }
 
@@ -122,8 +122,8 @@ public class RegisteredPlugin {
             return AppPluginInterface.class;
         }
 
-        if (this.getLogShippers().stream().anyMatch(r -> r.getName().equals(cls))) {
-            return LogShipper.class;
+        if (this.getLogExporters().stream().anyMatch(r -> r.getName().equals(cls))) {
+            return LogExporter.class;
         }
 
         if (this.getAliases().containsKey(cls.toLowerCase())) {
@@ -157,7 +157,7 @@ public class RegisteredPlugin {
         result.put("appBlocks", Arrays.asList(this.getAppBlocks().toArray(Class[]::new)));
         result.put("charts", Arrays.asList(this.getCharts().toArray(Class[]::new)));
         result.put("data-filters", Arrays.asList(this.getDataFilters().toArray(Class[]::new)));
-        result.put("log-shipper", Arrays.asList(this.getLogShippers().toArray(Class[]::new)));
+        result.put("log-exporters", Arrays.asList(this.getLogExporters().toArray(Class[]::new)));
 
         return result;
     }
@@ -340,9 +340,9 @@ public class RegisteredPlugin {
             b.append("] ");
         }
 
-        if (!this.getLogShippers().isEmpty()) {
-            b.append("[Log Shippers: ");
-            b.append(this.getLogShippers().stream().map(Class::getName).collect(Collectors.joining(", ")));
+        if (!this.getLogExporters().isEmpty()) {
+            b.append("[Log Exporters: ");
+            b.append(this.getLogExporters().stream().map(Class::getName).collect(Collectors.joining(", ")));
             b.append("] ");
         }
 
