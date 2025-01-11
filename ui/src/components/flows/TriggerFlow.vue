@@ -42,7 +42,9 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item v-if="localFlow" :label="$t('inputs')">
-                    <flow-run @execution-trigger="closeModal" :redirect="true" />
+                    <div class="inputs-container">
+                        <flow-run @execution-trigger="closeModal" :redirect="true" />
+                    </div>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -225,6 +227,9 @@
 </script>
 
 <style scoped>
+    .inputs-container{
+        width: 100%;
+    }
     .trigger-flow-wrapper {
         display: inline;
     }
