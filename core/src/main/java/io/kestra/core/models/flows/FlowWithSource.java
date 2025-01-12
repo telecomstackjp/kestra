@@ -1,5 +1,6 @@
 package io.kestra.core.models.flows;
 
+import io.kestra.core.models.HasSource;
 import io.micronaut.core.annotation.Introspected;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Introspected
 @ToString
-public class FlowWithSource extends Flow {
+public class FlowWithSource extends Flow implements HasSource {
     String source;
 
     @SuppressWarnings("deprecation")
@@ -79,5 +80,11 @@ public class FlowWithSource extends Flow {
             .retry(flow.retry)
             .sla(flow.sla)
             .build();
+    }
+
+    /** {@inheritDoc} **/
+    @Override
+    public String source() {
+        return getSource();
     }
 }

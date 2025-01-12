@@ -37,7 +37,7 @@
 <script>
     import Convert from "ansi-to-html";
     import xss from "xss";
-    import Markdown from "../../utils/markdown";
+    import * as Markdown from "../../utils/markdown";
     import VRuntimeTemplate from "vue3-runtime-template";
     import MenuRight from "vue-material-design-icons/MenuRight.vue";
 
@@ -143,7 +143,7 @@
             },
             iconColor() {
                 const logLevel = this.log.level?.toLowerCase();
-                return `var(--log-content-${logLevel}) !important`; // Use CSS variable for icon color
+                return `var(--ks-log-content-${logLevel}) !important`; // Use CSS variable for icon color
             },
             message() {
                 let logMessage = !this.log.message
@@ -166,7 +166,7 @@
                 let markdown = await Markdown.render(this.message, {onlyLink: true});
 
                 // Avoid rendering non-existent properties in the template by VRuntimeTemplate
-                markdown = markdown.replace(/{{/g, "{{").replace(/}}/g, "}}");
+                markdown = markdown.replace(/{{/g, "&lcub;&lcub;").replace(/}}/g, "&rcub;&rcub;");
 
                 return markdown;
             },
@@ -200,7 +200,7 @@ div.line {
     }
 
     .log-level {
-        padding: calc(var(--spacer) / 4);
+        padding: .25rem;
     }
 
     .log-content {

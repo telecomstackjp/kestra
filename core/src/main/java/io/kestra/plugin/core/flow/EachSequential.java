@@ -16,6 +16,7 @@ import io.kestra.core.models.tasks.VoidOutput;
 import io.kestra.core.runners.FlowableUtils;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.utils.GraphUtils;
+import io.kestra.core.utils.ListUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -125,8 +126,9 @@ public class EachSequential extends Sequential implements FlowableTask<VoidOutpu
 
     @Override
     public Optional<State.Type> resolveState(RunContext runContext, Execution execution, TaskRun parentTaskRun) throws IllegalVariableEvaluationException {
-        List<ResolvedTask> childTasks = this.childTasks(runContext, parentTaskRun);
-
+        List<ResolvedTask> childTasks = ListUtils.emptyOnNull(this.childTasks(runContext, parentTaskRun)).stream()
+            .filter(resolvedTask -> !resolvedTask.getTask().getDisabled())
+            .toList();
         if (childTasks.isEmpty()) {
             return Optional.of(State.Type.SUCCESS);
         }
