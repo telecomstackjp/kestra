@@ -56,10 +56,16 @@ public class HttpConfiguration {
 
     // Deprecated properties
 
+    /**
+     * @deprecated
+     */
     @Schema(title = "The time allowed to establish a connection to the server before failing.")
     @Deprecated
     private final Property<Duration> connectTimeout;
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     public void setConnectTimeout(Property<Duration> connectTimeout) {
         if (this.timeout == null) {
@@ -72,11 +78,17 @@ public class HttpConfiguration {
             .build();
     }
 
+    /**
+     * @deprecated
+     */
     @Schema(title = "The maximum time allowed for reading data from the server before failing.")
     @Builder.Default
     @Deprecated
     private final Property<Duration> readTimeout = Property.of(Duration.ofSeconds(HttpClientConfiguration.DEFAULT_READ_TIMEOUT_SECONDS));
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     public void setReadTimeout(Property<Duration> readTimeout) {
         if (this.timeout == null) {
@@ -89,11 +101,17 @@ public class HttpConfiguration {
             .build();
     }
 
+    /**
+     * @deprecated
+     */
     @Schema(title = "The type of proxy to use.")
     @Builder.Default
     @Deprecated
     private final Property<Proxy.Type> proxyType = Property.of(Proxy.Type.DIRECT);
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     public void setProxyType(Property<Proxy.Type> proxyType) {
         if (this.proxy == null) {
@@ -106,10 +124,16 @@ public class HttpConfiguration {
             .build();
     }
 
+    /**
+     * @deprecated
+     */
     @Schema(title = "The address of the proxy server.")
     @Deprecated
     private final Property<String> proxyAddress;
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     public void setProxyAddress(Property<String> proxyAddress) {
         if (this.proxy == null) {
@@ -122,10 +146,16 @@ public class HttpConfiguration {
             .build();
     }
 
+    /**
+     * @deprecated
+     */
     @Schema(title = "The port of the proxy server.")
     @Deprecated
     private final Property<Integer> proxyPort;
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     public void setProxyPort(Property<Integer> proxyPort) {
         if (this.proxy == null) {
@@ -138,10 +168,16 @@ public class HttpConfiguration {
             .build();
     }
 
+    /**
+     * @deprecated
+     */
     @Schema(title = "The username for proxy authentication.")
     @Deprecated
     private final Property<String> proxyUsername;
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     public void setProxyUsername(Property<String> proxyUsername) {
         if (this.proxy == null) {
@@ -154,10 +190,16 @@ public class HttpConfiguration {
             .build();
     }
 
+    /**
+     * @deprecated
+     */
     @Schema(title = "The password for proxy authentication.")
     @Deprecated
     private final Property<String> proxyPassword;
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     public void setProxyPassword(Property<String> proxyPassword) {
         if (this.proxy == null) {
@@ -170,10 +212,16 @@ public class HttpConfiguration {
             .build();
     }
 
+    /**
+     * @deprecated
+     */
     @Schema(title = "The username for HTTP basic authentication.")
     @Deprecated
     private final Property<String> basicAuthUser;
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     public void setBasicAuthUser(Property<String> basicAuthUser) {
         if (this.auth == null || !(this.auth instanceof BasicAuthConfiguration)) {
@@ -186,10 +234,16 @@ public class HttpConfiguration {
             .build();
     }
 
+    /**
+     * @deprecated
+     */
     @Schema(title = "The password for HTTP basic authentication.")
     @Deprecated
     private final Property<String> basicAuthPassword;
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     private void setBasicAuthPassword(Property<String> basicAuthPassword) {
         if (this.auth == null || !(this.auth instanceof BasicAuthConfiguration)) {
@@ -202,11 +256,17 @@ public class HttpConfiguration {
             .build();
     }
 
+    /**
+     * @deprecated
+     */
     @Schema(title = "The log level for the HTTP client.")
     @PluginProperty
     @Deprecated
     private final LogLevel logLevel;
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     private void setLogLevel(LogLevel logLevel) {
         if (logLevel == LogLevel.TRACE) {
@@ -229,18 +289,25 @@ public class HttpConfiguration {
     }
 
     // Deprecated properties with no real value to be kept, silently ignore
-
+    /**
+     * @deprecated
+     */
     @Schema(title = "The time allowed for a read connection to remain idle before closing it.")
     @Builder.Default
     @Deprecated
     private final Property<Duration> readIdleTimeout = Property.of(Duration.of(HttpClientConfiguration.DEFAULT_READ_IDLE_TIMEOUT_MINUTES, ChronoUnit.MINUTES));
 
-
+    /**
+     * @deprecated
+     */
     @Schema(title = "The time an idle connection can remain in the client's connection pool before being closed.")
     @Builder.Default
     @Deprecated
     private final Property<Duration> connectionPoolIdleTimeout = Property.of(Duration.ofSeconds(HttpClientConfiguration.DEFAULT_CONNECTION_POOL_IDLE_TIMEOUT_SECONDS));
 
+    /**
+     * @deprecated
+     */
     @Schema(title = "The maximum content length of the response.")
     @Builder.Default
     @Deprecated
