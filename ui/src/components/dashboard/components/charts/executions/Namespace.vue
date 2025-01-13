@@ -123,6 +123,13 @@
                     position: "bottom",
                     display: true,
                     stacked: true,
+           
+                    ticks: {
+                        callback: function(value) {
+                            const namespaceName = parsedData.value.labels[value]
+                            return namespaceName.length > 10 ? `${namespaceName.substring(0, 10)}...` : namespaceName;
+                        },
+                    }
                 },
                 y: {
                     title: {
