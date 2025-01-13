@@ -128,7 +128,7 @@
            
                     ticks: {
                         callback: function(value) {
-                            const namespaceName = parsedData.value.labels[value]
+                            const namespaceName = this.getLabelForValue(value)
                             return namespaceName.length > MAX_LABEL_LENGTH ? `${namespaceName.substring(0, MAX_LABEL_LENGTH)}...` : namespaceName;
                         },
                     }
