@@ -40,7 +40,13 @@
         },
         creation: {type: Boolean, default: false},
     });
-    const expanded = ref([]);
+    const expanded = ref<CollapseItem["title"][]>([]);
+
+    if (props.creation) {
+        props.items.forEach((item) => {
+            if (item.elements?.length) expanded.value.push(item.title);
+        });
+    }
 </script>
 
 <style scoped lang="scss">
