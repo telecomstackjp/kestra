@@ -89,6 +89,8 @@
         };
     });
 
+    const MAX_LABEL_LENGTH = 15;
+
     const options = computed(() =>
         defaultConfig({
             barThickness: 25,
@@ -127,7 +129,7 @@
                     ticks: {
                         callback: function(value) {
                             const namespaceName = parsedData.value.labels[value]
-                            return namespaceName.length > 10 ? `${namespaceName.substring(0, 10)}...` : namespaceName;
+                            return namespaceName.length > MAX_LABEL_LENGTH ? `${namespaceName.substring(0, MAX_LABEL_LENGTH)}...` : namespaceName;
                         },
                     }
                 },
