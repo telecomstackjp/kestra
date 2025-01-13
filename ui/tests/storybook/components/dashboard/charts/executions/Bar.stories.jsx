@@ -40,9 +40,10 @@ const generateSampleData = (days) => {
 const Template = (args) => ({
     components: {Bar},
     setup() {
-        return {args};
-    },
-    template: "<div style=\"width: 800px;\"><Bar v-bind=\"args\" /></div>",
+        return () => {
+            return <div style="width: 800px;"><Bar {...args} /></div>
+        }
+    }
 });
 
 // Basic story with 7 days of data
@@ -94,3 +95,11 @@ HourlyData.args = {
     }),
     total: 500,
 }; 
+
+// Story with execution names as labels
+export const ExecutionNamesAsLabels = Template.bind({});
+ExecutionNamesAsLabels.args = {
+    data: generateSampleData(7),
+    total: 350,
+    labels: ["Execution 1", "Execution 2", "Execution 3", "Execution 4", "Execution 5", "Execution 6", "Execution 7"]
+};
