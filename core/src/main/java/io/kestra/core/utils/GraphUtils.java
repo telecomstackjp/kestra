@@ -337,8 +337,11 @@ public class GraphUtils {
                 // add the node
                 graph.addNode(currentGraph);
 
+                if (relationType == RelationType.ERROR || relationType == RelationType.FINALLY) {
+                    currentGraph.updateWithChildren(AbstractGraph.BranchType.valueOf(relationType.name()));
+                }
+
                 if (relationType == RelationType.ERROR) {
-                    currentGraph.updateErrorWithChildren(true);
                     if (isFirst) {
                         previous = graph.getRoot();
                     }

@@ -139,12 +139,12 @@ public class GraphCluster extends AbstractGraph {
     }
 
     @Override
-    public void updateErrorWithChildren(boolean error) {
-        this.error = error;
+    public void updateWithChildren(BranchType branchType) {
+        this.branchType = branchType;
 
-        this.taskNode.error = error;
-        this.root.error = error;
-        this.end.error = error;
+        this.taskNode.branchType = branchType;
+        this.root.branchType = branchType;
+        this.end.branchType = branchType;
     }
 
     @Override
