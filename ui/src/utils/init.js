@@ -145,12 +145,11 @@ export default async (app, routes, stores, translations, additionalTranslations 
         allowComposition: true,
         legacy: false,
         warnHtmlMessage: false,
-        additionalTranslations
     });
 
     if(locale !== "en"){
-        await loadLocaleMessages(i18n, locale);
-        await setI18nLanguage(i18n, locale, additionalTranslations[locale]);
+        await loadLocaleMessages(i18n, locale, additionalTranslations);
+        await setI18nLanguage(i18n, locale);
     }
     
     app.use(i18n);

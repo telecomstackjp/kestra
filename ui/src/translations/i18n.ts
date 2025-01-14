@@ -1,5 +1,4 @@
 import {nextTick} from "vue"
-import merge from "lodash/merge"
 import {createI18n, type I18n} from "vue-i18n"
 
 const translations = import.meta.glob("./*.json")
@@ -31,11 +30,13 @@ export function setI18nLanguage(i18n: I18n, locale: (typeof SUPPORT_LOCALES)[num
 
 export async function loadLocaleMessages(i18n: I18n, locale: (typeof SUPPORT_LOCALES)[number], additionalTranslationsProvider: Record<string, () => Promise<any>>) {
   // load locale messages with dynamic import
-  const messages = await translations[`./${locale}.json`]() as any
+  const messages = {default: {}} as any
 
   if(additionalTranslationsProvider[locale]){
     const additionalTranslations = await additionalTranslationsProvider[locale]()
-    messages.default[locale] = merge({}, messages.default[locale], additionalTranslations)
+    messages.default[locale] = additionalTranslations.default[locale]
+  }else{
+    messages.default[locale] = await translations[`./${locale}.json`]() as any
   }
 
   // set locale and locale message
