@@ -350,6 +350,19 @@ public class FlowableUtils {
             parentTaskRun
         );
 
+        boolean isTasks = tasks.equals(currentTasks);
+
+        // errors & finally must be run as sequential tasks
+        if (!isTasks) {
+            return resolveSequentialNexts(
+                execution,
+                tasks,
+                errors,
+                _finally,
+                parentTaskRun
+            );
+        }
+
         // all tasks run
         List<TaskRun> taskRuns = execution.findTaskRunByTasks(currentTasks, parentTaskRun);
 
@@ -393,8 +406,7 @@ public class FlowableUtils {
         return Collections.emptyList();
     }
 
-    private final static TypeReference<List<Object>> TYPE_REFERENCE = new TypeReference<>() {
-    };
+    private final static TypeReference<List<Object>> TYPE_REFERENCE = new TypeReference<>() {};
     private final static ObjectMapper MAPPER = JacksonMapper.ofJson();
 
     @SuppressWarnings({"unchecked", "rawtypes"})
