@@ -55,7 +55,7 @@
                 </el-card>
             </template>
 
-            <template #table v-if="executions.length">
+            <template #table v-if="executions?.length">
                 <select-table
                     ref="selectTable"
                     :data="executions"
