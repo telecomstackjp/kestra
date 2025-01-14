@@ -62,7 +62,7 @@ import RouterMd from "../components/utils/RouterMd.vue";
 import Utils from "./utils";
 import TaskTaskRunner from "../components/flows/tasks/TaskTaskRunner.vue";
 
-export default async (app, routes, stores, translations) => {
+export default async (app, routes, stores, translations, additionalTranslations = {}) => {
     // charts
     Chart.register(
         CategoryScale,
@@ -145,11 +145,12 @@ export default async (app, routes, stores, translations) => {
         allowComposition: true,
         legacy: false,
         warnHtmlMessage: false,
+        additionalTranslations
     });
 
     if(locale !== "en"){
         await loadLocaleMessages(i18n, locale);
-        await setI18nLanguage(i18n, locale);
+        await setI18nLanguage(i18n, locale, additionalTranslations[locale]);
     }
     
     app.use(i18n);
