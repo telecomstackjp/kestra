@@ -36,6 +36,11 @@ function getDecorators(data) {
             }
         },
         vueRouter([
+        {
+            path: "/",
+            name: "home",
+            component: {template: "div>home</div>"}
+        },
           {
             path: "/flows/update/:namespace/:id?/:flowId?",
             name: "flows/update",
