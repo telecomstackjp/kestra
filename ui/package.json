@@ -96,7 +96,7 @@
     "eslint-plugin-vue": "^9.32.0",
     "globals": "^15.14.0",
     "husky": "^9.1.7",
-    "jsdom": "^25.0.1",
+    "jsdom": "^26.0.0",
     "lint-staged": "^15.2.11",
     "monaco-editor": "^0.52.2",
     "monaco-yaml": "^5.2.3",
