@@ -332,7 +332,7 @@
     import {SECTIONS, storageKeys} from "../../utils/constants.js";
     import LowCodeEditor from "../inputs/LowCodeEditor.vue";
     import {editorViewTypes} from "../../utils/constants";
-    import Utils from "@kestra-io/ui-libs/src/utils/Utils";
+    import {Utils} from "@kestra-io/ui-libs";
     import {apiUrl} from "override/utils/route";
     import EditorButtons from "./EditorButtons.vue";
     import Drawer from "../Drawer.vue";
@@ -1319,7 +1319,7 @@
 
 <style lang="scss" scoped>
     @use "element-plus/theme-chalk/src/mixins/mixins" as *;
-    @import "@kestra-io/ui-libs/src/scss/variables.scss";
+    @import "@kestra-io/ui-libs/src/scss/variables";
 
     .main-editor {
         padding: .5rem 0px;
@@ -1359,7 +1359,7 @@
         height: 100%;
 
         &.enhance-readability {
-            padding: calc(var(--spacer) * 1.5);
+            padding: 1.5rem;
             background-color: var(--bs-gray-100);
         }
 
@@ -1406,7 +1406,7 @@
     }
 
     .topology-display .el-alert {
-        margin-top: calc(3 * var(--spacer));
+        margin-top: 3rem;
     }
 
     .toggle-button {

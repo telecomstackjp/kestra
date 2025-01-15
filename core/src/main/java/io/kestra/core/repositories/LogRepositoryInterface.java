@@ -87,7 +87,6 @@ public interface LogRepositoryInterface extends SaveRepositoryInterface<LogEntry
     );
 
     Flux<LogEntry> findAsync(
-        Pageable pageable,
         @Nullable String tenantId,
         @Nullable String namespace,
         @Nullable Level minLevel,

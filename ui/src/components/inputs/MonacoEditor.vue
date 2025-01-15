@@ -730,7 +730,7 @@
 </style>
 
 <style lang="scss">
-    @import "../../styles/layout/root-dark.scss";
+    @import "../../styles/layout/root-dark";
 
     .custom-dark-vs-theme .ks-monaco-editor .sticky-widget {
         background-color: $input-bg;

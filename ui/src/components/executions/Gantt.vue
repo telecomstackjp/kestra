@@ -84,7 +84,7 @@
 <script>
     import TaskRunDetails from "../logs/TaskRunDetails.vue";
     import {mapState} from "vuex";
-    import State from "../../utils/state";
+    import {State} from "@kestra-io/ui-libs"
     import Duration from "../layout/Duration.vue";
     import Utils from "../../utils/utils";
     import FlowUtils from "../../utils/flowUtils";

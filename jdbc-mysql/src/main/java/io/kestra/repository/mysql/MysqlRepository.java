@@ -8,6 +8,8 @@ import io.kestra.jdbc.JooqDSLContextWrapper;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.data.model.Pageable;
+import io.micronaut.data.model.Sort;
+import io.micronaut.data.model.Sort.Order;
 import jakarta.inject.Inject;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -68,8 +70,8 @@ public class MysqlRepository<T> extends AbstractJdbcRepository<T> {
     }
 
     @Override
-    public <R extends Record> Select<R> buildPageQuery(DSLContext context, SelectConditionStep<R> select, Pageable pageable){
-        return this.pageable(select, pageable);
+    public <R extends Record> Select<R> buildPageQuery(DSLContext context, SelectConditionStep<R> select){
+        return this.sort(select, Pageable.from(Sort.of(Order.asc("timestamp"))));
     }
 
     public Field<Integer> weekFromTimestamp(Field<Timestamp> timestampField) {

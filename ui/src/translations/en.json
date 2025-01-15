@@ -126,6 +126,7 @@
       "demo": "Get a demo"
     },
     "source": "Source",
+    "source only": "Source only",
     "home": "Home",
     "create": "Create",
     "create_flow": "Create Flow",
@@ -934,7 +935,8 @@
       "trigger_disabled": "This trigger can only be enabled through code.",
       "description": "Description",
       "no_flow_description": "This flow has no description.",
-      "not_auth": "You don't have the necessary permissions to view this widget."
+      "not_auth": "You don't have the necessary permissions to view this widget.",
+      "preview": "Dashboard preview"
     },
     "docs": "Docs",
     "active-slots": "Active slots",
@@ -989,6 +991,8 @@
     "execution failed header": "Execution failed!",
     "execution failed message": "With last error: <code>{message}</code>",
     "execution restarted": "This execution has been restarted {nbRestart} time(s).",
+    "execution replay": "This execution is a replay of <code>{originalId}</code>.",
+    "execution replayed": "This execution has been replayed.",
     "task run id": "TaskRun ID",
     "active": "Active",
     "flows imported": "Flows imported",
@@ -1054,6 +1058,8 @@
       }
     },
     "custom value": "Custom value",
+    "chart": "Chart",
+    "chart preview": "Chart preview",
     "no_code": {
       "adding": "+ Add a {what}",
       "labels": {

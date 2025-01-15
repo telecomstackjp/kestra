@@ -5,6 +5,7 @@ import io.kestra.core.events.CrudEventType;
 import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
 import io.kestra.core.models.dashboards.filters.AbstractFilter;
+import io.kestra.core.models.dashboards.filters.Contains;
 import io.kestra.core.models.dashboards.filters.In;
 import io.kestra.core.models.executions.Execution;
 import io.kestra.core.models.executions.TaskRun;
@@ -1161,13 +1162,15 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
             return NAMESPACE_FIELD;
         } else if (field.getName().equals(START_DATE_FIELD.getName())) {
             return START_DATE_FIELD;
+        } else if (field.getName().equals(fieldsMapping.get(Executions.Fields.DURATION))) {
+            return DSL.field("{0} / 1000", Long.class, field);
         }
         return field;
     }
 
     @Override
     protected <F extends Enum<F>> SelectConditionStep<Record> where(SelectConditionStep<Record> selectConditionStep, JdbcFilterService jdbcFilterService, DataFilter<F, ? extends ColumnDescriptor<F>> descriptors, Map<F, String> fieldsMapping) {
-        if (descriptors.getWhere() != null && !descriptors.getWhere().isEmpty()) {
+        if (!ListUtils.isEmpty(descriptors.getWhere())) {
             // Check if descriptors contain a filter of type Executions.Fields.STATE and apply the custom filter "statesFilter" if present
             List<In<Executions.Fields>> stateFilters = descriptors.getWhere().stream()
                 .filter(descriptor -> descriptor.getField().equals(Executions.Fields.STATE) && descriptor instanceof In)
@@ -1183,10 +1186,30 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
                 );
             }
 
+            // Check if descriptors contain a filter of type EXECUTIONS.Fields.LABELS and apply the findCondition() method if present
+            List<Contains<Executions.Fields>> labelFilters = descriptors.getWhere().stream()
+                .filter(descriptor -> descriptor.getField().equals(Executions.Fields.LABELS) && descriptor instanceof Contains<F>)
+                .map(descriptor -> (Contains<Executions.Fields>) descriptor)
+                .toList();
+
+            if (!labelFilters.isEmpty()) {
+                Map<String, String> mergedMap = new HashMap<>();
+
+                labelFilters.forEach(labelFilter -> {
+                    Map<String, String> currentMap = (Map<String, String>) labelFilter.getValue();
+                    mergedMap.putAll(currentMap);
+                });
+
+                selectConditionStep = selectConditionStep.and(findCondition(null, mergedMap));
+            }
+
             // Remove the state filters from descriptors
             List<AbstractFilter<F>> remainingFilters = descriptors.getWhere().stream()
-                .filter(descriptor -> !descriptor.getField().equals(Executions.Fields.STATE) || !(descriptor instanceof In))
+                .filter(descriptor -> !descriptor.getField().equals(Executions.Fields.STATE) || !(descriptor instanceof In)) // Filter state
+                .filter(descriptor -> !descriptor.getField().equals(Executions.Fields.LABELS) || !(descriptor instanceof Contains<F>)) // Filter labels
                 .toList();
+
+
 
             // Use the generic method addFilters with the remaining filters
             return filterService.addFilters(selectConditionStep, fieldsMapping, remainingFilters);
