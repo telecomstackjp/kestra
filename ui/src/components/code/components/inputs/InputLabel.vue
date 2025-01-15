@@ -15,7 +15,7 @@
             </el-col>
             <el-col :span="16">
                 <InputText
-                    :model-value="value"
+                    :v-model="value"
                     @update:model-value="(changed) => updateValue(key, changed)"
                 />
             </el-col>
