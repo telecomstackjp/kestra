@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -239,7 +238,8 @@ class ScheduleTest {
     }
 
     @Test
-    void shouldReturnExecutionForBackFillWhenCurrentDateIsAfterScheduleDate() throws Exception {
+    void
+    shouldReturnExecutionForBackFillWhenCurrentDateIsAfterScheduleDate() throws Exception {
         // Given
         Schedule trigger = Schedule.builder().id("schedule").cron(TEST_CRON_EVERYDAY_AT_8).build();
         ZonedDateTime now = ZonedDateTime.now();
@@ -259,7 +259,7 @@ class ScheduleTest {
     }
 
     @Test
-    void noBackfillNextDate() throws Exception {
+    void noBackfillNextDate() {
         Schedule trigger = Schedule.builder().id("schedule").cron("0 0 * * *").build();
         ZonedDateTime next = trigger.nextEvaluationDate(conditionContext(trigger), Optional.empty());
 
@@ -267,7 +267,7 @@ class ScheduleTest {
     }
 
     @Test
-    void noBackfillNextDateContext() throws Exception {
+    void noBackfillNextDateContext() {
         Schedule trigger = Schedule.builder().id("schedule").cron("0 0 * * *").timezone("Europe/Paris").build();
         ZonedDateTime date = ZonedDateTime.parse("2020-01-01T00:00:00+01:00[Europe/Paris]");
         ZonedDateTime next = trigger.nextEvaluationDate(conditionContext(trigger), Optional.of(triggerContext(date, trigger)));
@@ -369,7 +369,7 @@ class ScheduleTest {
     }
 
     @Test
-    void lateMaximumDelay() throws Exception {
+    void lateMaximumDelay() {
         Schedule trigger = Schedule.builder()
             .id("schedule")
             .cron("* * * * *")
