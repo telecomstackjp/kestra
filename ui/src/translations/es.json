@@ -873,7 +873,7 @@
       "see_all": "Ver todo",
       "success_ratio_tooltip": "La Tasa de Éxito es la suma de ejecuciones en estado SUCCESS, CANCELLED y WARNING dividida por el número total de ejecuciones en un estado terminado.",
       "failure_ratio_tooltip": "La proporción de Failed es la suma de ejecuciones FAILED, KILLED y RETRIED dividida por el número total de ejecuciones en un estado terminado.",
-      "preview": "Vista previa del Dashboard"
+      "preview": "Vista previa del dashboard"
     },
     "delete_log": "¿Está seguro de que desea eliminar el log?",
     "docs": "Documentos",

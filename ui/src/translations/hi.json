@@ -1043,6 +1043,6 @@
     "source only": "केवल स्रोत",
     "chart preview": "चार्ट पूर्वावलोकन",
     "execution replayed": "इस execution को पुनः चलाया गया है।",
-    "execution replay": "यह execution <code>{originalId}</code> का पुनरावर्तन है।"
+    "execution replay": "यह निष्पादन <code>{originalId}</code> का पुन: प्ले है।"
   }
 }

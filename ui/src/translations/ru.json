@@ -1039,8 +1039,8 @@
     },
     "custom value": "Пользовательское значение",
     "execution restarted": "Это выполнение было перезапущено {nbRestart} раз(а).",
-    "chart": "Диаграмма",
-    "source only": "Только источник",
+    "chart": "График",
+    "source only": "Источник только",
     "chart preview": "Предварительный просмотр диаграммы",
     "execution replayed": "Это выполнение было воспроизведено.",
     "execution replay": "Это выполнение является повтором <code>{originalId}</code>."

@@ -1043,6 +1043,6 @@
     "source only": "仅限来源",
     "chart preview": "图表预览",
     "execution replayed": "此执行已被重放。",
-    "execution replay": "此执行是 <code>{originalId}</code> 的重放。"
+    "execution replay": "此执行是对<code>{originalId}</code>的重放。"
   }
 }

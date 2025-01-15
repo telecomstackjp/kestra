@@ -1042,7 +1042,7 @@
     "chart": "차트",
     "source only": "소스 전용",
     "chart preview": "차트 미리보기",
-    "execution replayed": "이 실행은 재생되었습니다.",
+    "execution replayed": "이 실행은 재실행되었습니다.",
     "execution replay": "이 실행은 <code>{originalId}</code>의 재실행입니다."
   }
 }
