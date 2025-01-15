@@ -36,7 +36,8 @@ export const storageKeys = {
     DEFAULT_NAMESPACE: "defaultNamespace",
     LATEST_NAMESPACE: "latestNamespace",
     PAGINATION_SIZE: "paginationSize",
-    IMPERSONATE: "impersonate"
+    IMPERSONATE: "impersonate",
+    EDITOR_VIEW_TYPE: "editorViewType",
 }
 
 export const executeFlowBehaviours = {

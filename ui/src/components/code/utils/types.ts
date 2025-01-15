@@ -11,15 +11,22 @@ export type Schemas = {
 
 export type Field = {
     component: ReturnType<typeof defineComponent>;
-    value: string | number | boolean | undefined;
+    value: any;
     label: string;
     required?: boolean;
     disabled?: boolean;
 };
 
-type ConcurrencyField = Field & {
-    root: string;
-    schema: object;
+export type LabelField = Omit<Field, "value"> & {
+    value: [string, string][];
+};
+
+type InputField = Field & {
+    inputs: any[];
+};
+
+type VariableField = Field & {
+    variables: any[];
 };
 
 type Main = {
@@ -28,12 +35,17 @@ type Main = {
     description: Field;
 };
 
+type ConcurrencyField = Field & {
+    root: string;
+    schema: object;
+};
+
 type General = {
     retry: Field;
-    labels: Field;
-    inputs: Field;
+    labels: LabelField;
+    inputs: InputField;
     outputs: Field;
-    variables: Field;
+    variables: VariableField;
     concurrency: ConcurrencyField;
     pluginDefaults: Field;
     disabled: Field;

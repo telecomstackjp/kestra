@@ -9,8 +9,8 @@ $code-font-sm: var(--el-font-size-small);
 
 .no-code {
     &::-webkit-scrollbar {
-        height: 3px;
-        width: 3px;
+        height: 5px;
+        width: 5px;
     }
 
     &::-webkit-scrollbar-track {
@@ -31,5 +31,9 @@ $code-font-sm: var(--el-font-size-small);
 .wrapper {
     :deep(*) {
         --el-disabled-text-color: #{$code-gray-700};
+
+        .el-input__inner {
+            font-size: $code-font-sm;
+        }
     }
 }

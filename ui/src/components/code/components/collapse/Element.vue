@@ -36,6 +36,7 @@
                 ...route.query,
                 section: props.section.toLowerCase(),
                 identifier: props.element.id,
+                type: props.element.type,
             },
         });
     };

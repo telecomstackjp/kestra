@@ -168,7 +168,7 @@
         }
     })
 
-    const emit = defineEmits(["follow", "on-edit", "loading", "expand-subflow", "swapped-task"])
+    const emit = defineEmits(["follow", "on-edit", "loading", "expand-subflow", "swapped-task", "openNoCode"])
 
     // Vue instance variables
     const store = useStore();
@@ -271,13 +271,11 @@
     }
 
     const onEditTask = (event) => {
-        taskEditData.value = {
-            action: "edit_task",
+        emit("openNoCode", {
             section: event.section ? event.section : SECTIONS.TASKS,
-            oldTaskId: event.task.id,
-        };
-        taskObject.value = event.task
-        taskEditDomElement.value.$refs.taskEdit.click()
+            identifier: event.task.id,
+            type: event.task.type,
+        })
     }
 
     const onAddFlowableError = (event) => {
