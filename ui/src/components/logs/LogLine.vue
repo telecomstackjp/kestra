@@ -169,11 +169,13 @@
 
             setTimeout(() => {
                 linkify(this.$refs.lineContent, this.$router);
-            }, 100);
+            }, 200);
         },
         watch: {
             renderedMarkdown() {
-                linkify(this.$refs.lineContent, this.$router);
+                this.$nextTick(() => {
+                    linkify(this.$refs.lineContent, this.$router);
+                });
             },
         },
     };
