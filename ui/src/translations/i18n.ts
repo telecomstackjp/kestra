@@ -29,13 +29,14 @@ export function setI18nLanguage(i18n: I18n, locale: (typeof SUPPORT_LOCALES)[num
 }
 
 export async function loadLocaleMessages(i18n: I18n, locale: (typeof SUPPORT_LOCALES)[number], additionalTranslationsProvider: Record<string, () => Promise<any>>) {
-  // load locale messages with dynamic import
   const messages = {default: {}} as any
-
+  
   if(additionalTranslationsProvider[locale]){
+    // load additional translations from the provider
     const additionalTranslations = await additionalTranslationsProvider[locale]()
     messages.default[locale] = additionalTranslations.default[locale]
   }else{
+    // load locale messages with dynamic import
     messages.default[locale] = await translations[`./${locale}.json`]() as any
   }
 
