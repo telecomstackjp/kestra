@@ -8,6 +8,7 @@ import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.dashboards.Dashboard;
 import io.kestra.core.models.dashboards.GraphStyle;
 import io.kestra.core.models.flows.Flow;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.models.tasks.VoidOutput;
@@ -323,7 +324,7 @@ class JsonSchemaGeneratorTest {
         }
 
         @Schema(title = "Test class")
-        private class TestClass {
+        private static class TestClass {
             @Schema(title = "Test property")
             public String testProperty;
         }
@@ -335,9 +336,8 @@ class JsonSchemaGeneratorTest {
     @Getter
     @NoArgsConstructor
     private static abstract class ParentClass extends Task {
-        @PluginProperty
         @Builder.Default
-        private String stringWithDefault = "default";
+        private Property<String> stringWithDefault = Property.of("default");
     }
 
     @SuperBuilder
@@ -346,8 +346,7 @@ class JsonSchemaGeneratorTest {
     @Getter
     @NoArgsConstructor
     @Plugin(
-        beta = true,
-        examples = {}
+        beta = true
     )
     public static class BetaTask extends Task {
         @PluginProperty(beta = true)

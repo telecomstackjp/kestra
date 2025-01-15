@@ -81,6 +81,7 @@ public class JsonSchemaGenerator {
                 objectNode.put("type", "array");
             }
             replaceAnyOfWithOneOf(objectNode);
+            pullOfDefaultFromOneOf(objectNode);
 
             return JacksonMapper.toMap(objectNode);
         } catch (IllegalArgumentException e) {
@@ -88,10 +89,34 @@ public class JsonSchemaGenerator {
         }
     }
 
-    private static void replaceAnyOfWithOneOf(ObjectNode objectNode) {
+    private void replaceAnyOfWithOneOf(ObjectNode objectNode) {
         objectNode.findParents("anyOf").forEach(jsonNode -> {
             if (jsonNode instanceof ObjectNode oNode) {
                 oNode.set("oneOf", oNode.remove("anyOf"));
+            }
+        });
+    }
+
+    // This hack exists because for Property we generate a oneOf for properties that are not strings.
+    // By default, the 'default' is in each oneOf which Monaco editor didn't take into account.
+    // So, we pull off the 'default' from any of the oneOf to the parent.
+    private void pullOfDefaultFromOneOf(ObjectNode objectNode) {
+        objectNode.findParents("oneOf").forEach(jsonNode -> {
+            if (jsonNode instanceof ObjectNode oNode) {
+                JsonNode oneOf = oNode.get("oneOf");
+                if (oneOf instanceof ArrayNode arrayNode) {
+                    Iterator<JsonNode> it = arrayNode.elements();
+                    JsonNode defaultNode = null;
+                    while (it.hasNext() && defaultNode == null) {
+                        JsonNode next = it.next();
+                        if (next instanceof ObjectNode nextAsObj) {
+                            defaultNode = nextAsObj.get("default");
+                        }
+                    }
+                    if (defaultNode != null) {
+                        oNode.set("default", defaultNode);
+                    }
+                }
             }
         });
     }
@@ -563,6 +588,7 @@ public class JsonSchemaGenerator {
         try {
             ObjectNode objectNode = generator.generateSchema(cls);
             replaceAnyOfWithOneOf(objectNode);
+            pullOfDefaultFromOneOf(objectNode);
 
             return JacksonMapper.toMap(extractMainRef(objectNode));
         } catch (IllegalArgumentException e) {
