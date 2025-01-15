@@ -1,13 +1,11 @@
 import {useStore} from "vuex";
-import {mockRouter} from "storybook-vue3-router";
+import {vueRouter} from "storybook-vue3-router";
 import Executions from "../../../../src/components/executions/Executions.vue";
 import fixture from "./Executions.fixture.json"
+import fixtureS from "./Executions-s.fixture.json"
 
-// Story configuration
-export default {
-    title: "Components/Executions",
-    component: Executions,
-    decorators: [
+function getDecorators(data) {
+    return [
         () => {
             return {
                 setup () {
@@ -18,40 +16,74 @@ export default {
                         lastName: "Doe",
                         email: "john.doe@example.com",
                         isAllowed: () => true,
+                        hasAnyActionOnAnyNamespace: () => true,
+                    })
+                    store.commit("misc/setConfigs", {
+                        hiddenLabelsPrefixes: ["system_"]
                     })
                     store.$http = {
                         get(a) {
-                            if (a.endsWith("bindings/search")) {
+                            if (a.endsWith("executions/search")) {
                                 return Promise.resolve({
-                                    data: fixture
+                                    data 
                                 })
                             }
                             return Promise.resolve({data: []})
                         },
                     }
-                    return {}
                 },
-                template: "<story />"
+                template: "<div style='margin:2rem'><story /></div>"
             }
         },
-        mockRouter({
-            meta: ["some_meta"],
-            params: ["some_param"],
-            query: ["some_query"]
+        vueRouter([
+          {
+            path: "/flows/update/:namespace/:id?/:flowId?",
+            name: "flows/update",
+            component: {template: "div>updateflows</div>"}
+          },{
+            path: "/executions/update/:namespace/:id?/:flowId?",
+            name: "executions/update",
+            component: {template: "div>executions</div>"}
+          },
+          {
+            path: "/executions/:id?/:flowId?",
+            name: "executions/list",
+            component: {template: "div>executions</div>"}
+          }
+        ], {
+            initialRoute: "/executions/123/645"
         }),
-    ],
+    ]
+}
+
+// Story configuration
+export default {
+    title: "Components/Executions",
+    component: Executions,
     parameters: {
         layout: "fullscreen"
     }
 };
 
+
 // Stories
-export const Default = {
+export const SmallData = {
+    decorators: getDecorators(fixtureS),
     args: {
         hidden: [],
         statuses: [],
         isReadOnly: false,
         embed: true,
+        topbar: false,
+        filter: false
+    }
+};
+
+export const BiggerData = {
+    decorators: getDecorators(fixture),
+    args: {
+        hidden: [],
+        statuses: [],
         topbar: false,
         filter: false
     }

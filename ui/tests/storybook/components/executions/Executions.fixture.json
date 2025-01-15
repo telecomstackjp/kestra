@@ -2,6 +2,13 @@
     "results": [
         {
             "id": "airbyte-sync",
+            "flowId": "airbyte-sync",
+            "state": {
+                "current": "RUNNING",
+                "duration": "PT30.337S",
+                "endDate": "2025-01-15T13:57:42.734Z",
+                "startDate": "2025-01-15T13:57:12.397Z"
+            },
             "namespace": "company.team",
             "revision": 1,
             "disabled": false,
@@ -25,7 +32,35 @@
             ]
         },
         {
+            "id": "blob-sync",
+            "flowId": "blob-sync",
+            "state": {
+                "current": "KILLED",
+                "duration": "PT30.337S",
+                "endDate": "2025-01-15T13:57:42.734Z",
+                "startDate": "2025-01-15T13:57:12.397Z"
+            },
+            "namespace": "company.team",
+            "revision": 1,
+            "disabled": false,
+            "deleted": false,
+            "triggers": [
+                {
+                    "id": "every_minute",
+                    "type": "io.kestra.plugin.core.trigger.Schedule",
+                    "cron": "*/1 * * * *"
+                }
+            ]
+        },
+        {
             "id": "child",
+            "flowId": "child",
+            "state": {
+                "current": "FAILED",
+                "duration": "PT30.337S",
+                "endDate": "2025-01-15T13:57:42.734Z",
+                "startDate": "2025-01-15T13:57:12.397Z"
+            },
             "namespace": "company.team",
             "revision": 1,
             "disabled": false,
@@ -41,6 +76,13 @@
         {
             "id": "myflow",
             "namespace": "company.team.my.deep.namespace",
+            "flowId": "myflow",
+            "state": {
+                "current": "SKIPPED",
+                "duration": "PT30.337S",
+                "endDate": "2025-01-15T13:57:42.734Z",
+                "startDate": "2025-01-15T13:57:12.397Z"
+            },
             "revision": 1,
             "disabled": false,
             "deleted": false,
@@ -56,6 +98,7 @@
             "id": "myflow",
             "namespace": "company.team",
             "revision": 3,
+            "flowId": "myflow",
             "inputs": [
                 {
                     "id": "api_url",
@@ -63,6 +106,12 @@
                     "required": true
                 }
             ],
+            "state": {
+                "current": "WARN",
+                "duration": "PT30.337S",
+                "endDate": "2025-01-15T13:57:42.734Z",
+                "startDate": "2025-01-15T13:57:12.397Z"
+            },
             "disabled": false,
             "deleted": false,
             "tasks": [
@@ -77,6 +126,7 @@
             "id": "myflow-editable",
             "namespace": "company.team",
             "revision": 8,
+            "flowId": "myflow-editable",
             "inputs": [
                 {
                     "id": "api_url",
@@ -84,6 +134,12 @@
                     "required": true
                 }
             ],
+            "state": {
+                "current": "RETRIED",
+                "duration": "PT30.337S",
+                "endDate": "2025-01-15T13:57:42.734Z",
+                "startDate": "2025-01-15T13:57:12.397Z"
+            },
             "disabled": false,
             "deleted": false,
             "tasks": [
@@ -98,6 +154,13 @@
             "id": "parentflow",
             "namespace": "company.team",
             "revision": 1,
+            "flowId": "parentflow",
+            "state": {
+                "current": "RETRYING",
+                "duration": "PT30.337S",
+                "endDate": "2025-01-15T13:57:42.734Z",
+                "startDate": "2025-01-15T13:57:12.397Z"
+            },
             "disabled": false,
             "deleted": false,
             "tasks": [
@@ -129,6 +192,13 @@
         {
             "id": "repro_bool",
             "namespace": "company.team",
+            "flowId": "repro_bool",
+            "state": {
+                "current": "RESTARTED",
+                "duration": "PT30.337S",
+                "endDate": "2025-01-15T13:57:42.734Z",
+                "startDate": "2025-01-15T13:57:12.397Z"
+            },
             "revision": 3,
             "inputs": [
                 {
@@ -153,6 +223,13 @@
             "id": "request_resources",
             "namespace": "company.team",
             "revision": 1,
+            "flowId": "request_resources",
+            "state": {
+                "current": "PAUSED",
+                "duration": "PT30.337S",
+                "endDate": "2025-01-15T13:57:42.734Z",
+                "startDate": "2025-01-15T13:57:12.397Z"
+            },
             "inputs": [
                 {
                     "id": "resource_type",
