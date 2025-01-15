@@ -36,8 +36,21 @@
 
     watch(
         () => route.query.section,
-        (query) => {
-            section.value = SECTIONS[query === "triggers" ? "TRIGGERS" : "TASKS"];
+        (value) => {
+            section.value = SECTIONS[value === "triggers" ? "TRIGGERS" : "TASKS"];
+        },
+        {immediate: true},
+    );
+
+    watch(
+        () => route.query.identifier,
+        (value) => {
+            if (value === "new") {
+                yaml.value = "";
+            } else {
+                yaml.value =
+                    YamlUtils.extractTask(props.flow, value)?.toString() || "";
+            }
         },
         {immediate: true},
     );
