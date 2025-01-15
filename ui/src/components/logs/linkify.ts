@@ -1,5 +1,21 @@
 // inspired from https://kerkour.com/vuejs-3-router-links-dynamic-vhtml
 import type {Router} from "vue-router";
+
+function gotoRoute(event: MouseEvent, route: any, router: Router) {
+  const {altKey, ctrlKey, metaKey, shiftKey, button} = event;
+  // ignore with control keys
+  if (metaKey || altKey || ctrlKey || shiftKey) {
+    return;
+  }
+
+  // ignore right clicks
+  if (button !== undefined && button !== 0) {
+    return;
+  }
+  event.preventDefault();
+  router.push(route);
+}
+
 /**
  * Tranform router-md elements in an html element use 
  * the vue-router methods instead of natural links 
@@ -30,16 +46,14 @@ export default function linkify(element?: HTMLElement, router?: Router) {
     anchorNodeExection.href = executionUrl.href;
     anchorNodeExection.textContent = execution;
     anchorNodeExection.onclick = (event: MouseEvent) => {
-        event.preventDefault();
-        router.push(executionRoute);
+        gotoRoute(event, executionRoute, router);
     }
 
     const anchorNodeFlow = document.createElement("a");
     anchorNodeFlow.href = flowUrl.href;
     anchorNodeFlow.textContent = `${namespace}.${flowId}`;
     anchorNodeFlow.onclick = (event: MouseEvent) => {
-        event.preventDefault();
-        router.push(flowRoute);
+      gotoRoute(event, flowRoute, router);
     }
 
     // finally we rebuild the router-md component with the new links
