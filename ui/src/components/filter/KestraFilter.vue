@@ -173,10 +173,10 @@
         buttons: {
             type: Object as () => Buttons,
             default: () => ({
-                refresh: {shown: false, callback: () => { }},
+                refresh: {shown: false, callback: () => {}},
                 settings: {
                     shown: false,
-                    charts: {shown: false, value: false, callback: () => { }},
+                    charts: {shown: false, value: false, callback: () => {}},
                 },
             }),
         },
@@ -255,8 +255,8 @@
     const activeParentFilter = ref<string | null>(null);
     const lastClickedParent = ref<string | null>(null);
     const showSubFilterDropdown = ref(false);
-    const valueOptions = ref([])
-    const parentValue = ref<string| null>(null);
+    const valueOptions = ref([]);
+    const parentValue = ref<string | null>(null);
 
     const filterCallback = (option) => {
         if (!option.value) {
@@ -271,7 +271,9 @@
         };
 
         // Check if parent filter already exists
-        const existingFilterIndex = current.value.findIndex(item => item.label === option.value.label);
+        const existingFilterIndex = current.value.findIndex(
+            (item) => item.label === option.value.label,
+        );
         if (existingFilterIndex !== -1) {
             // If it exists, update current filter index
             dropdowns.value.second = {shown: true, index: existingFilterIndex};
@@ -279,7 +281,7 @@
             lastClickedParent.value = option.value.label;
             parentValue.value = option.value.label;
             showSubFilterDropdown.value = true;
-            setOptions("filterCallback")
+            setOptions("filterCallback");
             if (option.comparators.length === 1) {
                 comparatorCallback(option.comparators[0]);
             }
@@ -292,7 +294,7 @@
             lastClickedParent.value = option.value.label;
             parentValue.value = option.value.label;
             showSubFilterDropdown.value = true;
-            setOptions("filterCallback")
+            setOptions("filterCallback");
             if (option.comparators.length === 1) {
                 comparatorCallback(option.comparators[0]);
             }
@@ -336,26 +338,35 @@
     const isOptionDisabled = () => {
         if (!activeParentFilter.value) return false;
 
-        const parentIndex = current.value.findIndex(item => item.label === activeParentFilter.value);
+        const parentIndex = current.value.findIndex(
+            (item) => item.label === activeParentFilter.value,
+        );
         if (parentIndex === -1) return false;
-       
     };
     const valueCallback = (filter, isDate = false) => {
         // Don't do anything if the option is disabled
         if (isOptionDisabled(filter)) return;
         if (!isDate) {
-            const parentIndex = current.value.findIndex(item => item.label === parentValue.value);
+            const parentIndex = current.value.findIndex(
+                (item) => item.label === parentValue.value,
+            );
             if (parentIndex !== -1) {
-                if(lastClickedParent.value === "Namespace" || lastClickedParent.value === "namespace" || lastClickedParent.value === "Log level"){
+                if (
+                    lastClickedParent.value === "Namespace" ||
+                    lastClickedParent.value === "namespace" ||
+                    lastClickedParent.value === "Log level"
+                ) {
                     const values = current.value[parentIndex].value;
                     const index = values.indexOf(filter.value);
-  
+
                     if (index === -1) {
                         current.value[parentIndex].value = [filter.value]; // Add only the filter.value
                     } else {
-                        current.value[parentIndex].value = values.filter((value, i) => i !== index); // remove the clicked item
+                        current.value[parentIndex].value = values.filter(
+                            (value, i) => i !== index,
+                        ); // remove the clicked item
                     }
-                } else{
+                } else {
                     const values = current.value[parentIndex].value;
                     const index = values.indexOf(filter.value);
                     if (index === -1) values.push(filter.value);
@@ -366,16 +377,16 @@
                 );
                 updateHoveringIndex(hoverIndex);
             }
-
         } else {
             const match = current.value.find((v) => v.label === "absolute_date");
             if (match) {
-                match.value = [{
-                    startDate: filter.startDate,
-                    endDate: filter.endDate
-                }]
+                match.value = [
+                    {
+                        startDate: filter.startDate,
+                        endDate: filter.endDate,
+                    },
+                ];
             }
-
         }
 
         if (!current.value[dropdowns.value.third.index].comparator?.multiple) {
@@ -423,14 +434,20 @@
     const {VALUES} = useValues(ITEMS_PREFIX);
 
     const isDatePickerShown = computed(() => {
-        return current?.value?.some(c => c.label === "absolute_date" && c.comparator);
+        return current?.value?.some(
+            (c) => c.label === "absolute_date" && c.comparator,
+        );
     });
-    const setOptions = ()=>{
+    const setOptions = () => {
         if (!lastClickedParent.value) {
             valueOptions.value = [];
             return;
         }
-        const parentValue = lastClickedParent.value.toLowerCase().replace(/\blog\b/gi, "").trim().replace(/\s+/g, "_");
+        const parentValue = lastClickedParent.value
+            .toLowerCase()
+            .replace(/\blog\b/gi, "")
+            .trim()
+            .replace(/\s+/g, "_");
         switch (parentValue) {
         case "namespace":
             valueOptions.value = namespaceOptions.value;
@@ -504,7 +521,7 @@
             valueOptions.value = [];
             break;
         }
-    }
+    };
     const current = ref<CurrentItem[]>([]);
     const includedOptions = computed(() => {
         const dates = ["relative_date", "absolute_date"];
@@ -517,7 +534,6 @@
             return props.include.includes(label) && label !== exclude;
         });
     });
-
 
     const changeCallback = (v) => {
         if (!Array.isArray(v) || !v.length) return;
@@ -560,50 +576,58 @@
         select.value?.focus();
     };
 
-    import {encodeParams, decodeParams} from "./utils/helpers";
+    import {decodeParams} from "./utils/helpers";
 
     const triggerSearch = () => {
         const params: any = {};
-   
+
         current.value.forEach((filter) => {
-            if (filter.label === "namespace" && filter.value && filter.value.length > 0) {
+            if (
+                filter.label === "namespace" &&
+                filter.value &&
+                filter.value.length > 0
+            ) {
                 //Always send only the last value
                 params.namespace = filter.value[filter.value.length - 1];
             } else if (filter.value && filter.value.length > 0) {
-                params[filter.label] = filter.value.length === 1 ? filter.value[0] : filter.value;
+                params[filter.label] =
+                    filter.value.length === 1 ? filter.value[0] : filter.value;
             }
         });
-    
-        router.push({query: params});
 
+        router.push({query: params});
     };
 
     // Include parameters from URL directly to filter
     onMounted(() => {
         if (props.decode) {
             const decodedParams = decodeParams(route.query, props.include, OPTIONS);
-            current.value = decodedParams.map(item => {
+            current.value = decodedParams.map((item) => {
                 if (item.label === "absolute_date") {
                     return {
                         ...item,
-                        value:  item.value?.length > 0 ? [{
-                            startDate: item.value[0]?.startDate,
-                            endDate: item.value[0]?.endDate
-                        }] : [],
+                        value:
+                            item.value?.length > 0
+                                ? [
+                                    {
+                                        startDate: item.value[0]?.startDate,
+                                        endDate: item.value[0]?.endDate,
+                                    },
+                                ]
+                                : [],
                         comparator: item.comparator,
-                    }
+                    };
                 }
                 if (item.label === "relative_date") {
                     return {
                         ...item,
                         value: item.value?.length > 0 ? [item.value[0]] : [],
                         comparator: item.comparator,
-                    }
+                    };
                 }
                 return item;
-            })
+            });
         }
-   
 
         const addNamespaceFilter = (namespace) => {
             if (!props.decode || !namespace) return;
@@ -632,34 +656,39 @@
             // Single namespace page
             addNamespaceFilter(params.id);
         }
-    })
+    });
 
-    watch(()=> select.value?.dropdownMenuVisible, (visible) =>{
-        if(!visible){
-            dropdowns.value = {...INITIAL_DROPDOWNS};
-            activeParentFilter.value = null;
-            lastClickedParent.value = null;
-            showSubFilterDropdown.value = false
-        }
-    })
+    watch(
+        () => select.value?.dropdownMenuVisible,
+        (visible) => {
+            if (!visible) {
+                dropdowns.value = {...INITIAL_DROPDOWNS};
+                activeParentFilter.value = null;
+                lastClickedParent.value = null;
+                showSubFilterDropdown.value = false;
+            }
+        },
+    );
 
     const handleFocus = () => {
         if (current.value.length > 0 && lastClickedParent.value) {
-            const existingFilterIndex = current.value.findIndex(item => item.label === lastClickedParent.value);
+            const existingFilterIndex = current.value.findIndex(
+                (item) => item.label === lastClickedParent.value,
+            );
             if (existingFilterIndex !== -1) {
                 if (!current.value[existingFilterIndex].comparator) {
                     dropdowns.value = {
                         first: {shown: false, value: {}},
                         second: {shown: true, index: existingFilterIndex},
                         third: {shown: false, index: -1},
-                    }
+                    };
                     showSubFilterDropdown.value = true;
                 } else {
                     dropdowns.value = {
                         first: {shown: false, value: {}},
                         second: {shown: false, index: -1},
                         third: {shown: true, index: existingFilterIndex},
-                    }
+                    };
                     showSubFilterDropdown.value = false;
                 }
                 setOptions("handleFocus");
@@ -675,13 +704,15 @@
 
             el.addEventListener("click", (event) => {
                 const target = event.target as HTMLElement;
-            
-                if(isDropdownOpen) {
+
+                if (isDropdownOpen) {
                     return;
                 }
                 const selectedItem = target.closest(".el-select__selected-item");
-                const selection = target.closest(".el-select__selection.is-near") as HTMLElement;
-                if(selection && !selectedItem){
+                const selection = target.closest(
+                    ".el-select__selection.is-near",
+                ) as HTMLElement;
+                if (selection && !selectedItem) {
                     event.preventDefault();
                     event.stopPropagation();
                     dropdowns.value = {...INITIAL_DROPDOWNS};
@@ -691,7 +722,7 @@
                     setOptions("onClick");
                     isDropdownOpen = true;
                     nextTick(() => {
-                        if(!select.value?.dropdownMenuVisible){
+                        if (!select.value?.dropdownMenuVisible) {
                             select.value?.focus();
                         }
                         isDropdownOpen = false;
@@ -701,34 +732,52 @@
                 if (selectedItem) {
                     event.preventDefault();
                     event.stopPropagation();
-                    const labelElement = selectedItem.querySelector(".text-lowercase");
+                    const labelElement =
+                        selectedItem.querySelector(".text-lowercase");
                     const label = labelElement?.textContent;
-                
+
                     if (label) {
-                    
-                        const existingFilterIndex = current.value.findIndex(item => item?.label.toLowerCase() === label.toLowerCase().replace(/\blog\b/gi, "").trim().replace(/\s+/g, "_"));
+                        const existingFilterIndex = current.value.findIndex(
+                            (item) =>
+                                item?.label.toLowerCase() ===
+                                label
+                                    .toLowerCase()
+                                    .replace(/\blog\b/gi, "")
+                                    .trim()
+                                    .replace(/\s+/g, "_"),
+                        );
                         if (existingFilterIndex !== -1) {
                             lastClickedParent.value = label;
-                            parentValue.value = label.toLowerCase().replace(/\blog\b/gi, "").trim().replace(/\s+/g, "_"); // Set parentValue when a filter is clicked
+                            parentValue.value = label
+                                .toLowerCase()
+                                .replace(/\blog\b/gi, "")
+                                .trim()
+                                .replace(/\s+/g, "_"); // Set parentValue when a filter is clicked
                             if (!current.value[existingFilterIndex].comparator) {
                                 dropdowns.value = {
                                     first: {shown: false, value: {}},
-                                    second: {shown: true, index: existingFilterIndex},
+                                    second: {
+                                        shown: true,
+                                        index: existingFilterIndex,
+                                    },
                                     third: {shown: false, index: -1},
-                                }
+                                };
                                 showSubFilterDropdown.value = true;
                             } else {
                                 dropdowns.value = {
                                     first: {shown: false, value: {}},
                                     second: {shown: false, index: -1},
-                                    third: {shown: true, index: existingFilterIndex},
-                                }
+                                    third: {
+                                        shown: true,
+                                        index: existingFilterIndex,
+                                    },
+                                };
                                 showSubFilterDropdown.value = false;
                             }
                             setOptions("onClickSelection");
                             isDropdownOpen = true;
                             nextTick(() => {
-                                if(!select.value?.dropdownMenuVisible){
+                                if (!select.value?.dropdownMenuVisible) {
                                     select.value?.focus();
                                 }
                                 isDropdownOpen = false;
