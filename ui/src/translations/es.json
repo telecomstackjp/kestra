@@ -1043,6 +1043,11 @@
     "source only": "Solo fuente",
     "chart preview": "Vista previa del gráfico",
     "execution replayed": "Esta ejecución ha sido reproducida.",
-    "execution replay": "Esta ejecución es una repetición de <code>{originalId}</code>."
+    "execution replay": "Esta ejecución es una repetición de <code>{originalId}</code>.",
+    "no_code": {
+      "save": {
+        "test": "prueba"
+      }
+    }
   }
 }
