@@ -15,7 +15,6 @@
         <el-tooltip :content="!isFlow ? $t('flow_only') : $t('source and blueprints')" transition="" :hide-after="0" :persistent="false" effect="light">
             <el-button :disabled="!isFlow" :type="buttonType(editorViewTypes.SOURCE_BLUEPRINTS)" @click="switchView(editorViewTypes.SOURCE_BLUEPRINTS)" :icon="BallotOutline" />
         </el-tooltip>
-        <KeyShortcuts />
     </el-button-group>
 </template>
 
@@ -26,7 +25,6 @@
     import FileTreeOutline from "vue-material-design-icons/FileTreeOutline.vue";
     import BallotOutline from "vue-material-design-icons/BallotOutline.vue";
     import {editorViewTypes} from "../../utils/constants";
-    import KeyShortcuts from "./KeyShortcuts.vue";
 </script>
 
 <script>

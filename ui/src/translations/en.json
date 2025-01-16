@@ -1063,14 +1063,6 @@
     "custom value": "Custom value",
     "chart": "Chart",
     "chart preview": "Chart preview",
-    "move line": "Move line",
-    "duplicate line": "Duplicate line",
-    "save flow": "Save flow",
-    "comment/uncomment": "Comment/Uncomment",
-    "comment": "Comment",
-    "uncomment": "Uncomment",
-    "fold/unfold code": "Fold/Unfold code",
-    "shortcuts": "Keyboard Shortcuts",
     "no_code": {
       "adding": "+ Add a {what}",
       "labels": {
@@ -1111,6 +1103,16 @@
         "tasks": "Save task",
         "triggers": "Save trigger"
       }
+    },
+    "editor_shortcuts": {
+      "label": "Keyboard shortcuts",
+      "save_flow": "Save flow",
+      "move_line": "Move line",
+      "duplicate_line": "Duplicate line",
+      "fold_unfold": "Fold/Unfold code",
+      "comment_uncomment": "Comment/Uncomment",
+      "comment": "Comment",
+      "uncomment": "Uncomment"
     }
   }
 }

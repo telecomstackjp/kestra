@@ -74,7 +74,7 @@
             <switch-view
                 v-if="!isNamespace"
                 :type="viewType"
-                class="to-topology-button me-2"
+                class="to-topology-button"
                 @switch-view="switchViewType"
             />
 
@@ -88,12 +88,15 @@
                 :infos="flowInfos"
             />
 
-            <el-button
-                v-if="!isNamespace"
-                :icon="Download"
-                @click="exportYaml"
-                class="ms-2 me-0"
-            />
+            <KeyShortcuts />
+
+            <el-tooltip :content="$t('export_to_file')" :hide-after="0" :persistent="false" effect="light">
+                <el-button
+                    v-if="!isNamespace"
+                    :icon="Download"
+                    @click="exportYaml"
+                />
+            </el-tooltip>
 
             <EditorButtons
                 v-if="isCreating || openedTabs.length"
@@ -331,6 +334,7 @@
     import ValidationError from "../flows/ValidationError.vue";
     import Blueprints from "override/components/flows/blueprints/Blueprints.vue";
     import SwitchView from "./SwitchView.vue";
+    import KeyShortcuts from "./KeyShortcuts.vue";
     import PluginDocumentation from "../plugins/PluginDocumentation.vue";
     import permission from "../../models/permission";
     import action from "../../models/action";

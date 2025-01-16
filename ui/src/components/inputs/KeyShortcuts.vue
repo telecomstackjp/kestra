@@ -1,5 +1,5 @@
 <template>
-    <el-tooltip :content="$t('shortcuts')" transition="" :hide-after="0" :persistent="false" effect="light">
+    <el-tooltip :content="$t('editor_shortcuts.label')" transition="" :hide-after="0" :persistent="false" effect="light">
         <el-button @click="visible = true" :icon="Keyboard" />
     </el-tooltip>
     <el-dialog
@@ -11,7 +11,7 @@
                 <el-icon size="30px">
                     <Keyboard />
                 </el-icon>
-                <span class="fs-6"> {{ $t("shortcuts") }} </span>
+                <span class="fs-6"> {{ $t("editor_shortcuts.label") }} </span>
             </div>
         </template>
         <div class="d-flex flex-column gap-3 fw-normal">
@@ -21,7 +21,7 @@
                     + <el-tag>↑</el-tag>/<el-tag>↓</el-tag>
                 </div>
                 <div class="text-break">
-                    {{ $t("move line") }}
+                    {{ $t("editor_shortcuts.move_line") }}
                 </div>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -31,7 +31,7 @@
                     + <el-tag>↑</el-tag>/<el-tag>↓</el-tag>
                 </div>
                 <div class="text-break">
-                    {{ $t("duplicate line") }}
+                    {{ $t("editor_shortcuts.duplicate_line") }}
                 </div>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -40,7 +40,7 @@
                     + <el-tag>s</el-tag>
                 </div>
                 <div class="text-break">
-                    {{ $t("save flow") }}
+                    {{ $t("editor_shortcuts.save_flow") }}
                 </div>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -49,7 +49,7 @@
                     + <el-tag>/</el-tag>
                 </div>
                 <div class="text-break">
-                    {{ $t("comment/uncomment") }}
+                    {{ $t("editor_shortcuts.comment_uncomment") }}
                 </div>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -58,7 +58,7 @@
                     + <el-tag>k</el-tag> + <el-tag>c</el-tag>
                 </div>
                 <div class="text-break">
-                    {{ $t("comment") }}
+                    {{ $t("editor_shortcuts.comment") }}
                 </div>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -67,7 +67,7 @@
                     + <el-tag>k</el-tag> + <el-tag>u</el-tag>
                 </div>
                 <div class="text-break">
-                    {{ $t("uncomment") }}
+                    {{ $t("editor_shortcuts.uncomment") }}
                 </div>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -76,7 +76,7 @@
                     + <el-tag>k</el-tag> + <el-tag>l</el-tag>
                 </div>
                 <div class="text-break">
-                    {{ $t("fold/unfold code") }}
+                    {{ $t("editor_shortcuts.fold_unfold") }}
                 </div>
             </div>
         </div>
