@@ -1043,11 +1043,6 @@
     "source only": "Source uniquement",
     "chart preview": "Aperçu du graphique",
     "execution replayed": "Cette exécution a été rejouée.",
-    "execution replay": "Cette exécution est une relecture de <code>{originalId}</code>.",
-    "no_code": {
-      "save": {
-        "test": "I'm sorry, but it seems there is no text provided after the \"----------\" for translation. Could you please provide the text you would like to have translated into French?"
-      }
-    }
+    "execution replay": "Cette exécution est une relecture de <code>{originalId}</code>."
   }
 }

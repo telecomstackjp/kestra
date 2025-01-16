@@ -1043,11 +1043,6 @@
     "source only": "Nur Quelle",
     "chart preview": "Diagrammvorschau",
     "execution replayed": "Diese Ausführung wurde erneut abgespielt.",
-    "execution replay": "Diese Ausführung ist eine Wiederholung von <code>{originalId}</code>.",
-    "no_code": {
-      "save": {
-        "test": "Test"
-      }
-    }
+    "execution replay": "Diese Ausführung ist eine Wiederholung von <code>{originalId}</code>."
   }
 }

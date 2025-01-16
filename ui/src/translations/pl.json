@@ -1043,11 +1043,6 @@
     "source only": "Tylko źródło",
     "chart preview": "Podgląd wykresu",
     "execution replayed": "To wykonanie zostało odtworzone.",
-    "execution replay": "To wykonanie jest powtórką <code>{originalId}</code>.",
-    "no_code": {
-      "save": {
-        "test": "test"
-      }
-    }
+    "execution replay": "To wykonanie jest powtórką <code>{originalId}</code>."
   }
 }

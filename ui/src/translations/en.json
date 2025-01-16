@@ -1059,48 +1059,6 @@
     },
     "custom value": "Custom value",
     "chart": "Chart",
-    "chart preview": "Chart preview",
-    "no_code": {
-      "adding": "+ Add a {what}",
-      "labels": {
-        "yaml": "YAML Editor",
-        "no_code": "No Code Editor"
-      },
-      "sections": {
-        "main": "Main properties",
-        "general": "General properties",
-        "tasks": "Tasks",
-        "triggers": "Triggers",
-        "error_handlers": "Error Handlers"
-      },
-      "fields": {
-        "main": {
-          "flow_id": "Flow ID",
-          "namespace": "Namespace",
-          "description": "Description"
-        },
-        "general": {
-          "retry": "Retry",
-          "labels": "Labels",
-          "inputs": "Inputs",
-          "outputs": "Outputs",
-          "variables": "Variables",
-          "concurrency": "Concurrency",
-          "plugin_defaults": "Plugin Defaults",
-          "disabled": "Disabled"
-        }
-      },
-      "creation": {
-        "tasks": "Add a task",
-        "triggers": "Add a trigger",
-        "error handlers": "Add an error handler",
-        "select": "Select a {section}"
-      },
-      "save": {
-        "tasks": "Save task",
-        "triggers": "Save trigger",
-        "test": "test"
-      }
-    }
+    "chart preview": "Chart preview"
   }
 }

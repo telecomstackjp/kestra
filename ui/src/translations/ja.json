@@ -1043,11 +1043,6 @@
     "source only": "ソースのみ",
     "chart preview": "チャートプレビュー",
     "execution replayed": "この実行は再実行されました。",
-    "execution replay": "この実行は<code>{originalId}</code>のリプレイです。",
-    "no_code": {
-      "save": {
-        "test": "テスト"
-      }
-    }
+    "execution replay": "この実行は<code>{originalId}</code>のリプレイです。"
   }
 }
