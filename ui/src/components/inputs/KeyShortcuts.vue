@@ -1,19 +1,25 @@
 <template>
-    <el-tooltip :content="$t('editor_shortcuts.label')" transition="" :hide-after="0" :persistent="false" effect="light">
-        <el-button @click="visible = true" :icon="Keyboard" />
-    </el-tooltip>
-    <el-dialog
-        v-model="visible"
-        draggable
+    <el-tooltip
+        :content="$t('editor_shortcuts.label')"
+        :hide-after="0"
+        :persistent="false"
+        effect="light"
     >
+        <el-button @click="isShown = true" :icon="Keyboard" />
+    </el-tooltip>
+
+    <el-dialog v-model="isShown">
         <template #header>
             <div class="d-flex align-items-center gap-2 fw-normal">
                 <el-icon size="30px">
                     <Keyboard />
                 </el-icon>
-                <span class="fs-6"> {{ $t("editor_shortcuts.label") }} </span>
+                <span class="fs-6">
+                    {{ $t("editor_shortcuts.label") }}
+                </span>
             </div>
         </template>
+
         <div class="d-flex flex-column gap-3 fw-normal">
             <div class="d-flex align-items-center gap-2">
                 <div class="d-flex align-items-center gap-2 keys">
@@ -27,8 +33,8 @@
             <div class="d-flex align-items-center gap-2">
                 <div class="d-flex align-items-center gap-2 keys">
                     <el-tag>⇧ Shift</el-tag>
-                    + <el-tag>⌥ Option/Alt</el-tag>
-                    + <el-tag>↑</el-tag>/<el-tag>↓</el-tag>
+                    + <el-tag>⌥ Option/Alt</el-tag> +
+                    <el-tag>↑</el-tag>/<el-tag> ↓ </el-tag>
                 </div>
                 <div class="text-break">
                     {{ $t("editor_shortcuts.duplicate_line") }}
@@ -85,13 +91,14 @@
 
 <script setup>
     import {ref} from "vue";
-    const visible = ref(false);
+
     import Keyboard from "vue-material-design-icons/Keyboard.vue";
+
+    const isShown = ref(false);
 </script>
 
 <style scoped lang="scss">
-
-.keys{
+.keys {
     min-width: 50%;
 }
 
@@ -111,12 +118,5 @@
 .el-tag::after {
     content: attr(data-content);
     text-transform: none;
-}
-
-</style>
-
-<style lang="scss">
-.el-dialog__headerbtn {
-    font-size: 1.5rem;
 }
 </style>
