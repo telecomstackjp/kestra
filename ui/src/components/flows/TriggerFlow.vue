@@ -227,9 +227,6 @@
 </script>
 
 <style scoped>
-    .inputs-container{
-        width: 100%;
-    }
     .trigger-flow-wrapper {
         display: inline;
     }
