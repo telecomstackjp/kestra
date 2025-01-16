@@ -118,6 +118,7 @@
                     }
                 },
             }))
+
             const darkTheme = document.getElementsByTagName("html")[0].className.indexOf("dark") >= 0;
 
             const chartData = computed(() => {
@@ -151,6 +152,7 @@
                             borderWidth: 0.2,
                             backgroundColor: Utils.hexToRgba(!darkTheme ? "#eaf0f9" : "#292e40", 0.5),
                             borderColor: !darkTheme ? "#7081b9" : "#7989b4",
+                            yAxisID: "yB",
                             data: props.data
                                 .map((value) => {
                                     return value.duration.avg === 0 ? 0 : Utils.duration(value.duration.avg);
