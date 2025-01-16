@@ -963,7 +963,7 @@
       }
     },
     "concurrency-view": {
-      "title_no_executions":"No Executions are ongoing for this Flow.",
+      "title_no_executions":"No ongoing Executions for this Flow.",
       "desc_no_executions":"Read more about <strong><a href=\"https://kestra.io/docs/workflow-components/execution\" target=\"_blank\">Executions</a></strong> in our documentation.",
       "title_no_limit": "No limits are set for this Flow.",
       "desc_no_limit": "Read more about <strong><a href=\"https://kestra.io/docs/workflow-components/concurrency\" target=\"_blank\">Concurrency Limits</a></strong> in our documentation."

@@ -1,5 +1,5 @@
 <template>
-    <div v-if="flow.concurrency && !runningCountSet" :class="{'opacity-0': !runningCountSet}">
+    <div v-if="flow.concurrency && !runningCountSet" :class="{'d-none': !runningCountSet}">
         <el-card class="mb-1">
             <div class="row mb-3">
                 <span class="col d-flex align-items-center">
