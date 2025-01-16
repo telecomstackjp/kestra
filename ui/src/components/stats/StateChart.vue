@@ -118,6 +118,7 @@
                     }
                 },
             }))
+            const darkTheme = document.getElementsByTagName("html")[0].className.indexOf("dark") >= 0;
 
             const chartData = computed(() => {
                 let datasets = props.data
@@ -127,6 +128,7 @@
                                 accumulator[state] = {
                                     label: state,
                                     backgroundColor: backgroundFromState(state),
+                                    borderRadius: 4,
                                     yAxisID: "y",
                                     data: []
                                 };
@@ -142,10 +144,13 @@
                     labels: props.data.map(r => moment(r.startDate).format(getFormat(r.groupBy))),
                     datasets: props.big || props.global || props.duration ?
                         [{
-                            type: "bar",
+                            type: "line",
                             label: duration,
-                            yAxisID: "yB",
-                            backgroundColor: Utils.hexToRgba("#ffffff", 0.001),
+                            fill: "start",
+                            pointRadius: 0,
+                            borderWidth: 0.2,
+                            backgroundColor: Utils.hexToRgba(!darkTheme ? "#eaf0f9" : "#292e40", 0.5),
+                            borderColor: !darkTheme ? "#7081b9" : "#7989b4",
                             data: props.data
                                 .map((value) => {
                                     return value.duration.avg === 0 ? 0 : Utils.duration(value.duration.avg);
