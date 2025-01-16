@@ -40,7 +40,7 @@
                                     </span>
                                 </el-tooltip>
                                 <div>
-                                    <el-tooltip placement="right" :persistent="false" transition="" :hide-after="0" effect="light">
+                                    <el-tooltip placement="right" :persistent="false" :hide-after="0" effect="light">
                                         <template #content>
                                             <span>This task has {{ item.attempts }} attempts.</span>
                                         </template>
