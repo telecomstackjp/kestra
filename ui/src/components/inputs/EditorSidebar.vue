@@ -1098,7 +1098,7 @@
 </style>
 
 <style lang="scss" scoped>
-@import "@kestra-io/ui-libs/src/scss/variables.scss";
+@import "@kestra-io/ui-libs/src/scss/variables";
 
 .sidebar {
     background: var(--ks-background-card);
