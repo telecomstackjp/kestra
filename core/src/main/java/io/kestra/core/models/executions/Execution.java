@@ -335,15 +335,15 @@ public class Execution implements DeletedInterface, TenantInterface {
      *
      * @param resolvedTasks normal tasks
      * @param resolvedErrors errors tasks
-     * @param resolvedErrors afters tasks
+     * @param resolvedErrors finally tasks
      * @return the flow we need to follow
      */
     public List<ResolvedTask> findTaskDependingFlowState(
         List<ResolvedTask> resolvedTasks,
         List<ResolvedTask> resolvedErrors,
-        List<ResolvedTask> resolvedAfters
+        List<ResolvedTask> resolvedFinally
     ) {
-        return this.findTaskDependingFlowState(resolvedTasks, resolvedErrors, resolvedAfters, null);
+        return this.findTaskDependingFlowState(resolvedTasks, resolvedErrors, resolvedFinally, null);
     }
 
     /**
@@ -353,7 +353,7 @@ public class Execution implements DeletedInterface, TenantInterface {
      *
      * @param resolvedTasks normal tasks
      * @param resolvedErrors errors tasks
-     * @param resolvedFinally afters tasks
+     * @param resolvedFinally finally tasks
      * @param parentTaskRun the parent task
      * @return the flow we need to follow
      */
@@ -366,7 +366,6 @@ public class Execution implements DeletedInterface, TenantInterface {
         resolvedTasks = removeDisabled(resolvedTasks);
         resolvedErrors = removeDisabled(resolvedErrors);
         resolvedFinally = removeDisabled(resolvedFinally);
-
 
         List<TaskRun> errorsFlow = this.findTaskRunByTasks(resolvedErrors, parentTaskRun);
         List<TaskRun> finallyFlow = this.findTaskRunByTasks(resolvedFinally, parentTaskRun);
@@ -390,7 +389,9 @@ public class Execution implements DeletedInterface, TenantInterface {
             }
         }
 
-        if (this.isTerminated(resolvedTasks, parentTaskRun) && resolvedFinally != null) {
+        if (resolvedFinally != null && (
+            this.isTerminated(resolvedTasks, parentTaskRun) || this.hasFailed(resolvedTasks, parentTaskRun
+        ))) {
             return resolvedFinally;
         }
 
