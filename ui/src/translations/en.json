@@ -1098,7 +1098,8 @@
       },
       "save": {
         "tasks": "Save task",
-        "triggers": "Save trigger"
+        "triggers": "Save trigger",
+        "test": "test"
       }
     }
   }
