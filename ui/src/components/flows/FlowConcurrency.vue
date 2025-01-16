@@ -1,5 +1,5 @@
 <template>
-    <div v-if="flow.concurrency">
+    <div v-if="flow.concurrency && !runningCountSet" :class="{'d-none': !runningCountSet}">
         <el-card class="mb-1">
             <div class="row mb-3">
                 <span class="col d-flex align-items-center">
@@ -27,6 +27,12 @@
         </el-card>
     </div>
     <empty-state
+        v-else-if="runningCount === 0"
+        :title="$t('concurrency-view.title_no_executions')"
+        :description="$t('concurrency-view.desc_no_executions')"
+        :image="noConcurrencyImage"
+    />
+    <empty-state
         v-else
         :title="$t('concurrency-view.title_no_limit')"
         :description="$t('concurrency-view.desc_no_limit')"
@@ -51,12 +57,14 @@
         data() {
             return {
                 runningCount: 0,
+                runningCountSet: false,
                 noConcurrencyImage
             }
         },
         methods: {
             setRunningCount(count) {
                 this.runningCount = count
+                this.runningCountSet = true
             }
         },
         computed: {

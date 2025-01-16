@@ -677,7 +677,8 @@
             "log_level": "Nível de Log Padrão",
             "log_display": "Exibição de Log Padrão",
             "execute_flow": "Executar o Flow",
-            "execute_default_tab": "Aba de Execução Padrão"
+            "execute_default_tab": "Aba de Execução Padrão",
+            "editor_type": "Tipo de Editor Padrão"
           }
         },
         "theme": {
@@ -880,7 +881,9 @@
     "behavior": "Comportamento",
     "concurrency-view": {
       "desc_no_limit": "Leia mais sobre <strong><a href=\"https://kestra.io/docs/workflow-components/concurrency\" target=\"_blank\">Limites de Concurrency</a></strong> na nossa documentação.",
-      "title_no_limit": "Nenhum limite foi definido para este Flow."
+      "title_no_limit": "Nenhum limite foi definido para este Flow.",
+      "desc_no_executions": "Leia mais sobre <strong><a href=\"https://kestra.io/docs/workflow-components/execution\" target=\"_blank\">Execuções</a></strong> em nossa documentação.",
+      "title_no_executions": "Sem Execuções em andamento para este Flow."
     },
     "active-slots": "Slots ativos",
     "concurrency": "Concorrência",
@@ -1043,6 +1046,48 @@
     "source only": "Somente fonte",
     "chart preview": "Pré-visualização do gráfico",
     "execution replayed": "Esta execução foi reproduzida.",
-    "execution replay": "Esta execução é uma repetição de <code>{originalId}</code>."
+    "execution replay": "Esta execução é uma repetição de <code>{originalId}</code>.",
+    "no_code": {
+      "fields": {
+        "main": {
+          "description": "Descrição",
+          "namespace": "Namespace",
+          "flow_id": "ID do Flow"
+        },
+        "general": {
+          "plugin_defaults": "Padrões do Plugin",
+          "variables": "Variáveis",
+          "labels": "Etiquetas",
+          "outputs": "Saídas",
+          "concurrency": "Concorrência",
+          "inputs": "Entradas",
+          "retry": "Repetir",
+          "disabled": "Desativado"
+        }
+      },
+      "sections": {
+        "general": "Propriedades gerais",
+        "triggers": "Triggers",
+        "main": "Propriedades principais",
+        "error_handlers": "Manipuladores de Erros",
+        "tasks": "Tarefas"
+      },
+      "creation": {
+        "select": "Selecione uma {section}",
+        "tasks": "Adicionar uma task",
+        "error handlers": "Adicionar um manipulador de erro",
+        "triggers": "Adicionar um trigger"
+      },
+      "save": {
+        "tasks": "Salvar task",
+        "triggers": "Salvar trigger"
+      },
+      "labels": {
+        "no_code": "Editor Sem Código",
+        "yaml": "Editor YAML"
+      },
+      "adding": "+ Adicionar um {what}"
+    },
+    "export_to_file": "Exportar para arquivo"
   }
 }

@@ -328,8 +328,6 @@
                 return Download
             },
             currentTaskRuns() {
-                // console.log(this.followedExecution?.taskRunList?.filter(tr => this.taskRunId ? tr.id === this.taskRunId : true))
-                // return this.logs.map(log => log.taskRunId).filter(tr => this.taskRunId ? tr.id === this.taskRunId : true)
                 return this.followedExecution?.taskRunList?.filter(tr => this.taskRunId ? tr.id === this.taskRunId : true) ?? [];
             },
             params() {
@@ -488,7 +486,10 @@
                             if (isEnd) {
                                 this.closeExecutionSSE();
                             }
-                            this.throttledExecutionUpdate(executionEvent);
+                            // we are receiving a first "fake" event to force initializing the connection: ignoring it
+                            if (executionEvent.lastEventId !== "start") {
+                                this.throttledExecutionUpdate(executionEvent);
+                            }
                             if (isEnd) {
                                 this.throttledExecutionUpdate.flush();
                             }
@@ -502,7 +503,10 @@
                         this.logsSSE = sse;
 
                         this.logsSSE.onmessage = event => {
-                            this.logsBuffer = this.logsBuffer.concat(JSON.parse(event.data));
+                            // we are receiving a first "fake" event to force initializing the connection: ignoring it
+                            if (event.lastEventId !== "start") {
+                                this.logsBuffer = this.logsBuffer.concat(JSON.parse(event.data));
+                            }
 
                             clearTimeout(this.timeout);
                             this.timeout = setTimeout(() => {

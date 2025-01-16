@@ -55,7 +55,7 @@
                 </el-card>
             </template>
 
-            <template #table v-if="executions.length">
+            <template #table v-if="executions?.length">
                 <select-table
                     ref="selectTable"
                     :data="executions"
@@ -590,9 +590,6 @@
             isDisplayedTop() {
                 return this.embed === false && this.filter
             },
-            filterStorageKey() {
-                return storageKeys.EXECUTIONS_FILTERS
-            },
             states() {
                 return [ State.FAILED, State.SUCCESS, State.WARNING, State.CANCELLED,].map(value => {
                     return {
@@ -938,7 +935,7 @@
                     name: "flows/update", params: {
                         namespace: this.flow.namespace,
                         id: this.flow.id,
-                        tab: "editor",
+                        tab: "edit",
                         tenant: this.$route.params.tenant
                     }
                 })

@@ -1040,14 +1040,6 @@ form.ks-horizontal {
         }
     }
 
-    .el-dialog__headerbtn .el-dialog__close {
-        background-color: var(--ks-content-link);
-
-        html.dark & {
-            color: $base-white
-        }
-    }
-
     .bottom-buttons {
         margin-top: 36px;
         display: flex;

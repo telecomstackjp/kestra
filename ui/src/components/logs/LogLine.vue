@@ -30,7 +30,7 @@
                     </span>
                 </span>
             </div>
-            <v-runtime-template :template="markdownRenderer" />
+            <div ref="lineContent" v-html="renderedMarkdown" />
         </div>
     </div>
 </template>
@@ -38,15 +38,14 @@
     import Convert from "ansi-to-html";
     import xss from "xss";
     import * as Markdown from "../../utils/markdown";
-    import VRuntimeTemplate from "vue3-runtime-template";
     import MenuRight from "vue-material-design-icons/MenuRight.vue";
+    import linkify from "./linkify";
 
 
     let convert = new Convert();
 
     export default {
         components: {
-            VRuntimeTemplate,
             MenuRight,
         },
         props: {
@@ -77,12 +76,12 @@
         },
         data() {
             return {
-                markdownRenderer: undefined,
+                renderedMarkdown: undefined,
                 logsFontSize: parseInt(localStorage.getItem("logsFontSize") || "12"),
             };
         },
         async created() {
-            this.markdownRenderer = await this.renderMarkdown();
+            this.renderedMarkdown = await Markdown.render(this.message, {onlyLink: true});
         },
         computed: {
             logLineStyle() {
@@ -161,22 +160,23 @@
                 return logMessage;
             },
         },
-        methods: {
-            async renderMarkdown() {
-                let markdown = await Markdown.render(this.message, {onlyLink: true});
-
-                // Avoid rendering non-existent properties in the template by VRuntimeTemplate
-                markdown = markdown.replace(/{{/g, "&lcub;&lcub;").replace(/}}/g, "&rcub;&rcub;");
-
-                return markdown;
-            },
-        },
         mounted() {
             window.addEventListener("storage", (event) => {
                 if (event.key === "logsFontSize") {
                     this.logsFontSize = parseInt(event.newValue);
                 }
             });
+
+            setTimeout(() => {
+                linkify(this.$refs.lineContent, this.$router);
+            }, 200);
+        },
+        watch: {
+            renderedMarkdown() {
+                this.$nextTick(() => {
+                    linkify(this.$refs.lineContent, this.$router);
+                });
+            },
         },
     };
 </script>

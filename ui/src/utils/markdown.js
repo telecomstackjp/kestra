@@ -11,14 +11,12 @@ async function getHighlighter(createHighlighterCore, githubDark, githubLight) {
     return highlighter;
 }
 
-export async function render(markdown, options) {
+export async function render(markdown, options = {}) {
     const {createHighlighterCore, githubDark, githubLight, markdownIt, mark, meta, anchor, container, fromHighlighter, linkTag} = await import( "./markdownDeps")
     const highlighter = await getHighlighter(createHighlighterCore, githubDark, githubLight);
 
     githubDark["colors"]["editor.background"] = "var(--bs-gray-500)";
     githubLight["colors"]["editor.background"] = "var(--bs-white)";
-
-    options = options || {};
 
     const darkTheme = document.getElementsByTagName("html")[0].className.indexOf("dark") >= 0;
 

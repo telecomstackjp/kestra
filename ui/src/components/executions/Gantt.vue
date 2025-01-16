@@ -39,6 +39,17 @@
                                         <small v-if="item.task && item.task.value"> {{ item.task.value }}</small>
                                     </span>
                                 </el-tooltip>
+                                <div>
+                                    <el-tooltip placement="right" :persistent="false" :hide-after="0" effect="light">
+                                        <template #content>
+                                            <span>This task has {{ item.attempts }} attempts.</span>
+                                        </template>
+                                        <Warning 
+                                            v-if="item.attempts > 1" 
+                                            class="attempt_warn me-3" 
+                                        />
+                                    </el-tooltip>
+                                </div>
                                 <div :style="'width: ' + (100 / (dates.length + 1)) * dates.length + '%'">
                                     <el-tooltip placement="top" :persistent="false" transition="" :hide-after="0" effect="light">
                                         <template #content>
@@ -92,11 +103,13 @@
     import {DynamicScroller, DynamicScrollerItem} from "vue-virtual-scroller";
     import ChevronRight from "vue-material-design-icons/ChevronRight.vue";
     import ChevronDown from "vue-material-design-icons/ChevronDown.vue";
+    import Warning from "vue-material-design-icons/Alert.vue"
+
 
     const ts = date => new Date(date).getTime();
     const TASKRUN_THRESHOLD = 50
     export default {
-        components: {DynamicScroller, DynamicScrollerItem, TaskRunDetails, Duration, ChevronRight, ChevronDown},
+        components: {DynamicScroller,Warning, DynamicScrollerItem, TaskRunDetails, Duration, ChevronRight, ChevronDown},
         data() {
             return {
                 colors: State.colorClass(),
@@ -287,7 +300,8 @@
                         task,
                         flowId: task.flowId,
                         namespace: task.namespace,
-                        executionId: task.outputs && task.outputs.executionId
+                        executionId: task.outputs && task.outputs.executionId,
+                        attempts: task.attempts ? task.attempts.length : 1
                     });
                 }
                 this.series = series;
@@ -395,6 +409,11 @@
                         font-size: var(--font-size-xs);
                         color: var(--ks-content-primary);
                     }
+                }
+                
+                .attempt_warn{
+                    color: var(--el-color-warning);
+                    vertical-align: middle;
                 }
 
                 .task-progress {
