@@ -677,7 +677,8 @@
             "log_level": "Livello di Log predefinito",
             "log_display": "Visualizzazione Log predefinita",
             "execute_flow": "Esegui il Flow",
-            "execute_default_tab": "Scheda di Esecuzione Predefinita"
+            "execute_default_tab": "Scheda di Esecuzione Predefinita",
+            "editor_type": "Tipo di Editor Predefinito"
           }
         },
         "theme": {
@@ -1043,6 +1044,47 @@
     "source only": "Solo sorgente",
     "chart preview": "Anteprima grafico",
     "execution replayed": "Questa esecuzione è stata ripetuta.",
-    "execution replay": "Questa esecuzione è una ripetizione di <code>{originalId}</code>."
+    "execution replay": "Questa esecuzione è una ripetizione di <code>{originalId}</code>.",
+    "no_code": {
+      "fields": {
+        "main": {
+          "description": "Descrizione",
+          "namespace": "Namespace",
+          "flow_id": "ID del Flow"
+        },
+        "general": {
+          "plugin_defaults": "Impostazioni Predefinite del Plugin",
+          "variables": "Variabili",
+          "labels": "Etichette",
+          "outputs": "Output",
+          "concurrency": "Concorrenza",
+          "inputs": "Ingressi",
+          "retry": "Riprova",
+          "disabled": "Disabilitato"
+        }
+      },
+      "sections": {
+        "general": "Proprietà generali",
+        "triggers": "Trigger",
+        "main": "Proprietà principali",
+        "error_handlers": "Gestori degli Errori",
+        "tasks": "Attività"
+      },
+      "creation": {
+        "select": "Seleziona una {section}",
+        "tasks": "Aggiungi un task",
+        "error handlers": "Aggiungi un gestore degli errori",
+        "triggers": "Aggiungi un trigger"
+      },
+      "save": {
+        "tasks": "Salva task",
+        "triggers": "Salva trigger"
+      },
+      "labels": {
+        "no_code": "Editor Senza Codice",
+        "yaml": "Editor YAML"
+      },
+      "adding": "+ Aggiungi un {what}"
+    }
   }
 }
