@@ -4,20 +4,22 @@
             <ul>
                 <li>
                     <div class="el-input el-input-file custom-upload">
-                        <div class="el-input__wrapper">
-                            <label for="importFlows">
-                                <Upload />
-                                {{ $t('import') }}
-                            </label>
-                            <input
-                                id="importFlows"
-                                class="el-input__inner"
-                                type="file"
-                                accept=".zip, .yml, .yaml"
-                                @change="importFlows()"
-                                ref="file"
-                            >
-                        </div>
+                        <form ref="importForm">
+                            <div class="el-input__wrapper">
+                                <label for="importFlows">
+                                    <Upload />
+                                    {{ $t('import') }}
+                                </label>
+                                <input
+                                    id="importFlows"
+                                    class="el-input__inner"
+                                    type="file"
+                                    accept=".zip, .yml, .yaml"
+                                    @change="importFlows()"
+                                    ref="file"
+                                >
+                            </div>
+                        </form>
                     </div>
                 </li>
                 <li>
@@ -163,6 +165,7 @@
                                 class-name="row-graph"
                             >
                                 <template #default="scope">
+                                    <!-- TODO: Replace the usage of StateChart with one of the new chart components -->
                                     <state-chart
                                         :duration="true"
                                         :namespace="scope.row.namespace"
@@ -469,6 +472,7 @@
                         } else {
                             this.$toast().success(this.$t("flows imported"));
                         }
+                        this.$refs.importForm.reset();
                         this.loadData(() => {
                         })
                     })

@@ -1,7 +1,7 @@
 @use "@kestra-io/ui-libs/src/scss/variables.scss" as global-var;
 @use 'element-plus/theme-chalk/src/mixins/mixins' as mixin;
 
-@use "@kestra-io/ui-libs/src/scss/app";
+@use "@kestra-io/ui-libs/style.css";
 
 // element-plus
 @use "layout/element-plus-overload";
@@ -13,9 +13,6 @@
 @use "layout/root";
 @use "layout/root-dark";
 @use "layout/html-tag" as *;
-
-@use "layout/theme-light";
-@use "layout/theme-dark";
 
 // components
 @use "layout/charts";

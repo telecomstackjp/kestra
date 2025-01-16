@@ -5,7 +5,7 @@ export default {
         "stylelint-config-recommended-vue/scss"
     ],
     plugins: [
-        "./theme/lint-custom-properties.mjs",
+        "./plugins/lint-custom-properties.mjs",
     ],
     rules: {
         "color-no-hex": true,

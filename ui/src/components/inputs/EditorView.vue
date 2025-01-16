@@ -68,6 +68,9 @@
         </el-menu>
 
         <div class="d-inline-flex">
+            <el-button size="small" text @click="toggleYamlEditor">
+                {{ isYamlEditorShown ? $t("no_code.labels.no_code") : $t("no_code.labels.yaml") }}
+            </el-button>
             <switch-view
                 v-if="!isNamespace"
                 :type="viewType"
@@ -83,6 +86,13 @@
                 :errors="flowErrors"
                 :warnings="flowWarnings"
                 :infos="flowInfos"
+            />
+
+            <el-button
+                v-if="!isNamespace"
+                :icon="Download"
+                @click="exportYaml"
+                class="ms-2 me-0"
             />
 
             <EditorButtons
@@ -108,6 +118,7 @@
                 @open-new-error="isNewErrorOpen = true"
                 @open-new-trigger="isNewTriggerOpen = true"
                 @open-edit-metadata="isEditMetadataOpen = true"
+                @export-yaml="exportYaml"
                 :is-namespace="isNamespace"
             />
         </div>
@@ -119,37 +130,45 @@
             :class="combinedEditor ? 'editor-combined' : ''"
             style="flex: 1;"
         >
-            <editor
-                v-if="isCreating || openedTabs.length"
-                ref="editorDomElement"
-                @save="save"
-                @execute="execute"
-                v-model="flowYaml"
-                :schema-type="isCurrentTabFlow? 'flow': undefined"
-                :lang="currentTab?.extension === undefined ? 'yaml' : undefined"
-                :extension="currentTab?.extension"
-                @update:model-value="editorUpdate"
-                @cursor="updatePluginDocumentation"
-                :creating="isCreating"
-                @restart-guided-tour="() => persistViewType(editorViewTypes.SOURCE)"
-                :read-only="isReadOnly"
-                :navbar="false"
-            />
-            <section v-else class="no-tabs-opened">
-                <div class="img" />
-
-                <h2>{{ $t("namespace_editor.empty.title") }}</h2>
-                <p><span>{{ $t("namespace_editor.empty.message") }}</span></p>
-
-                <iframe
-                    width="60%"
-                    height="400px"
-                    src="https://www.youtube.com/embed/o-d-GaXUiKQ?si=TTjV8jgRg6-lj_cC"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowfullscreen
+            <template v-if="isYamlEditorShown">
+                <editor
+                    v-if="isCreating || openedTabs.length"
+                    ref="editorDomElement"
+                    @save="save"
+                    @execute="execute"
+                    v-model="flowYaml"
+                    :schema-type="isCurrentTabFlow? 'flow': undefined"
+                    :lang="currentTab?.extension === undefined ? 'yaml' : undefined"
+                    :extension="currentTab?.extension"
+                    @update:model-value="editorUpdate"
+                    @cursor="updatePluginDocumentation"
+                    :creating="isCreating"
+                    @restart-guided-tour="() => persistViewType(editorViewTypes.SOURCE)"
+                    :read-only="isReadOnly"
+                    :navbar="false"
                 />
-            </section>
+                <section v-else class="no-tabs-opened">
+                    <div class="img" />
+
+                    <h2>{{ $t("namespace_editor.empty.title") }}</h2>
+                    <p><span>{{ $t("namespace_editor.empty.message") }}</span></p>
+
+                    <iframe
+                        width="60%"
+                        height="400px"
+                        src="https://www.youtube.com/embed/o-d-GaXUiKQ?si=TTjV8jgRg6-lj_cC"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen
+                    />
+                </section>
+            </template>
+            <NoCode
+                v-else
+                :flow="flowYaml"
+                @update-metadata="(e) => onUpdateMetadata(e, true)"
+                @update-task="(e) => editorUpdate(e)"
+            />
         </div>
         <div class="slider" @mousedown.prevent.stop="dragEditor" v-if="combinedEditor" />
         <div :class="{'d-flex': combinedEditor}" :style="viewType === editorViewTypes.SOURCE ? `display: none` : combinedEditor ? `flex: 0 0 calc(${100 - editorWidth}% - 11px)` : 'flex: 1 0 0%'">
@@ -173,6 +192,7 @@
                     @loading="loadingState"
                     @expand-subflow="onExpandSubflow"
                     @swapped-task="onSwappedTask"
+                    @open-no-code="(params) => handleTopologyEditClick(params)"
                     :flow-graph="flowGraph"
                     :flow-id="flowId"
                     :namespace="namespace"
@@ -296,7 +316,7 @@
 <script setup>
     import {computed, getCurrentInstance, h, nextTick, onBeforeUnmount, onMounted, ref, watch,} from "vue";
     import {useStore} from "vuex";
-    import {useRouter} from "vue-router";
+    import {useRoute, useRouter} from "vue-router";
 
     // Icons
     import ContentSave from "vue-material-design-icons/ContentSave.vue";
@@ -304,6 +324,7 @@
     import MenuClose from "vue-material-design-icons/MenuClose.vue";
     import Close from "vue-material-design-icons/Close.vue";
     import CircleMedium from "vue-material-design-icons/CircleMedium.vue";
+    import Download from "vue-material-design-icons/Download.vue";
 
     import TypeIcon from "../utils/icons/Type.vue"
 
@@ -317,17 +338,22 @@
     import TaskEditor from "../flows/TaskEditor.vue";
     import MetadataEditor from "../flows/MetadataEditor.vue";
     import Editor from "./Editor.vue";
-    import {SECTIONS} from "../../utils/constants.js";
+    import {SECTIONS, storageKeys} from "../../utils/constants.js";
     import LowCodeEditor from "../inputs/LowCodeEditor.vue";
     import {editorViewTypes} from "../../utils/constants";
-    import Utils from "@kestra-io/ui-libs/src/utils/Utils";
+    import {Utils} from "@kestra-io/ui-libs";
     import {apiUrl} from "override/utils/route";
     import EditorButtons from "./EditorButtons.vue";
     import Drawer from "../Drawer.vue";
     import {ElMessageBox} from "element-plus";
 
+    import localUtils from "../../utils/utils";
+    
+    import NoCode from "../code/NoCode.vue";
+
     const store = useStore();
     const router = useRouter();
+    const route = useRoute();
     const emit = defineEmits(["follow", "expand-subflow"]);
     const toast = getCurrentInstance().appContext.config.globalProperties.$toast();
     const t = getCurrentInstance().appContext.config.globalProperties.$t;
@@ -472,6 +498,17 @@
 
         return undefined;
     });
+
+    const isYamlEditorShown = ref(true);
+    const toggleYamlEditor = () => {
+        isYamlEditorShown.value = !isYamlEditorShown.value
+        localStorage.setItem(storageKeys.EDITOR_VIEW_TYPE, isYamlEditorShown.value === true ? "YAML" : "NO_CODE");
+    }
+
+    const handleTopologyEditClick = (params) => {
+        isYamlEditorShown.value = false;
+        nextTick(() => router.replace({query: {...route.query, ...params}}))
+    }
 
     const loadViewType = () => {
         return localStorage.getItem(editorViewTypes.STORAGE_KEY);
@@ -633,6 +670,8 @@
     };
 
     onMounted(async () => {
+        isYamlEditorShown.value = localStorage.getItem(storageKeys.EDITOR_VIEW_TYPE) === "YAML";
+
         if(!props.isNamespace) {
             initViewType()
             await initYamlSource();
@@ -880,8 +919,31 @@
         );
     };
 
-    const onUpdateMetadata = (event) => {
+    const validateFlow = (flow = yamlWithNextRevision.value) => {
+        return store
+            .dispatch("flow/validateFlow", {flow})
+            .then((value) => {
+                if (validationDomElement.value && editorDomElement.value) {
+                    validationDomElement.value.onResize(
+                        editorDomElement.value.$el.offsetWidth
+                    );
+                }
+
+                return value;
+            });
+    };
+
+    const onUpdateMetadata = (event, shouldSave) => {
         metadata.value = event;
+
+        if(shouldSave) {
+            metadata.value = {...metadata.value, ...event};
+            onSaveMetadata();
+            validateFlow()
+
+        } else {
+            metadata.value = event;
+        }
     };
 
     const onSaveMetadata = () => {
@@ -988,7 +1050,7 @@
                 params: {
                     id: flowParsed.value.id,
                     namespace: flowParsed.value.namespace,
-                    tab: "editor",
+                    tab: "edit",
                     tenant: routeParams.tenant,
                 },
             });
@@ -1264,6 +1326,11 @@
     const closeTabsToRight = (index) => {
         closeTabs(openedTabs.value.slice(index + 1).filter(tab => tab !== FLOW_TAB.value), openedTabs.value[index]);
     };
+
+    const exportYaml = () => {
+        const blob = new Blob([flowYaml.value], {type: "text/yaml"});
+        localUtils.downloadUrl(blob, "flow.yaml");
+    };
 </script>
 
 <style lang="scss" scoped>
@@ -1348,6 +1415,10 @@
         &:hover {
             background-color: var(--ks-border-active);
         }
+    }
+
+    .vueflow {
+        height: 100%;
     }
 
     .topology-display .el-alert {

@@ -73,6 +73,7 @@
                                         :source="chart.data.content"
                                         :chart="chart.data"
                                         :identifier="chart.data.id"
+                                        is-preview
                                     />
                                 </div>
                             </div>
@@ -131,6 +132,7 @@
                                     :source="selectedChart.content"
                                     :chart="selectedChart"
                                     :identifier="selectedChart.id"
+                                    is-preview
                                 />
                             </div>
                         </div>
@@ -155,6 +157,9 @@
     import ChartBar from "vue-material-design-icons/ChartBar.vue";
     import FileDocumentEditOutline from "vue-material-design-icons/FileDocumentEditOutline.vue";
     import ViewDashboard from "vue-material-design-icons/ViewDashboard.vue";
+
+    // avoid an eslint warning about missing declaration
+    defineEmits(["save"])
 </script>
 <script>
     import Editor from "../../inputs/Editor.vue";
@@ -184,7 +189,6 @@
                 return this.currentView !== this.views.NONE && this.currentView !== this.views.DASHBOARD;
             }
         },
-        emits: ["save"],
         props: {
             allowSaveUnchanged: {
                 type: Boolean,
@@ -272,7 +276,7 @@
                         if (errors.constraints) {
                             result.error = errors.constraints;
                         } else {
-                            result.data = chart;
+                            result.data = {...chart, content: yamlChart};
                         }
                     });
                 return result;

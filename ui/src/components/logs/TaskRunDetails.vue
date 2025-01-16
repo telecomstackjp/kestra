@@ -104,7 +104,7 @@
 
 <script>
     import LogLine from "./LogLine.vue";
-    import State from "../../utils/state";
+    import {State} from "@kestra-io/ui-libs"
     import _xor from "lodash/xor";
     import _groupBy from "lodash/groupBy";
     import moment from "moment";
@@ -488,7 +488,10 @@
                             if (isEnd) {
                                 this.closeExecutionSSE();
                             }
-                            this.throttledExecutionUpdate(executionEvent);
+                            // we are receiving a first "fake" event to force initializing the connection: ignoring it
+                            if (executionEvent.lastEventId !== "start") {
+                                this.throttledExecutionUpdate(executionEvent);
+                            }
                             if (isEnd) {
                                 this.throttledExecutionUpdate.flush();
                             }
@@ -502,7 +505,10 @@
                         this.logsSSE = sse;
 
                         this.logsSSE.onmessage = event => {
-                            this.logsBuffer = this.logsBuffer.concat(JSON.parse(event.data));
+                            // we are receiving a first "fake" event to force initializing the connection: ignoring it
+                            if (event.lastEventId !== "start") {
+                                this.logsBuffer = this.logsBuffer.concat(JSON.parse(event.data));
+                            }
 
                             clearTimeout(this.timeout);
                             this.timeout = setTimeout(() => {

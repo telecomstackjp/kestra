@@ -253,13 +253,23 @@
         .vsm--link {
             padding: 0.3rem 0.5rem;
             margin-bottom: 0.3rem;
-            border-radius: var(--bs-border-radius-lg);
+            border-radius: .25rem;
             transition: padding 0.2s ease;
             color: var(--ks-content-primary);
+            box-shadow: none;
+
+            &_active, &_active:hover {
+                background-color: var(--ks-button-background-secondary-active);
+                font-weight: normal;
+            }
 
             &_disabled {
                 pointer-events: auto;
             }
+
+            &:hover {
+                background-color: var(--ks-button-background-secondary-hover);
+            }   
 
             .el-tooltip__trigger {
                 display: flex;

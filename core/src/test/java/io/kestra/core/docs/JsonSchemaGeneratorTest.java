@@ -8,11 +8,12 @@ import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.dashboards.Dashboard;
 import io.kestra.core.models.dashboards.GraphStyle;
 import io.kestra.core.models.flows.Flow;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.models.tasks.VoidOutput;
 import io.kestra.core.models.tasks.logs.LogRecord;
-import io.kestra.core.models.tasks.logs.LogShipper;
+import io.kestra.core.models.tasks.logs.LogExporter;
 import io.kestra.core.models.tasks.runners.TaskRunner;
 import io.kestra.core.models.triggers.AbstractTrigger;
 import io.kestra.core.plugins.PluginRegistry;
@@ -145,10 +146,10 @@ class JsonSchemaGeneratorTest {
         Helpers.runApplicationContext((applicationContext) -> {
             JsonSchemaGenerator jsonSchemaGenerator = applicationContext.getBean(JsonSchemaGenerator.class);
 
-            Map<String, Object> generate = jsonSchemaGenerator.schemas(LogShipper.class);
+            Map<String, Object> generate = jsonSchemaGenerator.schemas(LogExporter.class);
 
             var definitions = (Map<String, Map<String, Object>>) generate.get("definitions");
-            var logShipper = definitions.get(LogShipper.class.getName());
+            var logShipper = definitions.get(LogExporter.class.getName());
             Assertions.assertNotNull(logShipper.get("$ref"));
         });
     }
@@ -323,7 +324,7 @@ class JsonSchemaGeneratorTest {
         }
 
         @Schema(title = "Test class")
-        private class TestClass {
+        private static class TestClass {
             @Schema(title = "Test property")
             public String testProperty;
         }
@@ -335,9 +336,8 @@ class JsonSchemaGeneratorTest {
     @Getter
     @NoArgsConstructor
     private static abstract class ParentClass extends Task {
-        @PluginProperty
         @Builder.Default
-        private String stringWithDefault = "default";
+        private Property<String> stringWithDefault = Property.of("default");
     }
 
     @SuperBuilder
@@ -346,15 +346,14 @@ class JsonSchemaGeneratorTest {
     @Getter
     @NoArgsConstructor
     @Plugin(
-        beta = true,
-        examples = {}
+        beta = true
     )
     public static class BetaTask extends Task {
         @PluginProperty(beta = true)
         private String beta;
     }
 
-    public static class TestLogShipper extends LogShipper<VoidOutput> {
+    public static class TestLogExporter extends LogExporter<VoidOutput> {
 
         @Override
         public VoidOutput sendLogs(RunContext runContext, Flux<LogRecord> logRecord) throws Exception {

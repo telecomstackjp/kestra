@@ -198,6 +198,17 @@ public class DashboardController {
     }
 
     @ExecuteOn(TaskExecutors.IO)
+    @Post(uri = "charts/preview", consumes = MediaType.APPLICATION_YAML)
+    @Operation(tags = {"Dashboards"}, summary = "Preview a chart data")
+    public PagedResults<Map<String, Object>> previewChart(
+        @Parameter(description = "The chart") @Body String chart
+    ) throws IOException {
+        Chart<?> parsed = YAML_PARSER.parse(chart, Chart.class);
+
+        return PagedResults.of(this.dashboardRepository.generate(tenantService.resolveTenant(), (DataChart) parsed, ZonedDateTime.now(), ZonedDateTime.now().minusDays(7), null));
+    }
+
+    @ExecuteOn(TaskExecutors.IO)
     @Post(uri = "validate/chart", consumes = MediaType.APPLICATION_YAML)
     @Operation(tags = {"Dashboards"}, summary = "Validate a chart from yaml source")
     public ValidateConstraintViolation validateChart(

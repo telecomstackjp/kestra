@@ -152,7 +152,7 @@
     import KestraIcon from "../Kicon.vue";
     import DateRange from "../layout/DateRange.vue";
 
-    import {Magnify} from "./utils/icons.js";
+    import {Magnify} from "./utils/icons";
 
     import {useI18n} from "vue-i18n";
     const {t} = useI18n({useScope: "global"});
@@ -190,7 +190,7 @@
 
     const ITEMS_PREFIX = props.prefix ?? String(route.name);
 
-    import {useFilters} from "./composables/useFilters.js";
+    import {useFilters} from "./composables/useFilters";
     const {COMPARATORS, OPTIONS} = useFilters(ITEMS_PREFIX);
 
     const select = ref<InstanceType<typeof ElSelect> | null>(null);
@@ -560,7 +560,7 @@
         select.value?.focus();
     };
 
-    import {decodeParams} from "./utils/helpers.js";
+    import {encodeParams, decodeParams} from "./utils/helpers";
 
     const triggerSearch = () => {
         const params: any = {};
