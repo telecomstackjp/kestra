@@ -32,33 +32,7 @@
                     >
                         {{ $t("copy") }}
                     </el-dropdown-item>
-                    <el-dropdown-item
-                        v-if="isAllowedEdit"
-                        :icon="Exclamation"
-                        size="large"
-                        @click="forwardEvent('open-new-error', null)"
-                        :disabled="!flowHaveTasks"
-                    >
-                        {{ $t("add global error handler") }}
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                        v-if="isAllowedEdit"
-                        :icon="LightningBolt"
-                        size="large"
-                        @click="forwardEvent('open-new-trigger', null)"
-                        :disabled="!flowHaveTasks"
-                    >
-                        {{ $t("add trigger") }}
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                        v-if="isAllowedEdit"
-                        :icon="FileEdit"
-                        size="large"
-                        @click="forwardEvent('open-edit-metadata', null)"
-                    >
-                        {{ $t("edit metadata") }}
-                    </el-dropdown-item>
-                </el-dropdown-menu>
+                </el-dropdown-menu> 
             </template>
         </el-dropdown>
     </div>
@@ -77,11 +51,9 @@
 </template>
 <script setup>
     import DotsVertical from "vue-material-design-icons/DotsVertical.vue";
+    
     import Delete from "vue-material-design-icons/Delete.vue";
     import ContentCopy from "vue-material-design-icons/ContentCopy.vue";
-    import Exclamation from "vue-material-design-icons/Exclamation.vue";
-    import LightningBolt from "vue-material-design-icons/LightningBolt.vue";
-    import FileEdit from "vue-material-design-icons/FileEdit.vue";
     import ContentSave from "vue-material-design-icons/ContentSave.vue";
     import Download from "vue-material-design-icons/Download.vue";
 </script>
@@ -92,9 +64,6 @@
         emits: [
             "delete-flow",
             "copy",
-            "open-new-error",
-            "open-new-trigger",
-            "open-edit-metadata",
             "save",
             "export"
         ],
