@@ -51,6 +51,7 @@
     import InputSwitch from "../components/inputs/InputSwitch.vue";
     import InputLabel from "../components/inputs/InputLabel.vue";
 
+    import Editor from "../../inputs/Editor.vue";
     import MetadataInputs from "../../flows/MetadataInputs.vue";
     import MetadataVariables from "../../flows/MetadataVariables.vue";
 
@@ -138,9 +139,13 @@
             //     root: "concurrency",
             // },
             pluginDefaults: {
-                component: shallowRef(InputText),
+                component: shallowRef(Editor),
                 value: props.metadata.pluginDefaults,
                 label: t("no_code.fields.general.plugin_defaults"),
+                navbar: false,
+                input: true,
+                lang: "yaml",
+                style: {height: "100px"},
             },
             disabled: {
                 component: shallowRef(InputSwitch),

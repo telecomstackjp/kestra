@@ -9,6 +9,12 @@ export type Schemas = {
     };
 };
 
+type Main = {
+    id: Field;
+    namespace: Field;
+    description: Field;
+};
+
 export type Field = {
     component: ReturnType<typeof defineComponent>;
     value: any;
@@ -29,15 +35,18 @@ type VariableField = Field & {
     variables: any[];
 };
 
-type Main = {
-    id: Field;
-    namespace: Field;
-    description: Field;
-};
-
 type ConcurrencyField = Field & {
     root: string;
     schema: object;
+};
+
+type PluginDefaultsField = Field & {
+    navbar: boolean;
+    input: boolean;
+    lang: string;
+    style: {
+        height: string;
+    };
 };
 
 type General = {
@@ -47,7 +56,7 @@ type General = {
     outputs: Field;
     variables: VariableField;
     concurrency: ConcurrencyField;
-    pluginDefaults: Field;
+    pluginDefaults: PluginDefaultsField;
     disabled: Field;
 };
 
