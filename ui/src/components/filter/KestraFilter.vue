@@ -577,26 +577,11 @@
         select.value?.focus();
     };
 
-    import {decodeParams} from "./utils/helpers";
+    import {encodeParams, decodeParams} from "./utils/helpers";
 
     const triggerSearch = () => {
-        const params: any = {};
-
-        current.value.forEach((filter) => {
-            if (
-                filter.label === "namespace" &&
-                filter.value &&
-                filter.value.length > 0
-            ) {
-                //Always send only the last value
-                params.namespace = filter.value[filter.value.length - 1];
-            } else if (filter.value && filter.value.length > 0) {
-                params[filter.label] =
-                    filter.value.length === 1 ? filter.value[0] : filter.value;
-            }
-        });
-
-        router.push({query: params});
+        if (props.searchCallback) return;
+        else router.push({query: encodeParams(current.value, OPTIONS)});
     };
 
     // Include parameters from URL directly to filter
