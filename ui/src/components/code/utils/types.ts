@@ -9,12 +9,6 @@ export type Schemas = {
     };
 };
 
-type Main = {
-    id: Field;
-    namespace: Field;
-    description: Field;
-};
-
 export type Field = {
     component: ReturnType<typeof defineComponent>;
     value: any;
@@ -49,20 +43,18 @@ type EditorField = Field & {
     };
 };
 
-type General = {
+export type Fields = {
+    id: Field;
+    namespace: Field;
+    description: Field;
     retry: EditorField;
     labels: LabelField;
     inputs: InputField;
     outputs: EditorField;
     variables: VariableField;
-    concurrency: ConcurrencyField;
+    concurrency?: ConcurrencyField; // TODO: Make it not optional
     pluginDefaults: EditorField;
     disabled: Field;
-};
-
-export type Fields = {
-    main: Main;
-    general: General;
 };
 
 export type Breadcrumb = {
@@ -76,9 +68,4 @@ export type Breadcrumb = {
 export type CollapseItem = {
     title: string;
     elements?: Record<string, any>[];
-};
-
-export type Sections = {
-    main: CollapseItem[];
-    segments: CollapseItem[];
 };
