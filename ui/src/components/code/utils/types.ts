@@ -40,7 +40,7 @@ type ConcurrencyField = Field & {
     schema: object;
 };
 
-type PluginDefaultsField = Field & {
+type EditorField = Field & {
     navbar: boolean;
     input: boolean;
     lang: string;
@@ -50,13 +50,13 @@ type PluginDefaultsField = Field & {
 };
 
 type General = {
-    retry: Field;
+    retry: EditorField;
     labels: LabelField;
     inputs: InputField;
-    outputs: Field;
+    outputs: EditorField;
     variables: VariableField;
     concurrency: ConcurrencyField;
-    pluginDefaults: PluginDefaultsField;
+    pluginDefaults: EditorField;
     disabled: Field;
 };
 

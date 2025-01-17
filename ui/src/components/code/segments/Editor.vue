@@ -105,9 +105,13 @@
         },
         general: {
             retry: {
-                component: shallowRef(InputText),
+                component: shallowRef(Editor),
                 value: props.metadata.retry,
                 label: t("no_code.fields.general.retry"),
+                navbar: false,
+                input: true,
+                lang: "yaml",
+                style: {height: "100px"},
             },
             labels: {
                 component: shallowRef(InputLabel),
@@ -121,9 +125,13 @@
                 inputs: props.metadata.inputs,
             },
             outputs: {
-                component: shallowRef(InputText),
+                component: shallowRef(Editor),
                 value: props.metadata.outputs,
                 label: t("no_code.fields.general.outputs"),
+                navbar: false,
+                input: true,
+                lang: "yaml",
+                style: {height: "100px"},
             },
             variables: {
                 component: shallowRef(MetadataVariables),

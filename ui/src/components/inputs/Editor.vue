@@ -37,7 +37,7 @@
         </nav>
         <slot name="absolute" />
         <span v-if="label" class="label">{{ label }}</span>
-        <div class="editor-container" ref="container" :class="containerClass">
+        <div class="editor-container" ref="container" :class="[containerClass, {'mb-2': label}]">
             <div ref="editorContainer" class="editor-wrapper position-relative">
                 <monaco-editor
                     ref="monacoEditor"
