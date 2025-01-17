@@ -94,13 +94,6 @@
                 :infos="flowInfos"
             />
 
-            <el-button
-                v-if="!isNamespace"
-                :icon="Download"
-                @click="exportYaml"
-                class="ms-2 me-0"
-            />
-
             <EditorButtons
                 v-if="isCreating || openedTabs.length"
                 :is-creating="props.isCreating"
@@ -124,7 +117,7 @@
                 @open-new-error="isNewErrorOpen = true"
                 @open-new-trigger="isNewTriggerOpen = true"
                 @open-edit-metadata="isEditMetadataOpen = true"
-                @export-yaml="exportYaml"
+                @export="exportYaml"
                 :is-namespace="isNamespace"
             />
         </div>
@@ -330,7 +323,6 @@
     import MenuClose from "vue-material-design-icons/MenuClose.vue";
     import Close from "vue-material-design-icons/Close.vue";
     import CircleMedium from "vue-material-design-icons/CircleMedium.vue";
-    import Download from "vue-material-design-icons/Download.vue";
 
     import TypeIcon from "../utils/icons/Type.vue"
 
@@ -352,8 +344,6 @@
     import EditorButtons from "./EditorButtons.vue";
     import Drawer from "../Drawer.vue";
     import {ElMessageBox} from "element-plus";
-
-    import localUtils from "../../utils/utils";
     
     import NoCode from "../code/NoCode.vue";
 
@@ -1329,6 +1319,7 @@
         closeTabs(openedTabs.value.slice(index + 1).filter(tab => tab !== FLOW_TAB.value), openedTabs.value[index]);
     };
 
+    import localUtils from "../../utils/utils";
     const exportYaml = () => {
         const blob = new Blob([flowYaml.value], {type: "text/yaml"});
         localUtils.downloadUrl(blob, "flow.yaml");

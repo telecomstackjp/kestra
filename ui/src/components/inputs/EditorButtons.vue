@@ -11,7 +11,7 @@
                         v-if="isAllowedEdit"
                         :icon="Download"
                         size="large"
-                        @click="forwardEvent('export-yaml')"
+                        @click="forwardEvent('export')"
                     >
                         {{ $t("export_to_file") }}
                     </el-dropdown-item>
@@ -96,7 +96,7 @@
             "open-new-trigger",
             "open-edit-metadata",
             "save",
-            "export-yaml"
+            "export"
         ],
         props: {
             isCreating: {
