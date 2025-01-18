@@ -104,6 +104,37 @@ $logLevels: "trace", "debug", "info", "warn", "error";
     }
 }
 
+//Docs Alert Colors
+
+    
+$success-bg-light: #d1e7dd;
+$success-color-light: #0a3622;
+$success-border-light: #a3cfbb;
+$success-bg: #051b11;
+$success-border: #0f5132;
+$success-color: #75b798;
+
+$info-bg-light: #cff4fc;
+$info-color-light: #055160;
+$info-border-light: #9eeaf9;
+$info-bg: #032830;
+$info-border: #087990;
+$info-color: #6edff6;
+
+$warning-bg-light: #fff3cd;
+$warning-color-light: #664d03;
+$warning-border-light: #ffe69c;
+$warning-bg: #332701;
+$warning-border: #997404;
+$warning-color: #ffda6a;
+
+$danger-bg-light: #f8d7da;
+$danger-color-light: #58151c;
+$danger-border-light: #f1aeb5;
+$danger-bg: #2c0b0e;
+$danger-border: #842029;
+$danger-color: #ea868f;
+
 .opacity-40 {
     opacity: 40%;
 }

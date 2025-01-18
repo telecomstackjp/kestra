@@ -610,7 +610,7 @@
     }
 
     .el-input__count {
-        color: var(--bs-white) !important;
+        color: var(--el-text-color-regular) !important;
         
         .el-input__count-inner {
             background: none !important;
