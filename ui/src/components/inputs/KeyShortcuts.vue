@@ -21,68 +21,15 @@
         </template>
 
         <div class="d-flex flex-column gap-3 fw-normal">
-            <div class="d-flex align-items-center gap-2">
+            <div v-for="(command, i) in commands" :key="i" class="d-flex align-items-center gap-3">
                 <div class="d-flex align-items-center gap-2 keys">
-                    <el-tag>⌥ Option/Alt</el-tag>
-                    + <el-tag>↑</el-tag>/<el-tag>↓</el-tag>
+                    <template v-for="(key, index) in command.keys" :key="index">
+                        <el-tag>{{ key }}</el-tag>
+                        <span v-if="index < command.keys.length - 1" class="fw-bold">+</span>
+                    </template>
                 </div>
                 <div class="text-break">
-                    {{ $t("editor_shortcuts.move_line") }}
-                </div>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <div class="d-flex align-items-center gap-2 keys">
-                    <el-tag>⇧ Shift</el-tag>
-                    + <el-tag>⌥ Option/Alt</el-tag> +
-                    <el-tag>↑</el-tag>/<el-tag> ↓ </el-tag>
-                </div>
-                <div class="text-break">
-                    {{ $t("editor_shortcuts.duplicate_line") }}
-                </div>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <div class="d-flex align-items-center gap-2 keys">
-                    <el-tag>⌘ Cmd/Ctrl</el-tag>
-                    + <el-tag>s</el-tag>
-                </div>
-                <div class="text-break">
-                    {{ $t("editor_shortcuts.save_flow") }}
-                </div>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <div class="d-flex align-items-center gap-2 keys">
-                    <el-tag>⌘ Cmd/Ctrl</el-tag>
-                    + <el-tag>/</el-tag>
-                </div>
-                <div class="text-break">
-                    {{ $t("editor_shortcuts.comment_uncomment") }}
-                </div>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <div class="d-flex align-items-center gap-2 keys">
-                    <el-tag>⌘ Cmd/Ctrl</el-tag>
-                    + <el-tag>k</el-tag> + <el-tag>c</el-tag>
-                </div>
-                <div class="text-break">
-                    {{ $t("editor_shortcuts.comment") }}
-                </div>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <div class="d-flex align-items-center gap-2 keys">
-                    <el-tag>⌘ Cmd/Ctrl</el-tag>
-                    + <el-tag>k</el-tag> + <el-tag>u</el-tag>
-                </div>
-                <div class="text-break">
-                    {{ $t("editor_shortcuts.uncomment") }}
-                </div>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <div class="d-flex align-items-center gap-2 keys">
-                    <el-tag>⌘ Cmd/Ctrl</el-tag>
-                    + <el-tag>k</el-tag> + <el-tag>l</el-tag>
-                </div>
-                <div class="text-break">
-                    {{ $t("editor_shortcuts.fold_unfold") }}
+                    {{ $t(command.description) }}
                 </div>
             </div>
         </div>
@@ -91,10 +38,40 @@
 
 <script setup>
     import {ref} from "vue";
-
     import Keyboard from "vue-material-design-icons/Keyboard.vue";
 
     const isShown = ref(false);
+
+    const commands = [
+        {
+            keys: ["⌘ Cmd/Ctrl", "s"],
+            description: "editor_shortcuts.save_flow"
+        },
+        {
+            keys: ["⌥ Option/Alt", "↑", "↓"],
+            description: "editor_shortcuts.move_line"
+        },
+        {
+            keys: ["⇧ Shift", "⌥ Option/Alt", "↑", "↓"],
+            description: "editor_shortcuts.duplicate_line"
+        },
+        {
+            keys: ["⌘ Cmd/Ctrl", "k", "l"],
+            description: "editor_shortcuts.fold_unfold"
+        },
+        {
+            keys: ["⌘ Cmd/Ctrl", "/"],
+            description: "editor_shortcuts.comment_uncomment"
+        },
+        {
+            keys: ["⌘ Cmd/Ctrl", "k", "c"],
+            description: "editor_shortcuts.comment"
+        },
+        {
+            keys: ["⌘ Cmd/Ctrl", "k", "u"],
+            description: "editor_shortcuts.uncomment"
+        }
+    ];
 </script>
 
 <style scoped lang="scss">
