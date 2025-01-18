@@ -308,7 +308,10 @@
         let dashboard = {};
 
         if (route.name === "home") {
-            router.replace({params: {...route.params, id: v?.id ?? "default"}});
+            router.replace({
+                params: {...route.params, id: v?.id ?? "default"},
+                query: {...route.query},
+            });
             if (v && v.id !== "default") {
                 dashboard = await store.dispatch("dashboard/load", v.id);
             }

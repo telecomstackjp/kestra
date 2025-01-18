@@ -67,10 +67,16 @@
             </el-menu-item>
         </el-menu>
 
-        <div class="d-inline-flex">
-            <el-button size="small" text @click="toggleYamlEditor">
-                {{ isYamlEditorShown ? $t("no_code.labels.no_code") : $t("no_code.labels.yaml") }}
-            </el-button>
+        <div class="d-inline-flex align-items-center">
+            <el-switch
+                v-model="editorViewType"
+                active-value="NO_CODE"
+                inactive-value="YAML"
+                :inactive-text="$t('no_code.labels.no_code')"
+                size="small"
+                class="me-2"
+            />
+
             <switch-view
                 v-if="!isNamespace"
                 :type="viewType"
@@ -121,7 +127,7 @@
                 @open-new-error="isNewErrorOpen = true"
                 @open-new-trigger="isNewTriggerOpen = true"
                 @open-edit-metadata="isEditMetadataOpen = true"
-                @export-yaml="exportYaml"
+                @export="exportYaml"
                 :is-namespace="isNamespace"
             />
         </div>
@@ -133,7 +139,7 @@
             :class="combinedEditor ? 'editor-combined' : ''"
             style="flex: 1;"
         >
-            <template v-if="isYamlEditorShown">
+            <template v-if="editorViewType === 'YAML'">
                 <editor
                     v-if="isCreating || openedTabs.length"
                     ref="editorDomElement"
@@ -327,7 +333,6 @@
     import MenuClose from "vue-material-design-icons/MenuClose.vue";
     import Close from "vue-material-design-icons/Close.vue";
     import CircleMedium from "vue-material-design-icons/CircleMedium.vue";
-    import Download from "vue-material-design-icons/Download.vue";
 
     import TypeIcon from "../utils/icons/Type.vue"
 
@@ -350,8 +355,6 @@
     import EditorButtons from "./EditorButtons.vue";
     import Drawer from "../Drawer.vue";
     import {ElMessageBox} from "element-plus";
-
-    import localUtils from "../../utils/utils";
     
     import NoCode from "../code/NoCode.vue";
 
@@ -503,14 +506,10 @@
         return undefined;
     });
 
-    const isYamlEditorShown = ref(true);
-    const toggleYamlEditor = () => {
-        isYamlEditorShown.value = !isYamlEditorShown.value
-        localStorage.setItem(storageKeys.EDITOR_VIEW_TYPE, isYamlEditorShown.value === true ? "YAML" : "NO_CODE");
-    }
-
+    const editorViewType = ref("YAML");
+   
     const handleTopologyEditClick = (params) => {
-        isYamlEditorShown.value = false;
+        editorViewType.value = "NO_CODE";
         nextTick(() => router.replace({query: {...route.query, ...params}}))
     }
 
@@ -674,7 +673,7 @@
     };
 
     onMounted(async () => {
-        isYamlEditorShown.value = localStorage.getItem(storageKeys.EDITOR_VIEW_TYPE) === "YAML";
+        editorViewType.value = localStorage.getItem(storageKeys.EDITOR_VIEW_TYPE) || "YAML";
 
         if(!props.isNamespace) {
             initViewType()
@@ -1331,6 +1330,7 @@
         closeTabs(openedTabs.value.slice(index + 1).filter(tab => tab !== FLOW_TAB.value), openedTabs.value[index]);
     };
 
+    import localUtils from "../../utils/utils";
     const exportYaml = () => {
         const blob = new Blob([flowYaml.value], {type: "text/yaml"});
         localUtils.downloadUrl(blob, "flow.yaml");
