@@ -31,7 +31,7 @@
     import TextSearchVariant from "vue-material-design-icons/TextSearchVariant.vue";
 
     defineProps<{
-        icon: string;
+        icon: any;
         label: string;
         tooltip?: string;
         value: string | number;
