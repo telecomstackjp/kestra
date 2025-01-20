@@ -4,14 +4,17 @@
         :hide-after="0"
         :persistent="false"
         effect="light"
+        placement="top"
     >
-        <el-button @click="isShown = true" :icon="Keyboard" />
+        <el-icon color="#918ba9" @click="isShown = true" :size="25" class="cursor-pointer">
+            <Keyboard />
+        </el-icon>
     </el-tooltip>
 
-    <el-dialog v-model="isShown">
+    <el-dialog v-model="isShown" top="25vh">
         <template #header>
             <div class="d-flex align-items-center gap-2 fw-normal">
-                <el-icon size="30px">
+                <el-icon :size="30">
                     <Keyboard />
                 </el-icon>
                 <span class="fs-6">
@@ -91,6 +94,7 @@
     display: inline-block;
     padding: 6px 10px;
 }
+
 
 .el-tag::after {
     content: attr(data-content);

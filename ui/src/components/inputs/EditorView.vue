@@ -94,8 +94,6 @@
                 :infos="flowInfos"
             />
 
-            <KeyShortcuts />
-
             <el-tooltip :content="$t('export_to_file')" :hide-after="0" :persistent="false" effect="light">
                 <el-button
                     v-if="!isNamespace"
@@ -141,6 +139,7 @@
         >
             <template v-if="editorViewType === 'YAML'">
                 <editor
+                    class="position-relative"
                     v-if="isCreating || openedTabs.length"
                     ref="editorDomElement"
                     @save="save"
@@ -155,7 +154,11 @@
                     @restart-guided-tour="() => persistViewType(editorViewTypes.SOURCE)"
                     :read-only="isReadOnly"
                     :navbar="false"
-                />
+                >
+                    <template #absolute>
+                        <key-shortcuts />
+                    </template>
+                </editor>
                 <section v-else class="no-tabs-opened">
                     <div class="img" />
 
