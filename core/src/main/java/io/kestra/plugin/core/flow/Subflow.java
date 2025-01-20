@@ -2,6 +2,7 @@ package io.kestra.plugin.core.flow;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.exceptions.InternalException;
 import io.kestra.core.models.Label;
 import io.kestra.core.models.annotations.Example;
@@ -103,8 +104,7 @@ public class Subflow extends Task implements ExecutableTask<Subflow.Output>, Chi
     @Schema(
         title = "The inputs to pass to the subflow to be executed."
     )
-    @PluginProperty(dynamic = true)
-    private Map<String, Object> inputs;
+    private Property<Map<String, Object>> inputs;
 
     @Schema(
         title = "The labels to pass to the subflow to be executed.",
@@ -127,16 +127,14 @@ public class Subflow extends Task implements ExecutableTask<Subflow.Output>, Chi
         title = "Whether to fail the current execution if the subflow execution fails or is killed.",
         description = "Note that this option works only if `wait` is set to `true`."
     )
-    @PluginProperty
-    private final Boolean transmitFailed = true;
+    private final Property<Boolean> transmitFailed = Property.of(true);
 
     @Builder.Default
     @Schema(
         title = "Whether the subflow should inherit labels from this execution that triggered it.",
         description = "By default, labels are not passed to the subflow execution. If you set this option to `true`, the child flow execution will inherit all labels from the parent execution."
     )
-    @PluginProperty
-    private final Boolean inheritLabels = false;
+    private final Property<Boolean> inheritLabels = Property.of(false);
 
     /**
      * @deprecated Output value should now be defined part of the Flow definition.
@@ -173,8 +171,9 @@ public class Subflow extends Task implements ExecutableTask<Subflow.Output>, Chi
                                                              Execution currentExecution,
                                                              TaskRun currentTaskRun) throws InternalException {
         Map<String, Object> inputs = new HashMap<>();
-        if (this.inputs != null) {
-            inputs.putAll(runContext.render(this.inputs));
+        var renderedInputs = runContext.render(this.inputs).asMap(String.class, Object.class);
+        if (!renderedInputs.isEmpty()) {
+            inputs.putAll(renderedInputs);
         }
 
         return ExecutableUtils.subflowExecution(
@@ -186,7 +185,7 @@ public class Subflow extends Task implements ExecutableTask<Subflow.Output>, Chi
             currentTaskRun,
             inputs,
             labels,
-            inheritLabels,
+            runContext.render(inheritLabels).as(Boolean.class).orElseThrow(),
             scheduleDate
         )
             .<List<SubflowExecution<?>>>map(subflowExecution -> List.of(subflowExecution))
@@ -199,7 +198,7 @@ public class Subflow extends Task implements ExecutableTask<Subflow.Output>, Chi
         TaskRun taskRun,
         io.kestra.core.models.flows.Flow flow,
         Execution execution
-    ) {
+    ) throws IllegalVariableEvaluationException {
         // we only create a worker task result when the execution is terminated
         if (!taskRun.getState().isTerminated()) {
             return Optional.empty();
@@ -250,7 +249,7 @@ public class Subflow extends Task implements ExecutableTask<Subflow.Output>, Chi
 
         taskRun = taskRun.withOutputs(builder.build().toMap());
 
-        State.Type finalState = ExecutableUtils.guessState(execution, this.transmitFailed, this.isAllowFailure(), this.isAllowWarning());
+        State.Type finalState = ExecutableUtils.guessState(execution, runContext.render(this.transmitFailed).as(Boolean.class).orElseThrow(), this.isAllowFailure(), this.isAllowWarning());
         if (taskRun.getState().getCurrent() != finalState) {
             taskRun = taskRun.withState(finalState);
         }

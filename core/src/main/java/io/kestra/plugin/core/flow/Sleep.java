@@ -3,6 +3,7 @@ package io.kestra.plugin.core.flow;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.models.tasks.VoidOutput;
@@ -42,15 +43,15 @@ public class Sleep extends Task implements RunnableTask<VoidOutput> {
         title = "Duration to sleep",
         description = "The time duration in ISO-8601 format (e.g., `PT5S` for 5 seconds)."
     )
-    @PluginProperty
     @NotNull
-    private Duration duration;
+    private Property<Duration> duration;
 
     public VoidOutput run(RunContext runContext) throws Exception {
-        runContext.logger().info("Waiting for {}", duration);
+        var renderedDuration = runContext.render(duration).as(Duration.class).orElseThrow();
+        runContext.logger().info("Waiting for {}", renderedDuration);
 
         // Wait for the specified duration
-        TimeUnit.MILLISECONDS.sleep(duration.toMillis());
+        TimeUnit.MILLISECONDS.sleep(renderedDuration.toMillis());
 
         return null;
     }
