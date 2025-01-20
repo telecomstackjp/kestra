@@ -26,31 +26,17 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+    import type {RouteLocationRaw} from "vue-router";
     import TextSearchVariant from "vue-material-design-icons/TextSearchVariant.vue";
 
-    defineProps({
-        icon: {
-            type: Object,
-            required: true,
-        },
-        label: {
-            type: String,
-            required: true,
-        },
-        tooltip: {
-            type: String,
-            default: undefined,
-        },
-        value: {
-            type: [String, Number],
-            required: true,
-        },
-        redirect: {
-            type: Object,
-            required: true,
-        },
-    });
+    defineProps<{
+        icon: string;
+        label: string;
+        tooltip?: string;
+        value: string | number;
+        redirect: RouteLocationRaw;
+    }>();
 </script>
 
 <style lang="scss" scoped>
