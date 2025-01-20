@@ -42,14 +42,14 @@ public class QueryFilterFormatBinder implements AnnotatedRequestArgumentBinder<Q
                 if (matcher.matches()) {
                     String field = matcher.group(1);
                     String operationStr = matcher.group(2);
-
+                    QueryFilter.QueryField queryField = QueryFilter.QueryField.fromString(field);
                     QueryFilter.Op operation = QueryFilter.Op.fromString(operationStr);
 
                     // Create a QueryFilter for each value
                     // Group all values for $in and $notIn into a single QueryFilter
                     if (operation == QueryFilter.Op.IN || operation == QueryFilter.Op.NOT_IN) {
                         var criteria = QueryFilter.builder()
-                            .field(field)
+                            .field(queryField)
                             .operation(operation)
                             .value(values) // Add all values as a list
                             .build();
@@ -57,7 +57,7 @@ public class QueryFilterFormatBinder implements AnnotatedRequestArgumentBinder<Q
                     } else {
                         values.forEach(value -> {
                             var criteria = QueryFilter.builder()
-                                .field(field)
+                                .field(queryField)
                                 .operation(operation)
                                 .value(value)
                                 .build();

@@ -506,7 +506,7 @@ public abstract class AbstractJdbcFlowRepository extends AbstractJdbcRepository 
         List<Condition> conditions = new ArrayList<>();
 
         for (QueryFilter filter : filters) {
-            String field = filter.field();
+            String field = filter.field().value();
             QueryFilter.Op operation = filter.operation();
             Object value = filter.value();
 
