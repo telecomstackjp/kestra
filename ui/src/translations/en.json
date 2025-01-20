@@ -1093,14 +1093,15 @@
         }
       },
       "creation": {
+        "select": "Select a {section}",
         "tasks": "Add a task",
         "triggers": "Add a trigger",
-        "error handlers": "Add an error handler",
-        "select": "Select a {section}"
+        "error handlers": "Add an error handler"
       },
       "save": {
         "tasks": "Save task",
-        "triggers": "Save trigger"
+        "triggers": "Save trigger",
+        "error handlers": "Save error handler"
       }
     }
   }
