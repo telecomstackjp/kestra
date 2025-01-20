@@ -1322,7 +1322,7 @@
     import localUtils from "../../utils/utils";
     const exportYaml = () => {
         const blob = new Blob([flowYaml.value], {type: "text/yaml"});
-        localUtils.downloadUrl(blob, "flow.yaml");
+        localUtils.downloadUrl(window.URL.createObjectURL(blob), "flow.yaml"); 
     };
 </script>
 
