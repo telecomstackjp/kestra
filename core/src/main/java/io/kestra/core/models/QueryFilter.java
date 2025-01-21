@@ -1,6 +1,5 @@
 package io.kestra.core.models;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.kestra.core.utils.Enums;
 import lombok.Builder;
 
@@ -148,7 +147,6 @@ public record QueryFilter(
             this.value = value;
         }
 
-        @JsonCreator
         public static Field fromString(String value) {
             return Enums.fromString(value, BY_VALUE, "field");
         }

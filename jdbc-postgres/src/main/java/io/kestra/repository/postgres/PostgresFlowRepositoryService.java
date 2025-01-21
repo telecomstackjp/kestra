@@ -7,10 +7,7 @@ import io.kestra.jdbc.AbstractJdbcRepository;
 import org.jooq.Condition;
 import org.jooq.impl.DSL;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static io.kestra.core.models.QueryFilter.Op.EQUALS;
 import static io.kestra.jdbc.repository.AbstractJdbcRepository.field;
@@ -58,7 +55,7 @@ public abstract class PostgresFlowRepositoryService {
                         }
                     }
                     case SCOPE -> {
-                        if (value instanceof List<?> scopeValues) {
+                        if (value instanceof List<?> scopeValues && !scopeValues.containsAll(Arrays.stream(FlowScope.values()).toList())) {
                             if (scopeValues.contains(FlowScope.USER)) {
                                 conditions.add(field("namespace").ne(systemFlowNamespace));
                             }

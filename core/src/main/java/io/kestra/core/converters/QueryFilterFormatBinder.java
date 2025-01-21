@@ -2,6 +2,7 @@ package io.kestra.core.converters;
 
 import com.google.common.annotations.VisibleForTesting;
 import io.kestra.core.models.QueryFilter;
+import io.kestra.core.models.flows.FlowScope;
 import io.micronaut.core.convert.ArgumentConversionContext;
 
 import io.micronaut.http.HttpRequest;
@@ -39,39 +40,48 @@ public class QueryFilterFormatBinder implements AnnotatedRequestArgumentBinder<Q
         List<QueryFilter> filters = new ArrayList<>();
 
         queryParams.forEach((key, values) -> {
-            if (key.startsWith("filters[")) {
-                Matcher matcher = FILTER_PATTERN.matcher(key);
+            if (!key.startsWith("filters[")) return;
 
-                if (matcher.matches()) {
-                    String field = matcher.group(1);
-                    String operationStr = matcher.group(2);
-                    QueryFilter.Field queryField = QueryFilter.Field.fromString(field);
-                    QueryFilter.Op operation = QueryFilter.Op.fromString(operationStr);
+            Matcher matcher = FILTER_PATTERN.matcher(key);
 
-                    // Create a QueryFilter for each value
-                    // Group all values for $in and $notIn into a single QueryFilter
-                    if (operation == QueryFilter.Op.IN || operation == QueryFilter.Op.NOT_IN) {
-                        var criteria = QueryFilter.builder()
-                            .field(queryField)
-                            .operation(operation)
-                            .value(values) // Add all values as a list
-                            .build();
-                        filters.add(criteria);
-                    } else {
-                        values.forEach(value -> {
-                            var criteria = QueryFilter.builder()
-                                .field(queryField)
-                                .operation(operation)
-                                .value(queryField.equals(QueryFilter.Field.LABELS)? toMap(values): value)
-                                .build();
-                            filters.add(criteria);
-                        });
-                    }
-                }
+            if (matcher.matches()) {
+                String fieldStr = matcher.group(1);
+                String operationStr = matcher.group(2);
+
+                QueryFilter.Field field = QueryFilter.Field.fromString(fieldStr);
+                QueryFilter.Op operation = QueryFilter.Op.fromString(operationStr);
+
+                Object value = switch (field) {
+                    case SCOPE -> toFlowScopes(values); // Convert to list FlowScope enum
+                    case LABELS -> toMap(values); // Convert labels to a map
+                    default -> (operation == QueryFilter.Op.IN || operation == QueryFilter.Op.NOT_IN) ? values
+                        : values.size() == 1 ? values.getFirst() : values;
+                };
+
+
+                filters.add(QueryFilter.builder()
+                    .field(field)
+                    .operation(operation)
+                    .value(value)
+                    .build());
             }
         });
+
         return filters;
     }
+
+    private static List<FlowScope> toFlowScopes(List<String> values) {
+        return Arrays.stream(values.getFirst().split(","))
+            .map(valueStr -> {
+                try {
+                    return FlowScope.valueOf(valueStr.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException("Invalid FlowScope value: " + valueStr, e);
+                }
+            })
+            .toList();
+    }
+
     public static Map<String, String> toMap(List<String> queryString) {
         return queryString == null ? null : queryString
                 .stream()
