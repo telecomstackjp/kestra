@@ -12,11 +12,13 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: {
+                    // bundle dashboard and all its dependencies in a single chunk
                     "dashboard": [
                         "src/components/dashboard/Dashboard.vue", 
                         "src/components/dashboard/components/DashboardCreate.vue", 
                         "src/components/dashboard/components/DashboardEdit.vue"
                     ],
+                    // bundle flows and all its dependencies in a second chunk
                     "flows": [
                         "src/components/flows/Flows.vue", 
                         "src/components/flows/FlowCreate.vue", 
