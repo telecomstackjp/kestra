@@ -72,158 +72,138 @@
         </el-row>
     </div>
     <div v-else class="dashboard">
-        <el-row v-if="!props.flow">
-            <el-col :xs="24" :sm="12" :lg="6">
-                <Card
-                    :icon="CheckBold"
-                    :label="t('dashboard.success_ratio')"
-                    :tooltip="t('dashboard.success_ratio_tooltip')"
-                    :value="stats.success"
-                    :redirect="{
-                        name: 'executions/list',
-                        query: {
-                            state: State.SUCCESS,
-                            scope: 'USER',
-                            size: 100,
-                            page: 1,
-                        },
-                    }"
-                    class="me-2"
-                />
-            </el-col>
-            <el-col :xs="24" :sm="12" :lg="6">
-                <Card
-                    :icon="Alert"
-                    :label="t('dashboard.failure_ratio')"
-                    :tooltip="t('dashboard.failure_ratio_tooltip')"
-                    :value="stats.failed"
-                    :redirect="{
-                        name: 'executions/list',
-                        query: {
-                            state: State.FAILED,
-                            scope: 'USER',
-                            size: 100,
-                            page: 1,
-                        },
-                    }"
-                    class="mx-2"
-                />
-            </el-col>
-            <el-col :xs="24" :sm="12" :lg="6">
-                <Card
-                    :icon="FileTree"
-                    :label="t('flows')"
-                    :value="numbers.flows"
-                    :redirect="{
-                        name: 'flows/list',
-                        query: {scope: 'USER', size: 100, page: 1},
-                    }"
-                    class="mx-2"
-                />
-            </el-col>
-            <el-col :xs="24" :sm="12" :lg="6">
-                <Card
-                    :icon="LightningBolt"
-                    :label="t('triggers')"
-                    :value="numbers.triggers"
-                    :redirect="{
-                        name: 'admin/triggers',
-                        query: {size: 100, page: 1},
-                    }"
-                    class="ms-2"
-                />
-            </el-col>
-        </el-row>
+        <div class="card-grid">
+            <Card
+                :icon="CheckBold"
+                :label="t('dashboard.success_ratio')"
+                :tooltip="t('dashboard.success_ratio_tooltip')"
+                :value="stats.success"
+                :redirect="{
+                    name: 'executions/list',
+                    query: {
+                        state: State.SUCCESS,
+                        scope: 'USER',
+                        size: 100,
+                        page: 1,
+                    },
+                }"
+            />
 
-        <el-row>
-            <el-col :xs="24" :lg="props.flow ? 24 : 16">
-                <ExecutionsBar
-                    :data="graphData"
-                    :total="stats.total"
-                    :class="{'me-2': !props.flow}"
-                />
-            </el-col>
-            <el-col v-if="!props.flow" :xs="24" :lg="8">
-                <ExecutionsDoughnut
-                    :data="graphData"
-                    :total="stats.total"
-                    class="ms-2"
-                />
-            </el-col>
-        </el-row>
+            <Card
+                :icon="Alert"
+                :label="t('dashboard.failure_ratio')"
+                :tooltip="t('dashboard.failure_ratio_tooltip')"
+                :value="stats.failed"
+                :redirect="{
+                    name: 'executions/list',
+                    query: {
+                        state: State.FAILED,
+                        scope: 'USER',
+                        size: 100,
+                        page: 1,
+                    },
+                }"
+            />
 
-        <el-row>
-            <el-col :xs="24" :lg="props.flow ? 7 : 12">
-                <div v-if="props.flow" class="h-100 p-4 me-2">
-                    <span class="d-flex justify-content-between">
-                        <span class="fs-6 fw-bold">
-                            {{ t("dashboard.description") }}
-                        </span>
-                        <el-button
-                            :icon="BookOpenOutline"
-                            @click="descriptionDialog = true"
-                        >
-                            {{ t("open") }}
-                        </el-button>
+            <Card
+                :icon="FileTree"
+                :label="t('flows')"
+                :value="numbers.flows"
+                :redirect="{
+                    name: 'flows/list',
+                    query: {scope: 'USER', size: 100, page: 1},
+                }"
+            />
 
-                        <el-dialog
-                            v-model="descriptionDialog"
-                            :title="$t('description')"
-                        >
-                            <Markdown
-                                :source="description"
-                                class="p-4 description"
-                            />
-                        </el-dialog>
+            <Card
+                :icon="LightningBolt"
+                :label="t('triggers')"
+                :value="numbers.triggers"
+                :redirect="{
+                    name: 'admin/triggers',
+                    query: {size: 100, page: 1},
+                }"
+            />
+        </div>
+
+        <div class="card-grid-2">
+            <ExecutionsBar
+                :data="graphData"
+                :total="stats.total"
+                class="card"
+            />
+
+            <ExecutionsDoughnut
+                :data="graphData"
+                :total="stats.total"
+                class="card"
+            />
+        </div>
+
+        <div class="card-grid-3">
+            <div v-if="props.flow" class="h-100 p-4 card">
+                <span class="d-flex justify-content-between">
+                    <span class="fs-6 fw-bold">
+                        {{ t("dashboard.description") }}
                     </span>
+                    <el-button
+                        :icon="BookOpenOutline"
+                        @click="descriptionDialog = true"
+                    >
+                        {{ t("open") }}
+                    </el-button>
 
-                    <Markdown :source="description" class="p-4 description" />
-                </div>
-                <ExecutionsInProgress
-                    v-else
-                    :flow="props.flowId"
-                    :namespace="props.namespace"
-                    class="me-2"
-                />
-            </el-col>
-            <el-col v-if="props.flow" :xs="24" :lg="10">
-                <ExecutionsNextScheduled
-                    :flow="props.flowId"
-                    :namespace="props.namespace"
-                    class="mx-2"
-                />
-            </el-col>
-            <el-col :xs="24" :lg="props.flow ? 7 : 12">
-                <ExecutionsDoughnut
-                    v-if="props.flow"
-                    :data="graphData"
-                    :total="stats.total"
-                    class="ms-2"
-                />
-                <ExecutionsNextScheduled
-                    v-else-if="isAllowedTriggers"
-                    :flow="props.flowId"
-                    :namespace="props.namespace"
-                    class="ms-2"
-                />
-                <ExecutionsEmptyNextScheduled v-else />
-            </el-col>
-        </el-row>
+                    <el-dialog
+                        v-model="descriptionDialog"
+                        :title="$t('description')"
+                    >
+                        <Markdown
+                            :source="description"
+                            class="p-4 description"
+                        />
+                    </el-dialog>
+                </span>
 
-        <el-row v-if="!props.flow">
-            <el-col :xs="24">
-                <ExecutionsNamespace
-                    :data="namespaceExecutions"
-                    :total="stats.total"
-                />
-            </el-col>
-        </el-row>
+                <Markdown :source="description" class="p-4 description" />
+            </div>
+            <ExecutionsInProgress
+                v-else
+                :flow="props.flowId"
+                :namespace="props.namespace"
+                class="card"
+            />
 
-        <el-row v-if="!props.flow">
-            <el-col :xs="24">
-                <Logs :data="logs" />
-            </el-col>
-        </el-row>
+            <ExecutionsNextScheduled
+                v-if="props.flow"
+                :flow="props.flowId"
+                :namespace="props.namespace"
+                class="card"
+            />
+
+            <ExecutionsDoughnut
+                v-if="props.flow"
+                :data="graphData"
+                :total="stats.total"
+                class="card"
+            />
+            <ExecutionsNextScheduled
+                v-else-if="isAllowedTriggers"
+                :flow="props.flowId"
+                :namespace="props.namespace"
+                class="card"
+            />
+
+            <ExecutionsEmptyNextScheduled v-else class="card" />
+        </div>
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+            <ExecutionsNamespace
+                v-if="!props.flow"
+                class="card"
+                :data="namespaceExecutions"
+                :total="stats.total"
+            />
+            <Logs v-if="!props.flow" :data="logs" class="card" />
+        </div>
     </div>
 </template>
 
@@ -514,21 +494,8 @@ $spacing: 20px;
 
 .dashboard-filters,
 .dashboard {
-    padding: 0 2rem;
-
-    & .el-row {
-        width: 100%;
-
-        & .el-col {
-            padding-bottom: $spacing;
-
-            & div {
-                background: var(--ks-background-card);
-                border: 1px solid var(--ks-border-primary);
-                border-radius: $border-radius;
-            }
-        }
-    }
+    padding: 0 32px;
+    margin: 0;
 
     .description {
         border: none !important;
@@ -540,8 +507,41 @@ $spacing: 20px;
     }
 }
 
-.dashboard {
-    margin: 0;
+.card {
+    background: var(--ks-background-card);
+    color: var(--ks-content-primary);
+    border: 1px solid var(--ks-border-primary);
+    border-radius: $border-radius;
+    overflow: hidden;
+}
+
+.card-grid, .card-grid-2, .card-grid-3 {
+    display: grid;
+    margin: 1rem 0;
+    width: 100%;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.card-grid {
+    @media (min-width: 600px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    @media (min-width: 1200px) {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.card-grid-2 {
+    @media (min-width: 1200px) {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+.card-grid-3 {
+    @media (min-width: 1200px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 .dashboard-filters {
