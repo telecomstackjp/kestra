@@ -103,7 +103,7 @@ public class MiscController {
                 .build()
             ).isBasicAuthEnabled(basicAuthService.isEnabled())
             .systemNamespace(namespaceUtils.getSystemFlowNamespace())
-            .componentToFilters(QueryFilter.COMPONENT_TO_FILTERS)
+            .componentToFilters(QueryFilter.Resource.asMap())
             .hiddenLabelsPrefixes(hiddenLabelsPrefixes);
 
         if (this.environmentName != null || this.environmentColor != null) {
@@ -170,7 +170,7 @@ public class MiscController {
 
         List<String> hiddenLabelsPrefixes;
         // List of filter by component
-        Map<QueryFilter.ComponentType, List<QueryFilter.FieldOperations>> componentToFilters;
+        Map<QueryFilter.Resource, List<QueryFilter.Field>> componentToFilters;
     }
 
     @Value

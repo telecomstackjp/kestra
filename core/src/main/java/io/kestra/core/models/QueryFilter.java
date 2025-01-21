@@ -1,5 +1,6 @@
 package io.kestra.core.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.kestra.core.utils.Enums;
 import lombok.Builder;
 
@@ -9,72 +10,10 @@ import java.util.stream.Collectors;
 
 @Builder
 public record QueryFilter(
-    QueryField field,
+    Field field,
     Op operation,
     Object value
 ) {
-    public static final Map<ComponentType, List<FieldOperations>> COMPONENT_TO_FILTERS = Map.of(
-        ComponentType.FLOW, List.of(
-            FieldOperations.of(QueryField.QUERY, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.STARTS_WITH, Op.ENDS_WITH, Op.REGEX)),
-            FieldOperations.of(QueryField.SCOPE, List.of(Op.EQUALS, Op.NOT_EQUALS)),
-            FieldOperations.of(QueryField.NAMESPACE, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.STARTS_WITH, Op.ENDS_WITH)),
-            FieldOperations.of(QueryField.LABELS, List.of(Op.EQUALS, Op.NOT_EQUALS))
-        ),
-        ComponentType.NAMESPACE, List.of(
-            FieldOperations.of(QueryField.EXISTING_ONLY, List.of(Op.EQUALS, Op.NOT_EQUALS))
-        ),
-        ComponentType.EXECUTION, List.of(
-            FieldOperations.of(QueryField.QUERY, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.STARTS_WITH, Op.ENDS_WITH, Op.REGEX)),
-            FieldOperations.of(QueryField.SCOPE, List.of(Op.EQUALS, Op.NOT_EQUALS)),
-            FieldOperations.of(QueryField.FLOW_ID, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.IN, Op.NOT_IN)),
-            FieldOperations.of(QueryField.START_DATE, List.of(Op.GREATER_THAN, Op.LESS_THAN, Op.EQUALS, Op.NOT_EQUALS)),
-            FieldOperations.of(QueryField.END_DATE, List.of(Op.GREATER_THAN, Op.LESS_THAN, Op.EQUALS, Op.NOT_EQUALS)),
-            FieldOperations.of(QueryField.DURATION, List.of(Op.GREATER_THAN, Op.LESS_THAN, Op.EQUALS, Op.NOT_EQUALS)),
-            FieldOperations.of(QueryField.STATE, List.of(Op.EQUALS, Op.NOT_EQUALS)),
-            FieldOperations.of(QueryField.LABELS, List.of(Op.EQUALS, Op.NOT_EQUALS)),
-            FieldOperations.of(QueryField.TRIGGER_EXECUTION_ID, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS)),
-            FieldOperations.of(QueryField.CHILD_FILTER, List.of(Op.EQUALS, Op.NOT_EQUALS))
-
-        ),
-        ComponentType.LOG, List.of(
-            FieldOperations.of(QueryField.NAMESPACE, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.STARTS_WITH, Op.ENDS_WITH)),
-            FieldOperations.of(QueryField.START_DATE, List.of(Op.GREATER_THAN, Op.LESS_THAN, Op.EQUALS, Op.NOT_EQUALS)),
-            FieldOperations.of(QueryField.END_DATE, List.of(Op.GREATER_THAN, Op.LESS_THAN, Op.EQUALS, Op.NOT_EQUALS)),
-            FieldOperations.of(QueryField.FLOW_ID, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.IN, Op.NOT_IN)),
-            FieldOperations.of(QueryField.TRIGGER_ID, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.IN, Op.NOT_IN)),
-            FieldOperations.of(QueryField.MIN_LEVEL, List.of(Op.EQUALS, Op.NOT_EQUALS))
-
-            ),
-        ComponentType.TRIGGER, List.of(
-            FieldOperations.of(QueryField.QUERY, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.STARTS_WITH, Op.ENDS_WITH, Op.REGEX)),
-            FieldOperations.of(QueryField.NAMESPACE, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.STARTS_WITH, Op.ENDS_WITH)),
-            FieldOperations.of(QueryField.WORKER_ID, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.IN, Op.NOT_IN)),
-            FieldOperations.of(QueryField.FLOW_ID, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.IN, Op.NOT_IN))
-            ),
-        ComponentType.TASK, List.of(
-            FieldOperations.of(QueryField.NAMESPACE, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.STARTS_WITH, Op.ENDS_WITH)),
-            FieldOperations.of(QueryField.QUERY, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.STARTS_WITH, Op.ENDS_WITH, Op.REGEX)),
-            FieldOperations.of(QueryField.END_DATE, List.of(Op.GREATER_THAN, Op.LESS_THAN, Op.EQUALS, Op.NOT_EQUALS)),
-            FieldOperations.of(QueryField.FLOW_ID, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.IN, Op.NOT_IN)),
-            FieldOperations.of(QueryField.START_DATE, List.of(Op.GREATER_THAN, Op.LESS_THAN, Op.EQUALS, Op.NOT_EQUALS)),
-            FieldOperations.of(QueryField.STATE, List.of(Op.EQUALS, Op.NOT_EQUALS)),
-            FieldOperations.of(QueryField.LABELS, List.of(Op.EQUALS, Op.NOT_EQUALS)),
-            FieldOperations.of(QueryField.TRIGGER_EXECUTION_ID, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS)),
-            FieldOperations.of(QueryField.CHILD_FILTER, List.of(Op.EQUALS, Op.NOT_EQUALS))
-            ),
-        ComponentType.TEMPLATE, List.of(
-            FieldOperations.of(QueryField.QUERY, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.STARTS_WITH, Op.ENDS_WITH, Op.REGEX)),
-            FieldOperations.of(QueryField.NAMESPACE, List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.STARTS_WITH, Op.ENDS_WITH))
-            )
-
-    );
-
-    public record FieldOperations(QueryField field, List<Op> allowedOperations) {
-        public static FieldOperations of(QueryField field, List<Op> allowedOperations) {
-            return new FieldOperations(field, allowedOperations);
-        }
-    }
-
     public enum Op {
         EQUALS("$eq"),
         NOT_EQUALS("$ne"),
@@ -105,34 +44,112 @@ public record QueryFilter(
         }
     }
 
-    public enum QueryField {
-        QUERY("query"),
-        SCOPE("scope"),
-        NAMESPACE("namespace"),
-        LABELS("labels"),
-        FLOW_ID("flowId"),
-        START_DATE("startDate"),
-        TIME_RANGE("timeRange"),
-        END_DATE("endDate"),
-        STATE("state"),
-        TRIGGER_EXECUTION_ID("triggerExecutionId"),
-        TRIGGER_ID("triggerId"),
-        CHILD_FILTER("childFilter"),
-        WORKER_ID("workerId"),
-        EXISTING_ONLY("existingOnly"),
-        DURATION("timeRange"),
-        MIN_LEVEL("minLevel");
+    public enum Field {
+        QUERY("query") {
+            @Override
+            public List<Op> supportedOp() {
+                return List.of(Op.EQUALS, Op.NOT_EQUALS, Op.REGEX);
+            }
+        },
+        SCOPE("scope") {
+            @Override
+            public List<Op> supportedOp() {
+                return List.of(Op.EQUALS, Op.NOT_EQUALS);
+            }
+        },
+        NAMESPACE("namespace") {
+            @Override
+            public List<Op> supportedOp() {
+                return List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.STARTS_WITH, Op.ENDS_WITH, Op.REGEX);
+            }
+        },
+        LABELS("labels") {
+            @Override
+            public List<Op> supportedOp() {
+                return List.of(Op.EQUALS, Op.NOT_EQUALS);
+            }
+        },
+        FLOW_ID("flowId") {
+            @Override
+            public List<Op> supportedOp() {
+                return List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.IN, Op.NOT_IN);
+            }
+        },
+        START_DATE("startDate") {
+            @Override
+            public List<Op> supportedOp() {
+                return List.of(Op.GREATER_THAN, Op.LESS_THAN, Op.EQUALS, Op.NOT_EQUALS);
+            }
+        },
+        END_DATE("endDate") {
+            @Override
+            public List<Op> supportedOp() {
+                return List.of(Op.GREATER_THAN, Op.LESS_THAN, Op.EQUALS, Op.NOT_EQUALS);
+            }
+        },
+        STATE("state") {
+            @Override
+            public List<Op> supportedOp() {
+                return List.of(Op.EQUALS, Op.NOT_EQUALS);
+            }
+        },
+        TIME_RANGE("timeRange") {
+            @Override
+            public List<Op> supportedOp() {
+                return List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.STARTS_WITH,
+                        Op.ENDS_WITH, Op.IN, Op.NOT_IN, Op.REGEX);
+            }
+        },
+        TRIGGER_EXECUTION_ID("triggerExecutionId") {
+            @Override
+            public List<Op> supportedOp() {
+                return List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.STARTS_WITH, Op.ENDS_WITH, Op.IN, Op.NOT_IN);
+            }
+        },
+        TRIGGER_ID("triggerId") {
+            @Override
+            public List<Op> supportedOp() {
+                return List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.STARTS_WITH, Op.ENDS_WITH, Op.IN, Op.NOT_IN);
+            }
+        },
+        CHILD_FILTER("childFilter") {
+            @Override
+            public List<Op> supportedOp() {
+                return List.of(Op.EQUALS, Op.NOT_EQUALS);
+            }
+        },
+        WORKER_ID("workerId") {
+            @Override
+            public List<Op> supportedOp() {
+                return List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.STARTS_WITH, Op.ENDS_WITH, Op.IN, Op.NOT_IN);
+            }
+        },
+        EXISTING_ONLY("existingOnly") {
+            @Override
+            public List<Op> supportedOp() {
+                return List.of(Op.EQUALS, Op.NOT_EQUALS);
+            }
+        },
+        MIN_LEVEL("minLevel") {
+            @Override
+            public List<Op> supportedOp() {
+                return List.of(Op.EQUALS, Op.NOT_EQUALS);
+            }
+        };
 
-        private static final Map<String, QueryField> BY_VALUE = Arrays.stream(values())
-            .collect(Collectors.toMap(QueryField::value, Function.identity()));
+        private static final Map<String, Field> BY_VALUE = Arrays.stream(values())
+            .collect(Collectors.toMap(Field::value, Function.identity()));
+
+        public abstract List<Op> supportedOp();
 
         private final String value;
 
-        QueryField(String value) {
+        Field(String value) {
             this.value = value;
         }
 
-        public static QueryField fromString(String value) {
+        @JsonCreator
+        public static Field fromString(String value) {
             return Enums.fromString(value, BY_VALUE, "field");
         }
 
@@ -141,30 +158,65 @@ public record QueryFilter(
         }
     }
 
-    public enum ComponentType {
-        FLOW("flow"),
-        NAMESPACE("namespace"),
-        EXECUTION("execution"),
-        LOG("log"),
-        TASK("task"),
-        TEMPLATE("template"),
-        TRIGGER("trigger");
 
-        private static final Map<String, ComponentType> BY_VALUE = Arrays.stream(values())
-            .collect(Collectors.toMap(ComponentType::value, Function.identity()));
+    public enum Resource {
+        FLOW {
+            @Override
+            public List<Field> supportedField() {
+                return List.of(Field.LABELS, Field.NAMESPACE, Field.QUERY, Field.SCOPE);
+            }
+        },
+        NAMESPACE {
+            @Override
+            public List<Field> supportedField() {
+                return List.of(Field.EXISTING_ONLY);
+            }
+        },
+        EXECUTION {
+            @Override
+            public List<Field> supportedField() {
+                return List.of(
+                        Field.QUERY, Field.SCOPE, Field.FLOW_ID, Field.START_DATE, Field.END_DATE,Field.TIME_RANGE,
+                        Field.STATE, Field.LABELS, Field.TRIGGER_EXECUTION_ID, Field.CHILD_FILTER,
+                        Field.NAMESPACE
+                );
+            }
+        },
+        LOG {
+            @Override
+            public List<Field> supportedField() {
+                return List.of(Field.NAMESPACE, Field.START_DATE, Field.END_DATE,
+                        Field.FLOW_ID, Field.TRIGGER_ID, Field.MIN_LEVEL
+                );
+            }
+        },
+        TASK {
+            @Override
+            public List<Field> supportedField() {
+                return List.of(Field.NAMESPACE, Field.QUERY, Field.END_DATE, Field.FLOW_ID, Field.START_DATE,
+                        Field.STATE, Field.LABELS, Field.TRIGGER_EXECUTION_ID, Field.CHILD_FILTER
+                );
+            }
+        },
+        TEMPLATE {
+            @Override
+            public List<Field> supportedField() {
+                return List.of(Field.NAMESPACE, Field.QUERY);
+            }
+        },
+        TRIGGER {
+            @Override
+            public List<Field> supportedField() {
+                return List.of(Field.QUERY, Field.NAMESPACE, Field.WORKER_ID, Field.FLOW_ID
+                );
+            }
+        };
 
-        private final String value;
+        public abstract List<Field> supportedField();
 
-        ComponentType(String value) {
-            this.value = value;
-        }
-
-        public static ComponentType fromString(String value) {
-            return Enums.fromString(value, BY_VALUE, "component type");
-        }
-
-        public String value() {
-            return value;
+        public static Map<Resource, List<Field>> asMap() {
+            return Arrays.stream(values()).collect(Collectors.toMap(Function.identity(),
+                    Resource::supportedField));
         }
     }
 }

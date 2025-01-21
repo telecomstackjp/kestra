@@ -5,12 +5,15 @@ import io.kestra.core.models.QueryFilter;
 import io.micronaut.core.convert.ArgumentConversionContext;
 
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.bind.binders.AnnotatedRequestArgumentBinder;
+import io.micronaut.http.exceptions.HttpStatusException;
 import jakarta.inject.Singleton;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Singleton
 public class QueryFilterFormatBinder implements AnnotatedRequestArgumentBinder<QueryFilterFormat, List<QueryFilter>> {
@@ -42,7 +45,7 @@ public class QueryFilterFormatBinder implements AnnotatedRequestArgumentBinder<Q
                 if (matcher.matches()) {
                     String field = matcher.group(1);
                     String operationStr = matcher.group(2);
-                    QueryFilter.QueryField queryField = QueryFilter.QueryField.fromString(field);
+                    QueryFilter.Field queryField = QueryFilter.Field.fromString(field);
                     QueryFilter.Op operation = QueryFilter.Op.fromString(operationStr);
 
                     // Create a QueryFilter for each value
@@ -59,7 +62,7 @@ public class QueryFilterFormatBinder implements AnnotatedRequestArgumentBinder<Q
                             var criteria = QueryFilter.builder()
                                 .field(queryField)
                                 .operation(operation)
-                                .value(value)
+                                .value(queryField.equals(QueryFilter.Field.LABELS)? toMap(values): value)
                                 .build();
                             filters.add(criteria);
                         });
@@ -68,5 +71,21 @@ public class QueryFilterFormatBinder implements AnnotatedRequestArgumentBinder<Q
             }
         });
         return filters;
+    }
+    public static Map<String, String> toMap(List<String> queryString) {
+        return queryString == null ? null : queryString
+                .stream()
+                .map(s -> {
+                    String[] split = s.split("[: ]+");
+                    if (split.length < 2 || split[0] == null || split[0].isEmpty()) {
+                        throw new HttpStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid queryString parameter");
+                    }
+
+                    return new AbstractMap.SimpleEntry<>(
+                            split[0],
+                            s.substring(s.indexOf(":") + 1).trim()
+                    );
+                })
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

@@ -208,6 +208,8 @@ public class FlowController {
         @Parameter(description = "The scope of the flows to include") @Nullable @QueryValue List<FlowScope> scope,
         @Parameter(description = "A namespace filter prefix") @Nullable @QueryValue String namespace,
         @Parameter(description = "A labels filter as a list of 'key:value'") @Nullable @QueryValue @Format("MULTI") List<String> labels
+//        @Parameter(description = "Filters") @QueryFilterFormat() List<QueryFilter> filters
+
     ) throws HttpStatusException {
 
         return PagedResults.of(flowRepository.find(
