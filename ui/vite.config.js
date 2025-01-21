@@ -1,7 +1,6 @@
 import path from "path";
 import {defineConfig} from "vite";
 import vue from "@vitejs/plugin-vue";
-import {visualizer} from "rollup-plugin-visualizer";
 
 import {filename} from "./plugins/filename"
 import {commit} from "./plugins/commit"
@@ -10,6 +9,23 @@ export default defineConfig({
     base: "",
     build: {
         outDir: "../webserver/src/main/resources/ui",
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    "dashboard": [
+                        "src/components/dashboard/Dashboard.vue", 
+                        "src/components/dashboard/components/DashboardCreate.vue", 
+                        "src/components/dashboard/components/DashboardEdit.vue"
+                    ],
+                    "flows": [
+                        "src/components/flows/Flows.vue", 
+                        "src/components/flows/FlowCreate.vue", 
+                        "src/components/flows/FlowsSearch.vue", 
+                        "src/components/flows/FlowRoot.vue"
+                    ]
+                }
+            }
+        },
     },
     resolve: {
         alias: {
@@ -19,6 +35,7 @@ export default defineConfig({
             "#mdc-imports": path.resolve(__dirname, "node_modules/@kestra-io/ui-libs/stub-mdc-imports.js"),
             "#mdc-configs": path.resolve(__dirname, "node_modules/@kestra-io/ui-libs/stub-mdc-imports.js"),
             "shiki": path.resolve(__dirname, "node_modules/shiki/dist"),
+            "vuex": path.resolve(__dirname, "node_modules/vuex/dist/vuex.esm-bundler.js"),
         },
     },
     plugins: [
@@ -31,7 +48,6 @@ export default defineConfig({
                 }
             }
         }),
-        visualizer(),
         filename(),
         commit()
     ],
