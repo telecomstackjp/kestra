@@ -262,7 +262,7 @@
       "header": {
         "catch phrase": {
           "1": "Il primo passo è sempre il più difficile.",
-          "2": "Esplora i blueprints per avviare il tuo prossimo flow."
+          "2": "Esplora i blueprint per avviare il tuo prossimo {kind}."
         },
         "alt": "Icona dei Blueprint"
       },

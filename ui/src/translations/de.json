@@ -262,7 +262,7 @@
       "header": {
         "catch phrase": {
           "1": "Der erste Schritt ist immer der schwerste.",
-          "2": "Erkunden Sie Blueprints, um Ihren nächsten Flow zu starten."
+          "2": "Erkunden Sie Blueprints, um Ihr nächstes {kind} zu starten."
         },
         "alt": "Blueprints-Symbol"
       },

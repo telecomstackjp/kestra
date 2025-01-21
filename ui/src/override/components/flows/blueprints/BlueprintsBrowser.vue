@@ -48,7 +48,7 @@
                     <component
                         class="blueprint-link"
                         :is="embed ? 'div' : 'router-link'"
-                        :to="embed ? undefined : {name: 'blueprints/view', params: {blueprintId: blueprint.id, tab}}"
+                        :to="embed ? undefined : {name: 'blueprints/view', params: {blueprintId: blueprint.id, tab, kind: blueprintKind}}"
                     >
                         <div class="left">
                             <div class="blueprint">
@@ -85,7 +85,7 @@
                                     {{ $t('copy') }}
                                 </el-button>
                             </el-tooltip>
-                            <el-button v-else type="primary" size="default" @click.prevent.stop="blueprintToEditor(blueprint.id)">
+                            <el-button v-else-if="blueprintKind === 'flow'" type="primary" size="default" @click.prevent.stop="blueprintToEditor(blueprint.id)">
                                 {{ $t('use') }}
                             </el-button>
                         </div>
@@ -126,6 +126,10 @@
                 type: String,
                 default: undefined,
             },
+            blueprintKind: {
+                type: String,
+                default: "flow",
+            },
             embed: {
                 type: Boolean,
                 default: false
@@ -153,12 +157,15 @@
             }
         },
         methods: {
+            kind() {
+                return this.blueprintType === "community" ? this.blueprintKind : undefined;
+            },
             initSelectedTag() {
                 return this.$route?.query?.selectedTag ?? 0
             },
-            async copy(blueprintId) {
+            async copy(id) {
                 await Utils.copy(
-                    (await this.$http.get(`${this.embedFriendlyBlueprintBaseUri}/${blueprintId}/flow`)).data
+                    (await this.$store.dispatch("blueprints/getBlueprintSource", {type: this.blueprintType, kind: this.kind(), id: id}))
                 );
             },
             async blueprintToEditor(blueprintId) {
@@ -181,17 +188,13 @@
                 if (this.$route.query.q || this.q) {
                     query.q = this.$route.query.q || this.q;
                 }
-
-                return this.$http
-                    .get(beforeLoadBlueprintBaseUri + "/tags", {
-                        params: query
-                    })
-                    .then(response => {
+                return this.$store.dispatch("blueprints/getBlueprintTagsForQuery", {type: this.blueprintType, kind: this.kind(), ...query})
+                    .then(data => {
                         // Handle switch tab while fetching data
                         if (this.embedFriendlyBlueprintBaseUri === beforeLoadBlueprintBaseUri) {
-                            this.tags = this.tagsResponseMapper(response.data);
+                            this.tags = this.tagsResponseMapper(data);
                         }
-                    })
+                    });
             },
             loadBlueprints(beforeLoadBlueprintBaseUri) {
                 const query = {}
@@ -199,7 +202,6 @@
                 if (this.$route.query.page || this.internalPageNumber) {
                     query.page = parseInt(this.$route.query.page || this.internalPageNumber);
                 }
-
 
                 if (this.$route.query.size || this.internalPageSize) {
                     query.size = parseInt(this.$route.query.size || this.internalPageSize);
@@ -215,16 +217,13 @@
                     query.tags = this.$route.query.selectedTag || this.selectedTag;
                 }
 
-                return this.$http
-                    .get(beforeLoadBlueprintBaseUri, {
-                        params: query
-                    })
-                    .then(response => {
+                return this.$store
+                    .dispatch("blueprints/getBlueprintsForQuery", {type: this.blueprintType, kind: this.kind(), ...query})
+                    .then(data => {
                         // Handle switch tab while fetching data
                         if (this.embedFriendlyBlueprintBaseUri === beforeLoadBlueprintBaseUri) {
-                            const blueprintsResponse = response.data;
-                            this.total = blueprintsResponse.total;
-                            this.blueprints = blueprintsResponse.results;
+                            this.total = data.total;
+                            this.blueprints = data.results;
                         }
                     });
             },
@@ -258,6 +257,7 @@
         computed: {
             ...mapState("auth", ["user"]),
             ...mapState("plugin", ["icons"]),
+            ...mapState("blueprint", ["blueprints"]),
             userCanCreateFlow() {
                 return this.user.hasAnyAction(permission.FLOW, action.CREATE);
             },
@@ -268,6 +268,9 @@
                 return base
                     ? (base.endsWith("/undefined") ? base.replace("/undefined", `/${tab}`) : base)
                     : `${apiUrl(this.$store)}/blueprints/${tab}`;
+            },
+            blueprintType() {
+                return this.tab ?? this?.$route?.params?.tab ?? "community";
             }
         },
         watch: {
@@ -308,7 +311,10 @@
                 this.loadData();
             },
             tab() {
-                this.loadData()
+                this.loadData();
+            },
+            blueprintKind() {
+                this.loadData();
             }
         }
     };

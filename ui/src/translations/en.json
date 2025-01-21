@@ -308,7 +308,7 @@
       "header": {
         "catch phrase": {
           "1": "The first step is always the hardest.",
-          "2": "Explore blueprints to kick-start your next flow."
+          "2": "Explore blueprints to kick-start your next {kind}."
         },
         "alt": "Blueprints Icon"
       }

@@ -1,7 +1,7 @@
 <template>
     <top-nav-bar v-if="!embed && blueprint" :title="blueprint.title" :breadcrumb="breadcrumb" v-loading="!blueprint">
         <template #additional-right>
-            <ul v-if="userCanCreateFlow">
+            <ul v-if="userCanCreateFlow && kind === 'flow' ">
                 <router-link :to="{name: 'flows/create', query: {blueprintId: blueprint.id, blueprintSource: embedFriendlyBlueprintBaseUri.includes('community') ? 'community' : 'custom'}}">
                     <el-button type="primary" v-if="!embed">
                         {{ $t('use') }}
@@ -47,7 +47,7 @@
                         :input="true"
                         :full-height="false"
                         :minimap="false"
-                        :model-value="blueprint.flow"
+                        :model-value="blueprint.source"
                         lang="yaml"
                         :navbar="false"
                     >
@@ -68,7 +68,7 @@
                     <markdown :source="blueprint.description" />
                 </template>
             </el-col>
-            <el-col :md="24" :lg="embed ? 24 : 6">
+            <el-col :md="24" :lg="embed ? 24 : 6" v-if="blueprint?.includedTasks?.length > 0">
                 <h4>Plugins</h4>
                 <div class="plugins-container">
                     <div v-for="task in [...new Set(blueprint.includedTasks)]" :key="task">
@@ -129,7 +129,11 @@
             blueprintBaseUri: {
                 type: String,
                 default: undefined,
-            }
+            },
+            kind: {
+                type: String,
+                default: "flow",
+            },
         },
         methods: {
             goBack() {
@@ -147,43 +151,64 @@
             }
         },
         async created() {
-            this.blueprint = (await this.$http.get(`${this.embedFriendlyBlueprintBaseUri}/${this.blueprintId}`)).data;
-
-            try {
-                if (this.embedFriendlyBlueprintBaseUri.endsWith("community")) {
-                    this.flowGraph = (await this.$http.get(`${this.embedFriendlyBlueprintBaseUri}/${this.blueprintId}/graph`, {
-                        validateStatus: (status) => {
-                            return status === 200;
-                        }
-                    }))?.data;
-                } else {
-                    this.flowGraph = await this.$store.dispatch("flow/getGraphFromSourceResponse", {
-                        flow: this.blueprint.flow, config: {
-                            validateStatus: (status) => {
-                                return status === 200;
+            this.$store.dispatch("blueprints/getBlueprint", {type: this.blueprintType, kind: this.blueprintKind, id: this.blueprintId})
+                .then(data => {
+                    this.blueprint = data;
+                    if (this.kind === "flow") {
+                        try {
+                            if (this.embedFriendlyBlueprintBaseUri.endsWith("community")) {
+                                this.$store.dispatch(
+                                    "blueprints/getBlueprintGraph",
+                                    {
+                                        type: this.blueprintType,
+                                        kind: this.blueprintKind,
+                                        id: this.blueprintId,
+                                        validateStatus: (status) => {
+                                            return status === 200;
+                                        }
+                                    })
+                                    .then(data => {
+                                        this.flowGraph  = data;
+                                    });
+                            } else {
+                                this.$store.dispatch("flow/getGraphFromSourceResponse", {
+                                    flow: this.blueprint.source, config: {
+                                        validateStatus: (status) => {
+                                            return status === 200;
+                                        }
+                                    }
+                                }).then(data => {
+                                    this.flowGraph = data ;
+                                });
                             }
+                        } catch (e) {
+                            console.error("Unable to create the blueprint's topology : " + e);
                         }
-                    });
-                }
-            } catch (e) {
-                console.error("Unable to create the blueprint's topology : " + e);
-            }
+                    }
+                });
         },
         computed: {
             ...mapState("auth", ["user"]),
             ...mapState("plugin", ["icons"]),
+            ...mapState("blueprints", ["blueprint"]),
             userCanCreateFlow() {
                 return this.user.hasAnyAction(permission.FLOW, action.CREATE);
             },
             parsedFlow() {
                 return {
-                    ...YamlUtils.parse(this.blueprint.flow),
-                    source: this.blueprint.flow
+                    ...YamlUtils.parse(this.blueprint.source),
+                    source: this.blueprint.source
                 }
             },
             embedFriendlyBlueprintBaseUri() {
                 return this.blueprintBaseUri ?? (`${apiUrl(this.$store)}/blueprints/` + (this?.$route?.params?.tab ?? "community"))
-            }
+            },
+            blueprintType() {
+                return this.tab ?? this?.$route?.params?.tab ?? "community";
+            },
+            blueprintKind() {
+                return this.blueprintType === "community" ? this.kind : undefined;
+            },
         }
     };
 </script>
@@ -280,21 +305,21 @@
         }
     }
 
-        .tags {
-            margin: 10px 0;
-            display: flex;
+    .tags {
+        margin: 10px 0;
+        display: flex;
 
-            .el-tag.el-tag--info {
-                background-color: var(--ks-background-card);
-                padding: 15px 10px;
-                color: var(--ks-content-primary);
-                text-transform: capitalize;
-                font-size: var(--el-font-size-small);
-                border: 1px solid var(--ks-border-primary);
-            }
-
-            .tag-box {
-                margin-right: calc($spacer / 3);
-            }
+        .el-tag.el-tag--info {
+            background-color: var(--ks-background-card);
+            padding: 15px 10px;
+            color: var(--ks-content-primary);
+            text-transform: capitalize;
+            font-size: var(--el-font-size-small);
+            border: 1px solid var(--ks-border-primary);
         }
+
+        .tag-box {
+            margin-right: calc($spacer / 3);
+        }
+    }
 </style>
