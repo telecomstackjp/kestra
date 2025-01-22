@@ -121,9 +121,9 @@
                         }
                     },
                     {
-                        name: "editor",
+                        name: "edit",
                         component: EditorView,
-                        title: this.$t("editor"),
+                        title: this.$t("edit"),
                         props: {
                             tab: "edit",
                             isNamespace: true,

@@ -69,6 +69,7 @@
 
         <div class="d-inline-flex align-items-center">
             <el-switch
+                v-if="!isNamespace"
                 v-model="editorViewType"
                 active-value="NO_CODE"
                 inactive-value="YAML"
@@ -659,7 +660,7 @@
     };
 
     onMounted(async () => {
-        editorViewType.value = localStorage.getItem(storageKeys.EDITOR_VIEW_TYPE) || "YAML";
+        editorViewType.value = props.isNamespace ? "YAML" : (localStorage.getItem(storageKeys.EDITOR_VIEW_TYPE) || "YAML");
 
         if(!props.isNamespace) {
             initViewType()
