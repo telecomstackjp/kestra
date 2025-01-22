@@ -18,7 +18,8 @@
 
         <div class="d-flex justify-content-between">
             <div class="d-flex align-items-center">
-                <ValidationError v-if="!lastBreadcumb.shown" :errors link />
+                <!-- TODO: Properly handle validation errors -->
+                <ValidationError v-if="false" :errors link />
             </div>
 
             <Save @click="saveTask" :what="route.query.section?.toString()" />
