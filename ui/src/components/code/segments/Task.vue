@@ -14,15 +14,17 @@
     />
 
     <template v-if="yaml">
-        <hr>
-
         <div class="d-flex justify-content-between">
             <div class="d-flex align-items-center">
                 <!-- TODO: Properly handle validation errors -->
                 <ValidationError v-if="false" :errors link />
             </div>
 
-            <Save @click="saveTask" :what="route.query.section?.toString()" />
+            <Save
+                @click="saveTask"
+                :what="route.query.section?.toString()"
+                class="w-100"
+            />
         </div>
     </template>
 </template>
