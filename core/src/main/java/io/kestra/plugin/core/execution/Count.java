@@ -151,7 +151,7 @@ public class Count extends Task implements RunnableTask<Count.Output> {
             .stream()
             .filter(throwPredicate(item -> runContext
                 .render(
-                    runContext.render(this.expression).as(String.class).orElseThrow(),
+                    this.expression.getExpression(),
                     ImmutableMap.of("count", item.getCount().intValue())
                 )
                 .equals("true")

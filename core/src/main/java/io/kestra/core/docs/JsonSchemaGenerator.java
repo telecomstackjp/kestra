@@ -41,8 +41,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.lang.reflect.*;
-import java.time.Duration;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -50,6 +49,7 @@ import java.util.stream.StreamSupport;
 
 @Singleton
 public class JsonSchemaGenerator {
+    private static final List<Class<?>> TYPES_RESOLVED_AS_STRING = List.of(Duration.class, LocalTime.class, LocalDate.class, LocalDateTime.class, ZonedDateTime.class, OffsetDateTime.class, OffsetTime.class);
 
     private final PluginRegistry pluginRegistry;
 
@@ -251,6 +251,7 @@ public class JsonSchemaGenerator {
             if (javaType.isInstanceOf(Property.class)) {
                 TypeContext context = target.getContext();
                 Class<?> erasedType = javaType.getTypeParameters().getFirst().getErasedType();
+
                 if(String.class.isAssignableFrom(erasedType)) {
                     return List.of(
                         context.resolve(String.class)
@@ -264,6 +265,10 @@ public class JsonSchemaGenerator {
                         javaType.getTypeParameters().getFirst()
                     );
                 } else if (List.class.isAssignableFrom(erasedType) || Map.class.isAssignableFrom(erasedType)) {
+                    return List.of(
+                        javaType.getTypeParameters().getFirst()
+                    );
+                } else if (isAssignableFromResolvedAsString(erasedType)) {
                     return List.of(
                         javaType.getTypeParameters().getFirst()
                     );
@@ -469,6 +474,15 @@ public class JsonSchemaGenerator {
                 }
             });
         }
+    }
+
+    private boolean isAssignableFromResolvedAsString(Class<?> declaredType) {
+        for (Class<?> clazz : TYPES_RESOLVED_AS_STRING) {
+            if (clazz.isAssignableFrom(declaredType)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected List<ResolvedType> subtypeResolver(ResolvedType declaredType, TypeContext typeContext) {

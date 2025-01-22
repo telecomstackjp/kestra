@@ -75,10 +75,9 @@ public abstract class AbstractExecScript extends Task implements RunnableTask<Sc
     @Schema(
         title = "Which interpreter to use."
     )
-    @PluginProperty
+    @PluginProperty(dynamic = true)
     @NotNull
-    @NotEmpty
-    protected List<String> interpreter = List.of("/bin/sh", "-c");
+    protected Property<List<String>> interpreter = Property.of(List.of("/bin/sh", "-c"));
 
     @Builder.Default
     @Schema(
@@ -101,7 +100,7 @@ public abstract class AbstractExecScript extends Task implements RunnableTask<Sc
         deprecated = true
     )
     @Deprecated
-    private Boolean outputDirectory;
+    private Property<Boolean> outputDirectory;
 
     @Schema(
         title = "The target operating system where the script will run."
@@ -156,7 +155,7 @@ public abstract class AbstractExecScript extends Task implements RunnableTask<Sc
             .withNamespaceFiles(this.getNamespaceFiles())
             .withInputFiles(this.getInputFiles())
             .withOutputFiles(runContext.render(this.getOutputFiles()).asList(String.class))
-            .withEnableOutputDirectory(this.getOutputDirectory())
+            .withEnableOutputDirectory(runContext.render(this.getOutputDirectory()).as(Boolean.class).orElse(null))
             .withTimeout(runContext.render(this.getTimeout()).as(Duration.class).orElse(null))
             .withTargetOS(runContext.render(this.getTargetOS()).as(TargetOS.class).orElseThrow());
     }
