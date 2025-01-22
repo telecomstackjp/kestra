@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-    import {ref, shallowRef} from "vue";
+    import {ref, shallowRef, computed} from "vue";
 
     import {Field, Fields, CollapseItem} from "../utils/types";
 
@@ -47,7 +47,16 @@
     import {useI18n} from "vue-i18n";
     const {t} = useI18n({useScope: "global"});
 
-    const emits = defineEmits(["updateTask", "updateMetadata"]);
+    const emits = defineEmits(["save", "updateTask", "updateMetadata"]);
+
+    const saveEvent = (e: KeyboardEvent) => {
+        if (e.type === "keydown" && e.key === "s" && e.ctrlKey) {
+            e.preventDefault();
+            emits("save");
+        }
+    };
+
+    document.addEventListener("keydown", saveEvent);
 
     const props = defineProps({
         creation: {type: Boolean, default: false},
@@ -147,9 +156,14 @@
         const title = t(`no_code.sections.${label}`);
         return {title, elements};
     };
-    const sections = ref<CollapseItem[]>([
-        getSectionTitle("tasks", YamlUtils.parse(props.flow).tasks ?? []),
-        getSectionTitle("triggers", YamlUtils.parse(props.flow).triggers ?? []),
-        getSectionTitle("error_handlers", YamlUtils.parse(props.flow).errors ?? []),
-    ]);
+    const sections = computed((): CollapseItem[] => {
+        return [
+            getSectionTitle("tasks", YamlUtils.parse(props.flow).tasks ?? []),
+            getSectionTitle("triggers", YamlUtils.parse(props.flow).triggers ?? []),
+            getSectionTitle(
+                "error_handlers",
+                YamlUtils.parse(props.flow).errors ?? [],
+            ),
+        ];
+    });
 </script>

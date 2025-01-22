@@ -1062,6 +1062,7 @@
     "chart preview": "Chart preview",
     "no_code": {
       "adding": "+ Add a {what}",
+      "adding_default": "+ Add a new value",
       "labels": {
         "yaml": "YAML Editor",
         "no_code": "No Code Editor",

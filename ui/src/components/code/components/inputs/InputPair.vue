@@ -1,7 +1,7 @@
 <template>
     <span v-if="required" class="me-1 text-danger">*</span>
     <span class="label">{{ label }}</span>
-    <div class="mt-1 mb-2 wrapper">
+    <div class="mt-1 mb-2 w-100 wrapper">
         <el-row
             v-for="(value, key, index) in props.modelValue"
             :key="index"
@@ -50,7 +50,7 @@
             default: undefined,
         },
         label: {type: String, required: true},
-        property: {type: String, required: true},
+        property: {type: String, default: undefined},
         required: {type: Boolean, default: false},
     });
 

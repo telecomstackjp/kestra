@@ -114,9 +114,6 @@
                             params: {tenant: routeParams.tenant},
                         })
                 "
-                @open-new-error="isNewErrorOpen = true"
-                @open-new-trigger="isNewTriggerOpen = true"
-                @open-edit-metadata="isEditMetadataOpen = true"
                 @export="exportYaml"
                 :is-namespace="isNamespace"
             />

@@ -1,12 +1,24 @@
 <template>
-    <TaskEditor v-model="yaml" :section @update:model-value="validateTask" />
+    <TaskEditor
+        v-if="!lastBreadcumb.shown"
+        v-model="yaml"
+        :section
+        @update:model-value="validateTask"
+    />
+    <component
+        v-else
+        :is="lastBreadcumb.component.type"
+        v-bind="lastBreadcumb.component.props"
+        v-on="lastBreadcumb.component.listeners"
+        @update:model-value="validateTask"
+    />
 
     <template v-if="yaml">
         <hr>
 
         <div class="d-flex justify-content-between">
             <div class="d-flex align-items-center">
-                <ValidationError :errors link />
+                <ValidationError v-if="!lastBreadcumb.shown" :errors link />
             </div>
 
             <Save @click="saveTask" :what="route.query.section?.toString()" />
@@ -23,7 +35,8 @@
         creation: {type: Boolean, default: false},
     });
 
-    import {useRoute} from "vue-router";
+    import {useRouter, useRoute} from "vue-router";
+    const router = useRouter();
     const route = useRoute();
 
     import {SECTIONS} from ".././../../utils/constants";
@@ -31,6 +44,20 @@
 
     import TaskEditor from "../../../components/flows/TaskEditor.vue";
     import YamlUtils from "../../../utils/yamlUtils";
+
+    import {useStore} from "vuex";
+    const store = useStore();
+
+    const breadcrumbs = computed(() => store.state.code.breadcrumbs);
+    const lastBreadcumb = computed(() => {
+        const index =
+            breadcrumbs.value.length === 3 ? 2 : breadcrumbs.value.length - 1;
+
+        return {
+            shown: index >= 2,
+            component: breadcrumbs.value?.[index]?.component,
+        };
+    });
 
     const yaml = ref(
         YamlUtils.extractTask(props.flow, route.query.identifier)?.toString() || "",
@@ -61,20 +88,36 @@
 
     const CURRENT = ref(null);
     const validateTask = (task) => {
+        let temp = YamlUtils.parse(yaml.value);
+
+        if (lastBreadcumb.value.shown) {
+            temp = {
+                ...temp,
+                [breadcrumbs.value.at(-1).label]: {
+                    ...temp[breadcrumbs.value.at(-1).label],
+                    ...task,
+                },
+            };
+        }
+
+        temp = YamlUtils.stringify(temp);
+
         store
-            .dispatch("flow/validateTask", {task, section: section.value})
-            .then(() => (yaml.value = task));
+            .dispatch("flow/validateTask", {task: temp, section: section.value})
+            .then(() => (yaml.value = temp));
 
-        CURRENT.value = task;
+        CURRENT.value = temp;
     };
-
-    import {useStore} from "vuex";
-    const store = useStore();
 
     const errors = computed(() => store.getters["flow/taskError"]);
 
     import Save from "../components/Save.vue";
     const saveTask = () => {
+        if (lastBreadcumb.value.shown) {
+            store.commit("code/removeBreadcrumb", {last: true});
+            return;
+        }
+
         const source = props.flow;
 
         const task = YamlUtils.extractTask(
@@ -114,5 +157,11 @@
 
             emits("updateTask", action);
         }
+
+        store.commit("code/removeBreadcrumb", {last: true});
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const {section, identifier, type, ...rest} = route.query;
+        router.replace({query: {...rest}});
     };
 </script>
