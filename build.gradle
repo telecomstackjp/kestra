@@ -118,7 +118,7 @@ allprojects {
         implementation "io.micronaut:micronaut-jackson-databind"
         implementation "io.micronaut.data:micronaut-data-model"
         implementation "io.micronaut:micronaut-management"
-        implementation "io.micrometer:micrometer-core"
+        implementation "io.micrometer:micrometer-core:1.14.3"
         implementation "io.micronaut.micrometer:micronaut-micrometer-registry-prometheus"
         implementation "io.micronaut:micronaut-http-client"
         implementation "io.micronaut.reactor:micronaut-reactor-http-client"
