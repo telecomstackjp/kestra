@@ -23,7 +23,7 @@
             <Save
                 @click="saveTask"
                 :what="route.query.section?.toString()"
-                class="w-100"
+                class="w-100 mt-3"
             />
         </div>
     </template>
