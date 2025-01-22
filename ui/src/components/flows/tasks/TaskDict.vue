@@ -59,7 +59,7 @@
             this.currentValue = Object.entries(toRaw(this.values));
         },
         computed: {
-            disabledAdding(){
+            disabledAdding() {
                 return !this.currentValue.at(-1)[0] || !this.currentValue.at(-1)[1];
             },
             values() {
@@ -122,3 +122,7 @@
         },
     };
 </script>
+
+<style scoped lang="scss">
+@import "../../code/styles/code.scss";
+</style>

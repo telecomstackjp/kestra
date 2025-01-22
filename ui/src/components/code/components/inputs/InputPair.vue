@@ -98,11 +98,4 @@
 
 <style scoped lang="scss">
 @import "../../styles/code.scss";
-
-.delete {
-    cursor: pointer;
-    padding-left: 0;
-    color: $code-gray-700;
-    text-align: right;
-}
 </style>
