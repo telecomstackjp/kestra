@@ -23,6 +23,7 @@ dependencies {
     implementation "io.micronaut:micronaut-http-server-netty"
     implementation "io.micronaut.cache:micronaut-cache-core"
     implementation "io.micronaut.cache:micronaut-cache-caffeine"
+    implementation "io.micronaut.tracing:micronaut-tracing-opentelemetry-http"
 
     // test
     testAnnotationProcessor project(':processor')
