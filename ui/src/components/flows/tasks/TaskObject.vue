@@ -1,55 +1,65 @@
 <template>
-    <template v-if="properties">
-        <el-form-item
-            :key="index"
-            :required="isRequired(key)"
-            v-for="(schema, key, index) in properties"
-        >
-            <template #label>
-                <span v-if="required" class="me-1 text-danger">*</span>
-                <span v-if="getKey(key)" class="label">{{ getKey(key) }}</span>
-                <el-tag disable-transitions size="small" class="ms-2 type-tag">
-                    {{ getType(schema) }}
-                </el-tag>
-                <el-tooltip
-                    v-if="hasTooltip(schema)"
-                    :persistent="false"
-                    :hide-after="0"
-                    effect="light"
-                >
-                    <template #content>
-                        <markdown
-                            class="markdown-tooltip"
-                            :source="helpText(schema)"
-                        />
-                    </template>
-                    <help class="ms-2" />
-                </el-tooltip>
-            </template>
-            <component
-                :is="`task-${getType(schema, key)}`"
-                :model-value="getPropertiesValue(key)"
-                :task="modelValue"
-                @update:model-value="onObjectInput(key, $event)"
-                :root="getKey(key)"
-                :schema="schema"
+    <el-form label-position="top">
+        <template v-if="properties">
+            <el-form-item
+                :key="index"
                 :required="isRequired(key)"
+                v-for="(schema, key, index) in properties"
+            >
+                <template #label>
+                    <span v-if="required" class="me-1 text-danger">*</span>
+                    <span v-if="getKey(key)" class="label">{{
+                        getKey(key)
+                    }}</span>
+                    <el-tag
+                        disable-transitions
+                        size="small"
+                        class="ms-2 type-tag"
+                    >
+                        {{ getType(schema) }}
+                    </el-tag>
+                    <el-tooltip
+                        v-if="hasTooltip(schema)"
+                        :persistent="false"
+                        :hide-after="0"
+                        effect="light"
+                    >
+                        <template #content>
+                            <markdown
+                                class="markdown-tooltip"
+                                :source="helpText(schema)"
+                            />
+                        </template>
+                        <help class="ms-2" />
+                    </el-tooltip>
+                </template>
+                <component
+                    :is="`task-${getType(schema, key)}`"
+                    :model-value="getPropertiesValue(key)"
+                    :task="modelValue"
+                    @update:model-value="onObjectInput(key, $event)"
+                    :root="getKey(key)"
+                    :schema="schema"
+                    :required="isRequired(key)"
+                    :definitions="definitions"
+                    class="mt-1 mb-2 wrapper"
+                />
+            </el-form-item>
+        </template>
+        <template v-else>
+            <task-dict
+                :model-value="modelValue"
+                :task="task"
+                @update:model-value="
+                    (value) => $emit('update:modelValue', value)
+                "
+                :root="root"
+                :schema="schema"
+                :required="required"
                 :definitions="definitions"
-                class="mt-1 mb-2 wrapper"
             />
-        </el-form-item>
-    </template>
-    <template v-else>
-        <task-dict
-            :model-value="modelValue"
-            :task="task"
-            @update:model-value="(value) => $emit('update:modelValue', value)"
-            :root="root"
-            :schema="schema"
-            :required="required"
-            :definitions="definitions"
-        />
-    </template>
+        </template>
+    </el-form>
 </template>
 
 <script>
