@@ -68,6 +68,9 @@ dependencies {
         // AWS CRT is not included in the AWS BOM but needed for the S3 Transfer manager
         api 'software.amazon.awssdk.crt:aws-crt:0.33.7'
 
+        // we need at least 0.14, it could be removed when Micronaut contains a recent only version in their BOM
+        api "io.micrometer:micrometer-core:1.14.3"
+
         // Other libs
         api("org.projectlombok:lombok:1.18.36")
         api("org.codehaus.janino:janino:3.1.12")
