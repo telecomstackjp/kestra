@@ -210,18 +210,28 @@
                         this.sseBySubflow[subflow] = sse;
                         sse.onmessage = (event) => {
                             if (event && event.lastEventId === "end") {
-                                sse.close();
+                                this.closeSubExecutionSSE(subflow);
                             }
 
-                            const previousExecution = this.subflowsExecutions[subflow];
-                            this.$store.commit("execution/addSubflowExecution", {subflow, execution: JSON.parse(event.data)});
+                            // we are receiving a first "fake" event to force initializing the connection: ignoring it
+                            if (event.lastEventId !== "start") {
+                                const previousExecution = this.subflowsExecutions[subflow];
+                                this.$store.commit("execution/addSubflowExecution", {subflow, execution: JSON.parse(event.data)});
 
-                            // add subflow execution id to graph
-                            if(previousExecution === undefined) {
-                                this.loadGraph(true);
+                                // add subflow execution id to graph
+                                if(previousExecution === undefined) {
+                                    this.loadGraph(true);
+                                }
                             }
                         };
                     });
+            },
+            closeSubExecutionSSE(subflow) {
+                const sse = this.sseBySubflow[subflow];
+                if (sse) {
+                    sse.close();
+                    delete this.sseBySubflow[subflow];
+                }
             }
         }
     };

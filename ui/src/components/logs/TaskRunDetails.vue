@@ -327,7 +327,14 @@
                     .then(sse => {
                         this.executionSSE = sse;
                         this.executionSSE.onmessage = async (event) => {
-                            this.followedExecution = JSON.parse(event.data);
+                            if (event && event.lastEventId === "end") {
+                                sse.close();
+                            }
+
+                            // we are receiving a first "fake" event to force initializing the connection: ignoring it
+                            if (event.lastEventId !== "start") {
+                                this.followedExecution = JSON.parse(event.data);
+                            }
                         }
                     });
             },

@@ -101,28 +101,31 @@
                                 self.closeSSE();
                             }
 
-                            let execution = JSON.parse(event.data);
+                            // we are receiving a first "fake" event to force initializing the connection: ignoring it
+                            if (event.lastEventId !== "start") {
+                                let execution = JSON.parse(event.data);
 
-                            if (!this.flow ||
-                                execution.flowId !== this.flow.id ||
-                                execution.namespace !== this.flow.namespace ||
-                                execution.flowRevision !== this.flow.revision
-                            ) {
-                                this.$store.dispatch(
-                                    "flow/loadFlow",
-                                    {
+                                if (!this.flow ||
+                                    execution.flowId !== this.flow.id ||
+                                    execution.namespace !== this.flow.namespace ||
+                                    execution.flowRevision !== this.flow.revision
+                                ) {
+                                    this.$store.dispatch(
+                                        "flow/loadFlow",
+                                        {
+                                            namespace: execution.namespace,
+                                            id: execution.flowId,
+                                            revision: execution.flowRevision
+                                        }
+                                    );
+                                    this.$store.dispatch("flow/loadRevisions", {
                                         namespace: execution.namespace,
-                                        id: execution.flowId,
-                                        revision: execution.flowRevision
-                                    }
-                                );
-                                this.$store.dispatch("flow/loadRevisions", {
-                                    namespace: execution.namespace,
-                                    id: execution.flowId
-                                })
-                            }
+                                        id: execution.flowId
+                                    })
+                                }
 
-                            this.$store.commit("execution/setExecution", execution);
+                                this.$store.commit("execution/setExecution", execution);
+                            }
                         }
                         // sse.onerror doesnt return the details of the error
                         // but as our emitter can only throw an error on 404
