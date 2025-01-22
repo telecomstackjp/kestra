@@ -123,7 +123,7 @@
                     {
                         name: "edit",
                         component: EditorView,
-                        title: this.$t("edit"),
+                        title: this.$t("files"),
                         props: {
                             tab: "edit",
                             isNamespace: true,
