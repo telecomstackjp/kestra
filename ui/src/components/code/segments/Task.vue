@@ -10,11 +10,13 @@
         :is="lastBreadcumb.component.type"
         v-bind="lastBreadcumb.component.props"
         v-on="lastBreadcumb.component.listeners"
+        :model-value="lastBreadcumb.component.props.modelValue"
         @update:model-value="validateTask"
     />
 
     <template v-if="yaml">
-        <ValidationError v-if="!lastBreadcumb.shown" :errors link />
+        <!-- TODO: Improve the validation for single tasks -->
+        <ValidationError v-if="false" :errors link />
 
         <Save
             @click="saveTask"
