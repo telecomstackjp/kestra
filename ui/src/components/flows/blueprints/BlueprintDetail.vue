@@ -1,8 +1,8 @@
 <template>
     <top-nav-bar v-if="!embed && blueprint" :title="blueprint.title" :breadcrumb="breadcrumb" v-loading="!blueprint">
         <template #additional-right>
-            <ul v-if="userCanCreateFlow && kind === 'flow' ">
-                <router-link :to="{name: 'flows/create', query: {blueprintId: blueprint.id, blueprintSource: embedFriendlyBlueprintBaseUri.includes('community') ? 'community' : 'custom'}}">
+            <ul v-if="userCanCreateFlow">
+                <router-link :to="toEditor()">
                     <el-button type="primary" v-if="!embed">
                         {{ $t('use') }}
                     </el-button>
@@ -93,8 +93,7 @@
     import {mapState} from "vuex";
     import permission from "../../../models/permission";
     import action from "../../../models/action";
-    import {apiUrl} from "override/utils/route";
-
+    
     export default {
         components: {Markdown, CopyToClipboard},
         emits: ["back"],
@@ -148,6 +147,12 @@
                         }
                     })
                 }
+            },
+            toEditor() {
+                const query = this.blueprintKind === "flow" ?
+                    {blueprintId: this.blueprintId, blueprintSource: this.blueprintType} :
+                    {blueprintId: this.blueprintId};
+                return {name: `${this.blueprintKind}s/create`, query};
             }
         },
         async created() {
@@ -156,7 +161,7 @@
                     this.blueprint = data;
                     if (this.kind === "flow") {
                         try {
-                            if (this.embedFriendlyBlueprintBaseUri.endsWith("community")) {
+                            if (this.blueprintType === "community") {
                                 this.$store.dispatch(
                                     "blueprints/getBlueprintGraph",
                                     {
@@ -199,9 +204,6 @@
                     ...YamlUtils.parse(this.blueprint.source),
                     source: this.blueprint.source
                 }
-            },
-            embedFriendlyBlueprintBaseUri() {
-                return this.blueprintBaseUri ?? (`${apiUrl(this.$store)}/blueprints/` + (this?.$route?.params?.tab ?? "community"))
             },
             blueprintType() {
                 return this.tab ?? this?.$route?.params?.tab ?? "community";
