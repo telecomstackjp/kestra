@@ -262,7 +262,7 @@
       "header": {
         "catch phrase": {
           "1": "第一步总是最难的。",
-          "2": "探索蓝图以启动你的下一个流程。"
+          "2": "探索蓝图以启动您的下一个{kind}。"
         },
         "alt": "蓝图图标"
       },
@@ -1077,7 +1077,8 @@
       },
       "save": {
         "tasks": "保存任务",
-        "triggers": "保存 trigger"
+        "triggers": "保存 trigger",
+        "error handlers": "保存错误处理程序"
       },
       "labels": {
         "no_code": "无代码编辑器",
@@ -1085,7 +1086,8 @@
         "label": "标签",
         "variable": "变量"
       },
-      "adding": "+ 添加{what}"
+      "adding": "+ 添加{what}",
+      "adding_default": "+ 添加新value"
     },
     "export_to_file": "导出到文件"
   }

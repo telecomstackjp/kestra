@@ -60,6 +60,7 @@ export type Breadcrumb = {
         name: RouteRecordName;
         params: RouteParams;
     };
+    component?: ReturnType<typeof defineComponent>;
 };
 
 export type CollapseItem = {

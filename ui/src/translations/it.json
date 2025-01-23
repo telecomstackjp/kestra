@@ -262,7 +262,7 @@
       "header": {
         "catch phrase": {
           "1": "Il primo passo è sempre il più difficile.",
-          "2": "Esplora i blueprints per avviare il tuo prossimo flow."
+          "2": "Esplora i blueprint per avviare il tuo prossimo {kind}."
         },
         "alt": "Icona dei Blueprint"
       },
@@ -1077,7 +1077,8 @@
       },
       "save": {
         "tasks": "Salva task",
-        "triggers": "Salva trigger"
+        "triggers": "Salva trigger",
+        "error handlers": "Salva gestore errori"
       },
       "labels": {
         "no_code": "Editor Senza Codice",
@@ -1085,7 +1086,8 @@
         "label": "Etichetta",
         "variable": "Variabile"
       },
-      "adding": "+ Aggiungi un {what}"
+      "adding": "+ Aggiungi un {what}",
+      "adding_default": "+ Aggiungi un nuovo value"
     },
     "export_to_file": "Esporta su file"
   }

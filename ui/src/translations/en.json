@@ -308,7 +308,7 @@
       "header": {
         "catch phrase": {
           "1": "The first step is always the hardest.",
-          "2": "Explore blueprints to kick-start your next flow."
+          "2": "Explore blueprints to kick-start your next {kind}."
         },
         "alt": "Blueprints Icon"
       }
@@ -1062,6 +1062,7 @@
     "chart preview": "Chart preview",
     "no_code": {
       "adding": "+ Add a {what}",
+      "adding_default": "+ Add a new value",
       "labels": {
         "yaml": "YAML Editor",
         "no_code": "No Code Editor",
@@ -1093,14 +1094,15 @@
         }
       },
       "creation": {
+        "select": "Select a {section}",
         "tasks": "Add a task",
         "triggers": "Add a trigger",
-        "error handlers": "Add an error handler",
-        "select": "Select a {section}"
+        "error handlers": "Add an error handler"
       },
       "save": {
         "tasks": "Save task",
-        "triggers": "Save trigger"
+        "triggers": "Save trigger",
+        "error handlers": "Save error handler"
       }
     }
   }

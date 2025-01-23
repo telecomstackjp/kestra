@@ -1,7 +1,7 @@
 <template>
     <span v-if="required" class="me-1 text-danger">*</span>
     <span class="label">{{ label }}</span>
-    <div class="mt-1 mb-2 wrapper">
+    <div class="mt-1 mb-2 w-100 wrapper">
         <el-row
             v-for="(value, key, index) in props.modelValue"
             :key="index"
@@ -50,7 +50,7 @@
             default: undefined,
         },
         label: {type: String, required: true},
-        property: {type: String, required: true},
+        property: {type: String, default: undefined},
         required: {type: Boolean, default: false},
     });
 
@@ -74,7 +74,7 @@
 
         if (index !== -1) {
             // Get the value of the old key
-            const [value] = entries[index];
+            const [, value] = entries[index];
 
             // Remove the old key from the entries
             entries.splice(index, 1);
@@ -98,11 +98,4 @@
 
 <style scoped lang="scss">
 @import "../../styles/code.scss";
-
-.delete {
-    cursor: pointer;
-    padding-left: 0;
-    color: $code-gray-700;
-    text-align: right;
-}
 </style>

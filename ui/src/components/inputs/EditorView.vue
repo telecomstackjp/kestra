@@ -69,6 +69,7 @@
 
         <div class="d-inline-flex align-items-center">
             <el-switch
+                v-if="!isNamespace"
                 v-model="editorViewType"
                 active-value="NO_CODE"
                 inactive-value="YAML"
@@ -114,9 +115,6 @@
                             params: {tenant: routeParams.tenant},
                         })
                 "
-                @open-new-error="isNewErrorOpen = true"
-                @open-new-trigger="isNewTriggerOpen = true"
-                @open-edit-metadata="isEditMetadataOpen = true"
                 @export="exportYaml"
                 :is-namespace="isNamespace"
             />
@@ -662,7 +660,7 @@
     };
 
     onMounted(async () => {
-        editorViewType.value = localStorage.getItem(storageKeys.EDITOR_VIEW_TYPE) || "YAML";
+        editorViewType.value = props.isNamespace ? "YAML" : (localStorage.getItem(storageKeys.EDITOR_VIEW_TYPE) || "YAML");
 
         if(!props.isNamespace) {
             initViewType()
@@ -739,7 +737,7 @@
         const pluginSingleList = store.getters["plugin/getPluginSingleList"];
         if (taskType && pluginSingleList && pluginSingleList.includes(taskType)) {
             store.dispatch("plugin/load", {cls: taskType}).then((plugin) => {
-                store.commit("plugin/setEditorPlugin", plugin);
+                store.commit("plugin/setEditorPlugin", {cls: taskType, ...plugin});
             });
         } else {
             store.commit("plugin/setEditorPlugin", undefined);

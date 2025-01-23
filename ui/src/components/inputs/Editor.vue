@@ -209,6 +209,7 @@
                         alwaysConsumeMouseWheel: false,
                     };
                     options.renderSideBySide = this.diffSideBySide;
+                    options.useInlineViewWhenSpaceIsLimited = false;
                 }
 
                 if (this.minimap === false) {

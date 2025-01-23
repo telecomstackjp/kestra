@@ -262,7 +262,7 @@
       "header": {
         "catch phrase": {
           "1": "Der erste Schritt ist immer der schwerste.",
-          "2": "Erkunden Sie Blueprints, um Ihren nächsten Flow zu starten."
+          "2": "Erkunden Sie Blueprints, um Ihr nächstes {kind} zu starten."
         },
         "alt": "Blueprints-Symbol"
       },
@@ -1077,7 +1077,8 @@
       },
       "save": {
         "tasks": "Aufgabe speichern",
-        "triggers": "Speicher Trigger"
+        "triggers": "Speicher Trigger",
+        "error handlers": "Fehlerbehandlungsroutine speichern"
       },
       "labels": {
         "no_code": "Kein Code-Editor",
@@ -1085,7 +1086,8 @@
         "label": "Label",
         "variable": "Variable"
       },
-      "adding": "+ {what} hinzufügen"
+      "adding": "+ {what} hinzufügen",
+      "adding_default": "+ Neuen Wert hinzufügen"
     },
     "export_to_file": "In Datei exportieren"
   }

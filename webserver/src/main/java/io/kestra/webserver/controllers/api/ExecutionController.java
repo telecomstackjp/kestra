@@ -34,6 +34,7 @@ import io.kestra.core.services.*;
 import io.kestra.core.storages.StorageContext;
 import io.kestra.core.storages.StorageInterface;
 import io.kestra.core.tenant.TenantService;
+import io.kestra.core.trace.propagation.ExecutionTextMapSetter;
 import io.kestra.core.utils.Await;
 import io.kestra.core.utils.ListUtils;
 import io.kestra.plugin.core.trigger.Webhook;
@@ -71,6 +72,8 @@ import io.micronaut.http.sse.Event;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.validation.Validated;
+import io.opentelemetry.api.OpenTelemetry;
+import io.opentelemetry.context.Context;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -176,6 +179,9 @@ public class ExecutionController {
 
     @Value("${kestra.url}")
     private Optional<String> kestraUrl;
+
+    @Inject
+    private OpenTelemetry openTelemetry;
 
     @ExecuteOn(TaskExecutors.IO)
     @Get(uri = "/search")
@@ -504,6 +510,10 @@ public class ExecutionController {
         }
 
         try {
+            // inject the traceparent into the execution
+            var propagator = openTelemetry.getPropagators().getTextMapPropagator();
+            propagator.inject(Context.current(), result, ExecutionTextMapSetter.INSTANCE);
+
             executionQueue.emit(result);
             eventPublisher.publishEvent(new CrudEvent<>(result, CrudEventType.CREATE));
             return HttpResponse.ok(result);
@@ -573,6 +583,10 @@ public class ExecutionController {
             .handle((executionInputs, sink) -> {
                 Execution executionWithInputs = current.withInputs(executionInputs);
                 try {
+                    // inject the traceparent into the execution
+                    var propagator = openTelemetry.getPropagators().getTextMapPropagator();
+                    propagator.inject(Context.current(), executionWithInputs, ExecutionTextMapSetter.INSTANCE);
+
                     executionQueue.emit(executionWithInputs);
                     eventPublisher.publishEvent(new CrudEvent<>(executionWithInputs, CrudEventType.CREATE));
 
@@ -618,8 +632,8 @@ public class ExecutionController {
         private final URI url;
 
         // This is not nice, but we cannot use @AllArgsConstructor as it would open a bunch of necessary changes on the Execution class.
-        ExecutionResponse(String tenantId, String id, String namespace, String flowId, Integer flowRevision, List<TaskRun> taskRunList, Map<String, Object> inputs, Map<String, Object> outputs, List<Label> labels, Map<String, Object> variables, State state, String parentId, String originalId, ExecutionTrigger trigger, boolean deleted, ExecutionMetadata metadata, Instant scheduleDate, URI url) {
-            super(tenantId, id, namespace, flowId, flowRevision, taskRunList, inputs, outputs, labels, variables, state, parentId, originalId, trigger, deleted, metadata, scheduleDate);
+        ExecutionResponse(String tenantId, String id, String namespace, String flowId, Integer flowRevision, List<TaskRun> taskRunList, Map<String, Object> inputs, Map<String, Object> outputs, List<Label> labels, Map<String, Object> variables, State state, String parentId, String originalId, ExecutionTrigger trigger, boolean deleted, ExecutionMetadata metadata, Instant scheduleDate, String traceParent, URI url) {
+            super(tenantId, id, namespace, flowId, flowRevision, taskRunList, inputs, outputs, labels, variables, state, parentId, originalId, trigger, deleted, metadata, scheduleDate, traceParent);
 
             this.url = url;
         }
@@ -643,6 +657,7 @@ public class ExecutionController {
                 execution.isDeleted(),
                 execution.getMetadata(),
                 execution.getScheduleDate(),
+                execution.getTraceParent(),
                 url
             );
         }

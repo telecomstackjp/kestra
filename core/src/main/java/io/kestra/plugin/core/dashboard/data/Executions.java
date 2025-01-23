@@ -1,6 +1,7 @@
 package io.kestra.plugin.core.dashboard.data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
@@ -9,6 +10,7 @@ import io.kestra.core.models.dashboards.filters.*;
 import io.kestra.core.repositories.ExecutionRepositoryInterface;
 import io.kestra.core.repositories.QueryBuilderInterface;
 import io.kestra.core.validations.ExecutionsDataFilterValidation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +26,8 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 @EqualsAndHashCode
 @ExecutionsDataFilterValidation
+@Schema(title = "Executions")
+@JsonTypeName("Executions")
 public class Executions<C extends ColumnDescriptor<Executions.Fields>> extends DataFilter<Executions.Fields, C> {
     @Override
     public Class<? extends QueryBuilderInterface<Executions.Fields>> repositoryClass() {

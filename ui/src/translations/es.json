@@ -262,7 +262,7 @@
       "header": {
         "catch phrase": {
           "1": "El primer paso siempre es el más difícil.",
-          "2": "Explora blueprints para iniciar tu próximo flujo."
+          "2": "Explora blueprints para iniciar tu próximo {kind}."
         },
         "alt": "Icono de Blueprints"
       },
@@ -1077,7 +1077,8 @@
       },
       "save": {
         "tasks": "Guardar tarea",
-        "triggers": "Guardar trigger"
+        "triggers": "Guardar trigger",
+        "error handlers": "Guardar controlador de errores"
       },
       "labels": {
         "no_code": "Editor Sin Código",
@@ -1085,7 +1086,8 @@
         "label": "Etiqueta",
         "variable": "Variable"
       },
-      "adding": "+ Agregar un {what}"
+      "adding": "+ Agregar un {what}",
+      "adding_default": "+ Añadir un nuevo value"
     },
     "export_to_file": "Exportar a archivo"
   }

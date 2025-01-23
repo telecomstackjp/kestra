@@ -17,6 +17,7 @@
                     :key="elementIndex"
                     :section="item.title"
                     :element
+                    @remove-element="removeElement(item.title, elementIndex)"
                 />
             </template>
 
@@ -26,18 +27,21 @@
 </template>
 
 <script setup lang="ts">
-    import {PropType, ref} from "vue";
+    import {nextTick, PropType, ref} from "vue";
 
     import {CollapseItem} from "../../utils/types";
 
     import Creation from "./buttons/Creation.vue";
     import Element from "./Element.vue";
 
+    const emits = defineEmits(["remove"]);
+
     const props = defineProps({
         items: {
             type: Array as PropType<CollapseItem[]>,
             required: true,
         },
+        flow: {type: String, default: undefined},
         creation: {type: Boolean, default: false},
     });
     const expanded = ref<CollapseItem["title"][]>([]);
@@ -47,6 +51,24 @@
             if (item.elements?.length) expanded.value.push(item.title);
         });
     }
+
+    import YamlUtils from "../../../../utils/yamlUtils";
+    const removeElement = (title: string, index: number) => {
+        props.items.forEach((item) => {
+            if (item.title === title) {
+                nextTick(() => {
+                    const ID = item.elements?.[index].id;
+
+                    item.elements?.splice(index, 1);
+                    emits(
+                        "remove",
+                        YamlUtils.deleteTask(props.flow, ID, title.toUpperCase()),
+                    );
+                    expanded.value = expanded.value.filter((v) => v !== title);
+                });
+            }
+        });
+    };
 </script>
 
 <style scoped lang="scss">
