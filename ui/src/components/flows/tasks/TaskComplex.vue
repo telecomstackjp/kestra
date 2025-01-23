@@ -9,10 +9,10 @@
                             label: root,
                             to: {},
                             component: h('task-object', {
-                                modelValue: modelValue,
-                                'onUpdate:modelValue': onInput,
+                                modelValue,
                                 schema: currentSchema,
-                                definitions: definitions,
+                                definitions,
+                                'onUpdate:modelValue': onInput,
                             }),
                         },
                         position:
@@ -25,8 +25,9 @@
 </template>
 
 <script setup>
-    import TextSearch from "vue-material-design-icons/TextSearch.vue";
     import {h} from "vue";
+
+    import TextSearch from "vue-material-design-icons/TextSearch.vue";
 </script>
 
 <script>
