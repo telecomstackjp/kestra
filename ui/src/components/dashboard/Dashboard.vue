@@ -210,7 +210,7 @@
             </el-col>
         </el-row>
 
-        <el-row v-if="!props.flow">
+        <el-row v-if="!props.flow && !props.namespace">
             <el-col :xs="24">
                 <ExecutionsNamespace
                     :data="namespaceExecutions"
