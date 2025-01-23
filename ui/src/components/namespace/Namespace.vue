@@ -121,11 +121,11 @@
                         }
                     },
                     {
-                        name: "edit",
+                        name: "files",
                         component: EditorView,
                         title: this.$t("files"),
                         props: {
-                            tab: "edit",
+                            tab: "files",
                             isNamespace: true,
                             namespace: this.$route.params.id,
                             isReadOnly: false,
