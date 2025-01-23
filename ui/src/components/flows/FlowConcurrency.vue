@@ -1,17 +1,17 @@
 <template>
     <template v-if="flow.concurrency">
         <div v-if="runningCount > 0 || !runningCountSet" :class="{'d-none': !runningCountSet}">
-            <el-card class="mb-1">
+            <el-card class="mb-3">
                 <div class="row mb-3">
                     <span class="col d-flex align-items-center">
-                        <h5 class="m-3">RUNNING</h5> {{ runningCount }} / {{ flow.concurrency.limit }} {{ $t('active-slots') }}
+                        <h5 class="m-3">RUNNING</h5> {{ runningCount }}/{{ flow.concurrency.limit }} {{ $t('active-slots') }}
                     </span>
                     <span class="col d-flex justify-content-end align-items-center">
-                        {{ $t('behavior') }}: <status class="mx-2" :status="flow.concurrency.behavior" />
+                        {{ $t('behavior') }}: <status class="mx-2" :status="flow.concurrency.behavior" size="small" />
                     </span>
                 </div>
                 <div class="progressbar mb-3">
-                    <el-progress :stroke-width="40" color="#5BB8FF" :percentage="progress" :show-text="false" />
+                    <el-progress :stroke-width="16" color="#5BB8FF" :percentage="progress" :show-text="false" />
                 </div>
             </el-card>
             <el-card>
@@ -90,5 +90,15 @@
     .bg-purple {
         height: 100%;
         width: 100%;
+    }
+    h5 {
+        font-weight: bold;
+        margin-left: 0 !important;
+    }
+
+    :deep(.el-progress) {
+        .el-progress-bar, .el-progress-bar__outer, .el-progress-bar__inner {
+            border-radius: var(--bs-border-radius);
+        }
     }
 </style>
