@@ -2,6 +2,7 @@ package io.kestra.jdbc.repository;
 
 import io.kestra.core.events.CrudEvent;
 import io.kestra.core.events.CrudEventType;
+import io.kestra.core.models.QueryFilter;
 import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
 import io.kestra.core.models.dashboards.filters.AbstractFilter;
@@ -194,17 +195,9 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
     @Override
     public ArrayListTotal<Execution> find(
         Pageable pageable,
-        @Nullable String query,
         @Nullable String tenantId,
-        @Nullable List<FlowScope> scope,
-        @Nullable String namespace,
-        @Nullable String flowId,
-        @Nullable ZonedDateTime startDate,
-        @Nullable ZonedDateTime endDate,
-        @Nullable List<State.Type> state,
-        @Nullable Map<String, String> labels,
-        @Nullable String triggerExecutionId,
-        @Nullable ChildFilter childFilter
+        @Nullable List<QueryFilter> filters
+
     ) {
         return this.jdbcRepository
             .getDslContextWrapper()
@@ -213,18 +206,9 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
 
                 SelectConditionStep<Record1<Object>> select = this.findSelect(
                     context,
-                    query,
                     tenantId,
-                    scope,
-                    namespace,
-                    flowId,
-                    startDate,
-                    endDate,
-                    state,
-                    labels,
-                    triggerExecutionId,
-                    childFilter,
-                    false
+                    filters
+
                 );
 
                 return this.jdbcRepository.fetchPage(context, select, pageable);
@@ -280,6 +264,23 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
         );
     }
 
+    private SelectConditionStep<Record1<Object>> findSelect(
+        DSLContext context,
+        @Nullable String tenantId,
+        @Nullable List<QueryFilter> filters
+    ) {
+        SelectConditionStep<Record1<Object>> select = context
+            .select(
+                field("value")
+            )
+            .hint(context.configuration().dialect().supports(SQLDialect.MYSQL) ? "SQL_CALC_FOUND_ROWS" : null)
+            .from(this.jdbcRepository.getTable())
+            .where(this.defaultFilter(tenantId, false));
+
+        select = filter(select, filters);
+
+        return select;
+    }
     private SelectConditionStep<Record1<Object>> findSelect(
         DSLContext context,
         @Nullable String query,
@@ -341,16 +342,8 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
     @Override
     public ArrayListTotal<TaskRun> findTaskRun(
         Pageable pageable,
-        @Nullable String query,
         @Nullable String tenantId,
-        @Nullable String namespace,
-        @Nullable String flowId,
-        @Nullable ZonedDateTime startDate,
-        @Nullable ZonedDateTime endDate,
-        @Nullable List<State.Type> states,
-        @Nullable Map<String, String> labels,
-        @Nullable String triggerExecutionId,
-        @Nullable ChildFilter childFilter
+        List<QueryFilter> filters
     ) {
         throw new UnsupportedOperationException();
     }

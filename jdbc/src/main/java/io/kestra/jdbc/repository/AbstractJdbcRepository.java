@@ -1,5 +1,6 @@
 package io.kestra.jdbc.repository;
 
+import io.kestra.core.models.QueryFilter;
 import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
 import io.kestra.core.models.dashboards.Order;
@@ -14,10 +15,7 @@ import org.jooq.impl.DSL;
 
 import java.sql.Timestamp;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractJdbcRepository {
 
@@ -202,5 +200,43 @@ public abstract class AbstractJdbcRepository {
         return column.getField() != null ? field(fieldsMapping.get(column.getField())) : null;
     }
 
+    protected  <T extends Record> SelectConditionStep<T> filter(
+        SelectConditionStep<T> select,
+        List<QueryFilter> filters
+    ) {
+        if (filters==null) return select;
+        for (QueryFilter filter : filters) {
+            QueryFilter.Field field = filter.field();
+            QueryFilter.Op operation = filter.operation();
+            Object value = filter.value();
 
+            switch (operation) {
+                case EQUALS -> select = select.and(DSL.field(field.value()).eq(value));
+                case NOT_EQUALS -> select = select.and(DSL.field(field.value()).ne(value));
+                case GREATER_THAN -> select = select.and(DSL.field(field.value()).greaterThan(value));
+                case LESS_THAN -> select = select.and(DSL.field(field.value()).lessThan(value));
+                case IN -> {
+                    if (value instanceof Collection<?>) {
+                        select = select.and(DSL.field(field.value()).in((Collection<?>) value));
+                    } else {
+                        throw new IllegalArgumentException("IN operation requires a collection as value");
+                    }
+                }
+                case NOT_IN -> {
+                    if (value instanceof Collection<?>) {
+                        select = select.and(DSL.field(field.value()).notIn((Collection<?>) value));
+                    } else {
+                        throw new IllegalArgumentException("NOT_IN operation requires a collection as value");
+                    }
+                }
+                case STARTS_WITH -> select = select.and(DSL.field(field.value()).like(value + "%"));
+                case ENDS_WITH -> select = select.and(DSL.field(field.value()).like("%" + value));
+                case CONTAINS -> select = select.and(DSL.field(field.value()).like("%" + value + "%"));
+                case REGEX -> select = select.and(DSL.field(field.value()).likeRegex((String) value));
+                default -> throw new UnsupportedOperationException("Unsupported operation: " + operation);
+            }
+        }
+
+        return select;
+    }
 }

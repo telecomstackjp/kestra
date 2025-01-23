@@ -27,8 +27,8 @@ public class MysqlFlowRepository extends AbstractJdbcFlowRepository {
     }
 
     @Override
-    protected Condition findCondition(List<QueryFilter> filters, String systemFlowNamespace) {
-        return null;
+    protected Condition findCondition(Object value, QueryFilter.Op operation) {
+        return MysqlFlowRepositoryService.findCondition(value, operation);
     }
 
     @Override

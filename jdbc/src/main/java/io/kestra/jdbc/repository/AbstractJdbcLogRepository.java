@@ -1,5 +1,6 @@
 package io.kestra.jdbc.repository;
 
+import io.kestra.core.models.QueryFilter;
 import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
 import io.kestra.core.models.executions.Execution;
@@ -63,18 +64,11 @@ public abstract class AbstractJdbcLogRepository extends AbstractJdbcRepository i
         Logs.Fields.LEVEL, "level",
         Logs.Fields.MESSAGE, "message"
     );
-
     @Override
     public ArrayListTotal<LogEntry> find(
         Pageable pageable,
-        @Nullable String query,
         @Nullable String tenantId,
-        @Nullable String namespace,
-        @Nullable String flowId,
-        @Nullable String triggerId,
-        @Nullable Level minLevel,
-        @Nullable ZonedDateTime startDate,
-        @Nullable ZonedDateTime endDate
+        @Nullable List<QueryFilter> filters
     ) {
         return this.jdbcRepository
             .getDslContextWrapper()
@@ -87,11 +81,13 @@ public abstract class AbstractJdbcLogRepository extends AbstractJdbcRepository i
                     .from(this.jdbcRepository.getTable())
                     .where(this.defaultFilter(tenantId));
 
-                this.filter(select, query, namespace, flowId, triggerId, minLevel, startDate , endDate);
+               this.filter(select, filters);
 
                 return this.jdbcRepository.fetchPage(context, select, pageable);
             });
     }
+
+
 
     private <T extends Record> SelectConditionStep<T> filter(
         SelectConditionStep<T> select,

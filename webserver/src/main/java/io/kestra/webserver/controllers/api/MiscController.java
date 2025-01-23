@@ -29,7 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -103,7 +102,7 @@ public class MiscController {
                 .build()
             ).isBasicAuthEnabled(basicAuthService.isEnabled())
             .systemNamespace(namespaceUtils.getSystemFlowNamespace())
-            .resourceToFilters(QueryFilter.Resource.asMap())
+            .resourceToFilters(QueryFilter.Resource.asResourceList())
             .hiddenLabelsPrefixes(hiddenLabelsPrefixes);
 
         if (this.environmentName != null || this.environmentColor != null) {
@@ -170,7 +169,7 @@ public class MiscController {
 
         List<String> hiddenLabelsPrefixes;
         // List of filter by component
-        Map<QueryFilter.Resource, List<QueryFilter.Field>> resourceToFilters;
+        List<QueryFilter.ResourceField> resourceToFilters;
     }
 
     @Value

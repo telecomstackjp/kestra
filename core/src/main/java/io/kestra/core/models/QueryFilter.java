@@ -44,7 +44,7 @@ public record QueryFilter(
     }
 
     public enum Field {
-        QUERY("query") {
+        QUERY("q") {
             @Override
             public List<Op> supportedOp() {
                 return List.of(Op.EQUALS, Op.NOT_EQUALS, Op.REGEX);
@@ -96,7 +96,7 @@ public record QueryFilter(
             @Override
             public List<Op> supportedOp() {
                 return List.of(Op.EQUALS, Op.NOT_EQUALS, Op.CONTAINS, Op.STARTS_WITH,
-                        Op.ENDS_WITH, Op.IN, Op.NOT_IN, Op.REGEX);
+                    Op.ENDS_WITH, Op.IN, Op.NOT_IN, Op.REGEX);
             }
         },
         TRIGGER_EXECUTION_ID("triggerExecutionId") {
@@ -174,9 +174,9 @@ public record QueryFilter(
             @Override
             public List<Field> supportedField() {
                 return List.of(
-                        Field.QUERY, Field.SCOPE, Field.FLOW_ID, Field.START_DATE, Field.END_DATE,Field.TIME_RANGE,
-                        Field.STATE, Field.LABELS, Field.TRIGGER_EXECUTION_ID, Field.CHILD_FILTER,
-                        Field.NAMESPACE
+                    Field.QUERY, Field.SCOPE, Field.FLOW_ID, Field.START_DATE, Field.END_DATE, Field.TIME_RANGE,
+                    Field.STATE, Field.LABELS, Field.TRIGGER_EXECUTION_ID, Field.CHILD_FILTER,
+                    Field.NAMESPACE
                 );
             }
         },
@@ -184,7 +184,7 @@ public record QueryFilter(
             @Override
             public List<Field> supportedField() {
                 return List.of(Field.NAMESPACE, Field.START_DATE, Field.END_DATE,
-                        Field.FLOW_ID, Field.TRIGGER_ID, Field.MIN_LEVEL
+                    Field.FLOW_ID, Field.TRIGGER_ID, Field.MIN_LEVEL
                 );
             }
         },
@@ -192,7 +192,7 @@ public record QueryFilter(
             @Override
             public List<Field> supportedField() {
                 return List.of(Field.NAMESPACE, Field.QUERY, Field.END_DATE, Field.FLOW_ID, Field.START_DATE,
-                        Field.STATE, Field.LABELS, Field.TRIGGER_EXECUTION_ID, Field.CHILD_FILTER
+                    Field.STATE, Field.LABELS, Field.TRIGGER_EXECUTION_ID, Field.CHILD_FILTER
                 );
             }
         },
@@ -212,9 +212,39 @@ public record QueryFilter(
 
         public abstract List<Field> supportedField();
 
-        public static Map<Resource, List<Field>> asMap() {
-            return Arrays.stream(values()).collect(Collectors.toMap(Function.identity(),
-                    Resource::supportedField));
+        /**
+         * Converts {@code Resource} enums to a list of {@code ResourceField},
+         * including fields and their supported operations.
+         *
+         * @return List of {@code ResourceField} with resource names, fields, and operations.
+         */
+        public static List<ResourceField> asResourceList() {
+            return Arrays.stream(values())
+                .map(Resource::toResourceField)
+                .toList();
+        }
+
+        private static ResourceField toResourceField(Resource resource) {
+            List<FieldOp> fieldOps = resource.supportedField().stream()
+                .map(Resource::toFieldInfo)
+                .toList();
+            return new ResourceField(resource.name().toLowerCase(), fieldOps);
+        }
+
+        private static FieldOp toFieldInfo(Field field) {
+            List<Operation> operations = field.supportedOp().stream()
+                .map(Resource::toOperation)
+                .toList();
+            return new FieldOp(field.name().toLowerCase(), field.value(), operations);
+        }
+
+        private static Operation toOperation(Op op) {
+            return new Operation(op.name(), op.value());
         }
     }
+
+    public record ResourceField(String name, List<FieldOp> fields) {}
+    public record FieldOp(String name, String value, List<Operation> operations) {}
+    public record Operation(String name, String value) {}
+
 }

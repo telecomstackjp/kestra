@@ -1,5 +1,7 @@
 package io.kestra.webserver.controllers.api;
 
+import io.kestra.core.converters.QueryFilterFormat;
+import io.kestra.core.models.QueryFilter;
 import io.kestra.core.models.conditions.ConditionContext;
 import io.kestra.core.models.executions.ExecutionKilled;
 import io.kestra.core.models.executions.ExecutionKilledTrigger;
@@ -74,19 +76,15 @@ public class TriggerController {
         @Parameter(description = "The current page") @QueryValue(defaultValue = "1") @Min(1) int page,
         @Parameter(description = "The current page size") @QueryValue(defaultValue = "10") @Min(1) int size,
         @Parameter(description = "The sort of current page") @Nullable @QueryValue List<String> sort,
-        @Parameter(description = "A string filter") @Nullable @QueryValue(value = "q") String query,
-        @Parameter(description = "A namespace filter prefix") @Nullable @QueryValue String namespace,
-        @Parameter(description = "The identifier of the worker currently evaluating the trigger") @Nullable @QueryValue String workerId,
-        @Parameter(description = "The flow identifier") @Nullable @QueryValue String flowId
+        @Parameter(description = "Filters") @QueryFilterFormat List<QueryFilter> filters
+
     ) throws HttpStatusException {
 
         ArrayListTotal<Trigger> triggerContexts = triggerRepository.find(
             PageableUtils.from(page, size, sort, triggerRepository.sortMapping()),
-            query,
             tenantService.resolveTenant(),
-            namespace,
-            flowId,
-            workerId
+            filters
+
         );
 
         List<Triggers> triggers = new ArrayList<>();

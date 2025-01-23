@@ -35,66 +35,21 @@ public abstract class PostgresFlowRepositoryService {
         return jdbcRepository.fullTextCondition(Collections.singletonList("FULLTEXT_INDEX(source_code)"), query);
     }
 
-    public static Condition findCondition(AbstractJdbcRepository<Flow> jdbcRepository, List<QueryFilter> filters, String systemFlowNamespace) {
+
+    public static Condition findCondition(Object value, QueryFilter.Op operation) {
         List<Condition> conditions = new ArrayList<>();
 
-        if (filters != null) {
-            for (QueryFilter filter : filters) {
-                QueryFilter.Field field = filter.field();
-                QueryFilter.Op operation = filter.operation();
-                Object value = filter.value();
+        if (value instanceof Map<?, ?> labels) {
+            labels.forEach((key, val) -> {
+                String sql = "value -> 'labels' @> '[{\"key\":\"" + key + "\", \"value\":\"" + val + "\"}]'";
+                if (operation.equals(EQUALS))
+                    conditions.add(DSL.condition(sql));
+                else
+                    conditions.add(DSL.not(DSL.condition(sql)));
 
-                switch (field) {
-                    case QUERY -> {
-                        if (value instanceof String query) {
-                            if (operation.equals(EQUALS))
-                                conditions.add(jdbcRepository.fullTextCondition(Collections.singletonList("fulltext"), query));
-                            else
-                                conditions.add(DSL.not(jdbcRepository.fullTextCondition(Collections.singletonList("fulltext"), query)));
-
-                        }
-                    }
-                    case SCOPE -> {
-                        if (value instanceof List<?> scopeValues && !scopeValues.containsAll(Arrays.stream(FlowScope.values()).toList())) {
-                            if (scopeValues.contains(FlowScope.USER)) {
-                                conditions.add(field("namespace").ne(systemFlowNamespace));
-                            }
-                            if (scopeValues.contains(FlowScope.SYSTEM)) {
-                                conditions.add(field("namespace").eq(systemFlowNamespace));
-                            }
-                        }
-                    }
-                    case NAMESPACE -> {
-                        if (value instanceof String namespace) {
-                            switch (operation) {
-                                case EQUALS -> conditions.add(NAMESPACE_FIELD.eq(namespace));
-                                case NOT_EQUALS -> conditions.add(NAMESPACE_FIELD.ne(namespace));
-                                case CONTAINS -> conditions.add(NAMESPACE_FIELD.like("%" + namespace + "%"));
-                                case STARTS_WITH -> conditions.add(NAMESPACE_FIELD.like(namespace + "%"));
-                                case ENDS_WITH -> conditions.add(NAMESPACE_FIELD.like("%" + namespace));
-                                default ->
-                                    throw new UnsupportedOperationException("Unsupported operation '%s' for field 'namespace'.".formatted(operation));
-                            }
-                        }
-                    }
-                    case LABELS -> {
-                        if (value instanceof Map<?, ?> labels) {
-                            labels.forEach((key, val) -> {
-                                String sql = "value -> 'labels' @> '[{\"key\":\"" + key + "\", \"value\":\"" + val + "\"}]'";
-                                if (operation.equals(EQUALS))
-                                    conditions.add(DSL.condition(sql));
-                                else
-                                    conditions.add(DSL.not(DSL.condition(sql)));
-
-                            });
-                        }
-                    }
-                    default -> throw new UnsupportedOperationException("Unsupported field '%s'.".formatted(field));
-                }
-            }
+            });
         }
-
-        return conditions.isEmpty() ? DSL.trueCondition() : DSL.and(conditions);
+       return conditions.isEmpty() ? DSL.trueCondition() : DSL.and(conditions);
     }
 
 

@@ -27,9 +27,10 @@ public class H2FlowRepository extends AbstractJdbcFlowRepository {
     }
 
     @Override
-    protected Condition findCondition(List<QueryFilter> filters, String systemFlowNamespace) {
-        return null;
+    protected Condition findCondition(Object value, QueryFilter.Op operation) {
+        return H2FlowRepositoryService.findCondition(value, operation);
     }
+
 
     @Override
     protected Condition findSourceCodeCondition(String query) {

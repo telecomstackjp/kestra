@@ -27,9 +27,10 @@ public class PostgresFlowRepository extends AbstractJdbcFlowRepository {
     }
 
     @Override
-    protected Condition findCondition(List<QueryFilter> filters,String systemFlowNamespace) {
-        return PostgresFlowRepositoryService.findCondition(this.jdbcRepository, filters, systemFlowNamespace);
+    protected Condition findCondition(Object value, QueryFilter.Op operation) {
+        return PostgresFlowRepositoryService.findCondition( value, operation);
     }
+
 
     @Override
     protected Condition findSourceCodeCondition(String query) {
