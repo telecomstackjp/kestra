@@ -85,7 +85,7 @@
                                     {{ $t('copy') }}
                                 </el-button>
                             </el-tooltip>
-                            <el-button v-else-if="blueprintKind === 'flow'" type="primary" size="default" @click.prevent.stop="blueprintToEditor(blueprint.id)">
+                            <el-button v-else type="primary" size="default" @click.prevent.stop="blueprintToEditor(blueprint.id)">
                                 {{ $t('use') }}
                             </el-button>
                         </div>
@@ -157,25 +157,25 @@
             }
         },
         methods: {
-            kind() {
-                return this.blueprintType === "community" ? this.blueprintKind : undefined;
-            },
             initSelectedTag() {
                 return this.$route?.query?.selectedTag ?? 0
             },
             async copy(id) {
                 await Utils.copy(
-                    (await this.$store.dispatch("blueprints/getBlueprintSource", {type: this.blueprintType, kind: this.kind(), id: id}))
+                    (await this.$store.dispatch("blueprints/getBlueprintSource", {type: this.blueprintType, kind: this.blueprintKind, id: id}))
                 );
             },
             async blueprintToEditor(blueprintId) {
                 localStorage.setItem(editorViewTypes.STORAGE_KEY, editorViewTypes.SOURCE_TOPOLOGY);
+                const query = this.blueprintKind === "flow" ?
+                    {blueprintId: blueprintId, blueprintSource: this.embedFriendlyBlueprintBaseUri.includes("community") ? "community" : "custom"} :
+                    {blueprintId: blueprintId};
                 this.$router.push({
-                    name: "flows/create",
+                    name: `${this.blueprintKind}s/create`,
                     params: {
                         tenant: this.$route.params.tenant
                     },
-                    query: {blueprintId: blueprintId, blueprintSource: this.embedFriendlyBlueprintBaseUri.includes("community") ? "community" : "custom"}
+                    query: query
                 });
             },
             goToDetail(blueprintId) {
@@ -188,7 +188,7 @@
                 if (this.$route.query.q || this.q) {
                     query.q = this.$route.query.q || this.q;
                 }
-                return this.$store.dispatch("blueprints/getBlueprintTagsForQuery", {type: this.blueprintType, kind: this.kind(), ...query})
+                return this.$store.dispatch("blueprints/getBlueprintTagsForQuery", {type: this.blueprintType, kind: this.blueprintKind, ...query})
                     .then(data => {
                         // Handle switch tab while fetching data
                         if (this.embedFriendlyBlueprintBaseUri === beforeLoadBlueprintBaseUri) {
@@ -218,7 +218,7 @@
                 }
 
                 return this.$store
-                    .dispatch("blueprints/getBlueprintsForQuery", {type: this.blueprintType, kind: this.kind(), params: query})
+                    .dispatch("blueprints/getBlueprintsForQuery", {type: this.blueprintType, kind: this.blueprintKind, params: query})
                     .then(data => {
                         // Handle switch tab while fetching data
                         if (this.embedFriendlyBlueprintBaseUri === beforeLoadBlueprintBaseUri) {

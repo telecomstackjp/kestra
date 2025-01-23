@@ -10,7 +10,7 @@ export default {
 
     actions: {
         getBlueprint({commit}, options) {
-            const kind = options.kind ? `/${options.kind}` : "";
+            const kind = options.kind && options.type !== "custom" ? `/${options.kind}` : "";
             return this.$http.get(
                 `${apiUrl(this)}/blueprints/${options.type}${kind}/${options.id}`
             )
@@ -20,7 +20,7 @@ export default {
                 });
         },
         getBlueprintSource({commit}, options) {
-            const kind = options.kind ? `/${options.kind}` : "";
+            const kind = options.kind && options.type !== "custom" ? `/${options.kind}` : "";
             return this.$http.get(
                 `${apiUrl(this)}/blueprints/${options.type}${kind}/${options.id}/source`
             )
@@ -30,7 +30,7 @@ export default {
             });
         },
         getBlueprintGraph({commit}, options) {
-            const kind = options.kind ? `/${options.kind}` : "";
+            const kind = options.kind && options.type !== "custom" ? `/${options.kind}` : "";
             return this.$http.get(
                 `${apiUrl(this)}/blueprints/${options.type}${kind}/${options.id}/graph`
             )
@@ -40,7 +40,7 @@ export default {
             });
         },
         getBlueprintsForQuery({commit}, options) {
-            const kind = options.kind ? `/${options.kind}` : "";
+            const kind = options.kind && options.type !== "custom" ? `/${options.kind}` : "";
             return this.$http.get(
                 `${apiUrl(this)}/blueprints/${options.type}${kind}`,
                 {params: options.params}
@@ -51,7 +51,7 @@ export default {
                 });
         },
         getBlueprintTagsForQuery(_, options) {
-            const kind = options.kind ? `/${options.kind}` : "";
+            const kind = options.kind && options.type !== "custom" ? `/${options.kind}` : "";
             return this.$http.get(
                 `${apiUrl(this)}/blueprints/${options.type}${kind}/tags`,
                 {params: options.params}
