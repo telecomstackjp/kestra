@@ -46,7 +46,7 @@
     const emits = defineEmits(["update:modelValue"]);
     const props = defineProps({
         modelValue: {
-            type: Array as PropType<PairField["value"][]>,
+            type: Object as PropType<PairField["value"][]>,
             default: undefined,
         },
         label: {type: String, required: true},
