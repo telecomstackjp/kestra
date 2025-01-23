@@ -24,14 +24,14 @@
     </div>
 
     <section v-bind="$attrs" :class="{'container': !embed}" class="blueprint-container" v-loading="!blueprint">
-        <el-card v-if="blueprint">
+        <el-card v-if="blueprint && kind === 'flow'">
             <div class="embedded-topology" v-if="flowGraph">
                 <low-code-editor
                     v-if="flowGraph"
                     :flow-id="parsedFlow.id"
                     :namespace="parsedFlow.namespace"
                     :flow-graph="flowGraph"
-                    :source="blueprint.flow"
+                    :source="blueprint.source"
                     :view-type="embed ? 'source-blueprints' : 'blueprints'"
                     is-read-only
                 />
@@ -52,7 +52,7 @@
                         :navbar="false"
                     >
                         <template #absolute>
-                            <copy-to-clipboard class="position-absolute" :text="blueprint.flow" />
+                            <copy-to-clipboard class="position-absolute" :text="blueprint.source" />
                         </template>
                     </editor>
                 </el-card>

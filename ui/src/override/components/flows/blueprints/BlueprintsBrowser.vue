@@ -218,7 +218,7 @@
                 }
 
                 return this.$store
-                    .dispatch("blueprints/getBlueprintsForQuery", {type: this.blueprintType, kind: this.kind(), ...query})
+                    .dispatch("blueprints/getBlueprintsForQuery", {type: this.blueprintType, kind: this.kind(), params: query})
                     .then(data => {
                         // Handle switch tab while fetching data
                         if (this.embedFriendlyBlueprintBaseUri === beforeLoadBlueprintBaseUri) {
