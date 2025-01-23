@@ -12,7 +12,12 @@
 
             <hr class="m-0 mt-3">
 
-            <Collapse :items="sections" creation />
+            <Collapse
+                :items="sections"
+                creation
+                :flow
+                @remove="(yaml) => emits('updateTask', yaml)"
+            />
         </template>
 
         <Task

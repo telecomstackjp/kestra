@@ -7,13 +7,24 @@
         <div class="flex-grow-1 label">
             {{ props.element.id }}
         </div>
+
+        <el-button
+            @click.prevent.stop="emits('removeElement')"
+            :icon="DeleteOutline"
+            size="small"
+            class="border-0"
+        />
     </div>
 </template>
 
 <script setup lang="ts">
     import {computed} from "vue";
 
+    import {DeleteOutline} from "../../utils/icons";
+
     import TaskIcon from "@kestra-io/ui-libs/src/components/misc/TaskIcon.vue";
+
+    const emits = defineEmits(["removeElement"]);
 
     const props = defineProps({
         section: {type: String, required: true},
