@@ -14,18 +14,13 @@
     />
 
     <template v-if="yaml">
-        <div class="d-flex justify-content-between">
-            <div class="d-flex align-items-center">
-                <!-- TODO: Properly handle validation errors -->
-                <ValidationError v-if="false" :errors link />
-            </div>
+        <ValidationError v-if="!lastBreadcumb.shown" :errors link />
 
-            <Save
-                @click="saveTask"
-                :what="route.query.section?.toString()"
-                class="w-100 mt-3"
-            />
-        </div>
+        <Save
+            @click="saveTask"
+            :what="route.query.section?.toString()"
+            class="w-100 mt-3"
+        />
     </template>
 </template>
 
