@@ -37,10 +37,13 @@
         created() {
             this.schemas = this.schema?.oneOf ?? [];
 
-            const schema = this.schemaOptions.find(
-                (sch) => sch.id === this.modelValue.type,
+            const schema = this.schemaOptions.find((item) =>
+                typeof this.modelValue === "string"
+                    ? item.id === "string"
+                    : item.id === this.modelValue.type,
             );
-            this.onSelect(schema.value);
+
+            this.onSelect(schema?.value);
         // }
         },
         methods: {

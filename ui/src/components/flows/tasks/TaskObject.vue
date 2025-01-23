@@ -8,9 +8,9 @@
             >
                 <template #label>
                     <span v-if="required" class="me-1 text-danger">*</span>
-                    <span v-if="getKey(key)" class="label">{{
-                        getKey(key)
-                    }}</span>
+                    <span v-if="getKey(key)" class="label">
+                        {{ getKey(key) }}
+                    </span>
                     <el-tag
                         disable-transitions
                         size="small"

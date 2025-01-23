@@ -91,13 +91,8 @@
         let temp = YamlUtils.parse(yaml.value);
 
         if (lastBreadcumb.value.shown) {
-            temp = {
-                ...temp,
-                [breadcrumbs.value.at(-1).label]: {
-                    ...temp[breadcrumbs.value.at(-1).label],
-                    ...task,
-                },
-            };
+            const field = breadcrumbs.value.at(-1).label;
+            temp = {...temp, [field]: task};
         }
 
         temp = YamlUtils.stringify(temp);
