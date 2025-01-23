@@ -74,7 +74,7 @@
 
         if (index !== -1) {
             // Get the value of the old key
-            const [value] = entries[index];
+            const [, value] = entries[index];
 
             // Remove the old key from the entries
             entries.splice(index, 1);
