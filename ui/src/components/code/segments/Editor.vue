@@ -2,7 +2,7 @@
     <div class="p-4">
         <template v-if="!route.query.section && !route.query.identifier">
             <component
-                v-for="([k, v], index) in Object.entries(fields)"
+                v-for="([k, v], index) in Object.entries(getFields())"
                 :key="index"
                 :is="v.component"
                 v-model="v.value"
@@ -10,13 +10,24 @@
                 @update:model-value="emits('updateMetadata', k, v.value)"
             />
 
-            <hr class="m-0 mt-3">
+            <hr class="my-4">
 
             <Collapse
                 :items="sections"
                 creation
                 :flow
                 @remove="(yaml) => emits('updateTask', yaml)"
+            />
+
+            <hr class="my-4">
+
+            <component
+                v-for="([k, v], index) in Object.entries(getFields(false))"
+                :key="index"
+                :is="v.component"
+                v-model="v.value"
+                v-bind="trimmed(v)"
+                @update:model-value="emits('updateMetadata', k, v.value)"
             />
         </template>
 
@@ -45,8 +56,6 @@
 
     import Task from "./Task.vue";
 
-    const CONCURRENCY = "io.kestra.core.models.flows.Concurrency";
-
     import {useRoute} from "vue-router";
     const route = useRoute();
 
@@ -68,7 +77,6 @@
         creation: {type: Boolean, default: false},
         flow: {type: String, required: true},
         metadata: {type: Object, required: true},
-        schemas: {type: Object, required: true},
     });
 
     const trimmed = (field: Field) => {
@@ -140,7 +148,20 @@
             component: shallowRef(TaskBasic),
             value: props.metadata.concurrency,
             label: t("no_code.fields.general.concurrency"),
-            schema: props.schemas?.definitions?.[CONCURRENCY] ?? {},
+            // TODO: Pass schema for concurrency dynamically
+            schema: {
+                type: "object",
+                properties: {
+                    behavior: {
+                        type: "string",
+                        enum: ["QUEUE", "CANCEL", "FAIL"],
+                        default: "QUEUE",
+                        markdownDescription: "Default value is : `QUEUE`",
+                    },
+                    limit: {type: "integer", exclusiveMinimum: 0},
+                },
+                required: ["limit"],
+            },
             root: "concurrency",
         },
         pluginDefaults: {
@@ -159,6 +180,13 @@
             label: t("no_code.fields.general.disabled"),
         },
     });
+
+    const getFields = (main = true) => {
+        const {id, namespace, description, inputs, ...rest} = fields.value;
+
+        if (main) return {id, namespace, description, inputs};
+        else return rest;
+    };
 
     import YamlUtils from "../../../utils/yamlUtils";
     const getSectionTitle = (label: string, elements = []) => {
