@@ -35,7 +35,7 @@ type EditorField = Field & {
     navbar: boolean;
     input: boolean;
     lang: string;
-    shouldFocus: boolean,
+    shouldFocus: boolean;
     style: {
         height: string;
     };
@@ -55,6 +55,11 @@ export type Fields = {
     disabled: Field;
 };
 
+export type CollapseItem = {
+    title: string;
+    elements?: Record<string, any>[];
+};
+
 export type Breadcrumb = {
     label: string;
     to: {
@@ -64,7 +69,4 @@ export type Breadcrumb = {
     component?: ReturnType<typeof defineComponent>;
 };
 
-export type CollapseItem = {
-    title: string;
-    elements?: Record<string, any>[];
-};
+export type Component = ReturnType<typeof defineComponent>;
