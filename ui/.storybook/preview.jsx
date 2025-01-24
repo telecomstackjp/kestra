@@ -1,7 +1,7 @@
 import {setup} from "@storybook/vue3";
+import {withThemeByClassName} from "@storybook/addon-themes";
 import initApp from "../src/utils/init";
 import stores from "../src/stores/store";
-import { withThemeByClassName } from '@storybook/addon-themes';
 
 import "../src/styles/vendor.scss";
 import "../src/styles/app.scss";
@@ -25,11 +25,11 @@ const preview = {
   decorators: [
     withThemeByClassName({
         themes: {
-          light: 'light',
-          dark: 'dark',
+          light: "light",
+          dark: "dark",
         },
-        defaultTheme: 'light',
-      }),
+        defaultTheme: "light",
+      })
   ]
 };
 
