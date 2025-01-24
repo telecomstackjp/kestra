@@ -11,7 +11,7 @@
         </template>
     </top-nav-bar>
     <div class="main">
-        <div class="section-1">
+        <div @click="startTour()" class="cursor-pointer section-1">
             <div class="section-1-main">
                 <div class="section-content">
                     <img
@@ -86,6 +86,13 @@
                 type: Boolean,
                 default: true
             }
+        },
+        methods: {
+            startTour() {
+                localStorage.setItem("tourDoneOrSkip", undefined);
+                this.$store.commit("core/setGuidedProperties", {tourStarted: false});
+                this.$tours["guidedTour"]?.start();
+            },
         },
         computed: {
             ...mapGetters("core", ["guidedProperties"]),

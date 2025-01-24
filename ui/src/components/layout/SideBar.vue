@@ -269,8 +269,8 @@
             }
 
             &:hover, body &_hover {
-                background-color: var(--ks-button-background-secondary-hover);
-            }   
+                background-color: var(--ks-button-background-primary);
+            }
 
             .el-tooltip__trigger {
                 display: flex;

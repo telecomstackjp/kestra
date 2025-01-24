@@ -160,6 +160,8 @@
 
 
 .el-select {
+    --el-disabled-text-color: var(--ks-content-inactive);
+
     &.fit-text .el-select__input {
         width: fit-content !important;
     }
@@ -181,6 +183,12 @@
         &.is-disabled {
             html.dark & {
                 background-color: var(--bs-gray-400);
+            }
+
+            .el-select__suffix {
+                .el-select__caret {
+                    color: var(--ks-content-inactive);
+                }
             }
         }
     }

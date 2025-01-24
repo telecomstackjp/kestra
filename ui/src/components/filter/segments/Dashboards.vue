@@ -47,7 +47,7 @@
 
                             <div class="col-auto">
                                 <DeleteOutline
-                                    @click.stop="remove(dashboard.id)"
+                                    @click.stop="remove(dashboard)"
                                 />
                             </div>
                         </div>
@@ -65,28 +65,26 @@
 </template>
 
 <script setup lang="ts">
-    import {onBeforeMount, ref, computed} from "vue";
-
+    import {onBeforeMount, ref, computed, getCurrentInstance} from "vue";
     import KestraIcon from "../../Kicon.vue";
-
-    import {
-        ViewDashboardEdit,
-        Plus,
-        DeleteOutline,
-        Magnify,
-    } from "../utils/icons";
-
+    import {ViewDashboardEdit, Plus, DeleteOutline, Magnify,} from "../utils/icons";
     import {useI18n} from "vue-i18n";
-    const {t} = useI18n({useScope: "global"});
-
     import {useStore} from "vuex";
+    import {useRouter} from "vue-router";
+
+    const {t} = useI18n({useScope: "global"});
     const store = useStore();
-
+    const router = useRouter();
     const emits = defineEmits(["dashboard"]);
+    const toast = getCurrentInstance().appContext.config.globalProperties.$toast();
 
-    const remove = (id: string) => {
-        store.dispatch("dashboard/delete", id).then(() => {
-            dashboards.value = dashboards.value.filter((d) => d.id !== id);
+    const remove = (dashboard: any) => {
+        toast.confirm(t("delete confirm", {name: dashboard.title}), () => {
+            store.dispatch("dashboard/delete", dashboard.id).then((item) => {
+                dashboards.value = dashboards.value.filter((d) => d.id !== dashboard.id);
+                toast.deleted(item.title);
+                router.push({name: "home"});
+            });
         });
     };
 
@@ -99,6 +97,7 @@
                 d.title.toLowerCase().includes(search.value.toLowerCase()),
         );
     });
+
     onBeforeMount(() => {
         store
             .dispatch("dashboard/list", {})
