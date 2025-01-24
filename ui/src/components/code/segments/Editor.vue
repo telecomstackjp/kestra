@@ -41,10 +41,11 @@
 
     import Editor from "../../inputs/Editor.vue";
     import MetadataInputs from "../../flows/MetadataInputs.vue";
+    import TaskBasic from "../../flows/tasks/TaskBasic.vue";
 
     import Task from "./Task.vue";
 
-    // const CONCURRENCY = "io.kestra.core.models.flows.Concurrency";
+    const CONCURRENCY = "io.kestra.core.models.flows.Concurrency";
 
     import {useRoute} from "vue-router";
     const route = useRoute();
@@ -104,6 +105,7 @@
             navbar: false,
             input: true,
             lang: "yaml",
+            shouldFocus: false,
             style: {height: "100px"},
         },
         labels: {
@@ -125,6 +127,7 @@
             navbar: false,
             input: true,
             lang: "yaml",
+            shouldFocus: false,
             style: {height: "100px"},
         },
         variables: {
@@ -133,13 +136,13 @@
             label: t("no_code.fields.general.variables"),
             property: t("no_code.labels.variable"),
         },
-        // concurrency: {
-        //     component: shallowRef(InputSwitch), // TODO: To improve slot content
-        //     value: props.metadata.concurrency,
-        //     label: t("no_code.fields.general.concurrency"),
-        //     schema: props.schemas?.definitions?.[CONCURRENCY] ?? {},
-        //     root: "concurrency",
-        // },
+        concurrency: {
+            component: shallowRef(TaskBasic),
+            value: props.metadata.concurrency,
+            label: t("no_code.fields.general.concurrency"),
+            schema: props.schemas?.definitions?.[CONCURRENCY] ?? {},
+            root: "concurrency",
+        },
         pluginDefaults: {
             component: shallowRef(Editor),
             value: props.metadata.pluginDefaults,
@@ -147,6 +150,7 @@
             navbar: false,
             input: true,
             lang: "yaml",
+            shouldFocus: false,
             style: {height: "100px"},
         },
         disabled: {

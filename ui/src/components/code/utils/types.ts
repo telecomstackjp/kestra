@@ -35,6 +35,7 @@ type EditorField = Field & {
     navbar: boolean;
     input: boolean;
     lang: string;
+    shouldFocus: boolean,
     style: {
         height: string;
     };
@@ -49,7 +50,7 @@ export type Fields = {
     inputs: InputField;
     outputs: EditorField;
     variables: PairField;
-    concurrency?: ConcurrencyField; // TODO: Make it not optional
+    concurrency: ConcurrencyField;
     pluginDefaults: EditorField;
     disabled: Field;
 };
