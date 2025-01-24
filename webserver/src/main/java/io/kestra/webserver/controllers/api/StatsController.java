@@ -77,7 +77,9 @@ public class StatsController {
             statisticRequest.endDate() != null ? statisticRequest.endDate().withZoneSameInstant(ZoneId.systemDefault()) : null,
             null,
             statisticRequest.state(),
-            false, RequestUtils.toMap(statisticRequest.labels), statisticRequest.childFilter);
+            false,
+            RequestUtils.toMap(statisticRequest.labels()),
+            statisticRequest.childFilter());
     }
 
     @ExecuteOn(TaskExecutors.IO)
@@ -110,7 +112,8 @@ public class StatsController {
             statisticRequest.startDate() != null ? statisticRequest.startDate().withZoneSameInstant(ZoneId.systemDefault()) : null,
             statisticRequest.endDate() != null ? statisticRequest.endDate().withZoneSameInstant(ZoneId.systemDefault()) : null,
             Boolean.TRUE.equals(statisticRequest.namespaceOnly()),
-            null, null);
+            RequestUtils.toMap(statisticRequest.labels()),
+            statisticRequest.childFilter());
     }
 
     @ExecuteOn(TaskExecutors.IO)
@@ -208,8 +211,6 @@ public class StatsController {
 
     @Introspected
     public record LastExecutionsRequest(
-        @Parameter(description = "A list of flows filter") @Nullable List<ExecutionRepositoryInterface.FlowFilter> flows,
-        @Parameter(description = "A labels filter as a list of 'key:value'") @Nullable @QueryValue @Format("MULTI") List<String> labels,
-        @Parameter(description = "A execution child filter") @Nullable @QueryValue ExecutionRepositoryInterface.ChildFilter childFilter
+        @Parameter(description = "A list of flows filter") @Nullable List<ExecutionRepositoryInterface.FlowFilter> flows
     ) {}
 }
