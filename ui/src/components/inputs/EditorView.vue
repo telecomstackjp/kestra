@@ -1085,6 +1085,8 @@
                 }
             });
         } else {
+            if(!currentTab.value.dirty) return;
+
             await store.dispatch("namespace/createFile", {
                 namespace: props.namespace ?? routeParams.id,
                 path: currentTab.value.path ?? currentTab.value.name,
