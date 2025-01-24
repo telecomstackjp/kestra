@@ -55,19 +55,43 @@ public class FlowService {
     });
 
     private static void removeExtendProperties(Map<String, Object> map) {
-        map.remove("extend");
-        map.keySet().removeIf(key -> key.startsWith("extend."));
+        if (map != null) {
+            map.remove("extend");
+            map.keySet().removeIf(key -> key.startsWith("extend."));
+            
+            // Handle nested maps that might contain format strings
+            for (Object value : map.values()) {
+                if (value instanceof Map) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> nestedMap = (Map<String, Object>) value;
+                    if (nestedMap.containsKey("format") && nestedMap.get("format") instanceof String) {
+                        String format = (String) nestedMap.get("format");
+                        if (format.contains("\n")) {
+                            nestedMap.put("format", "|\n" + format);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public static String generateSource(Flow flow) {
         try {
+            if (flow == null) {
+                return null;
+            }
+            
             String json = WITHOUT_EXTEND_OBJECT_MAPPER.writeValueAsString(flow);
             Map<String, Object> map = JacksonMapper.toMap(json);
             removeExtendProperties(map);
             String source = JacksonMapper.ofYaml().writeValueAsString(map);
             return source.replaceFirst("(?m)^revision: \\d+\n?","");
         } catch (JsonProcessingException e) {
-            log.warn("Unable to convert flow json '{}' '{}'({})", flow.getNamespace(), flow.getId(), flow.getRevision(), e);
+            log.warn("Unable to convert flow json '{}' '{}'({})", 
+                flow != null ? flow.getNamespace() : null, 
+                flow != null ? flow.getId() : null, 
+                flow != null ? flow.getRevision() : null, 
+                e);
             return null;
         }
     }
