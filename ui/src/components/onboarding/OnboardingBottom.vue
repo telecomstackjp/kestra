@@ -7,6 +7,7 @@
             :content="card.content"
             :category="card.category"
             :link="card.link"
+            @click="card.category === 'tour' ? startTour() : null"
         />
     </div>
 </template>
@@ -39,6 +40,13 @@
         },
         computed: {
             ...mapGetters("core", ["guidedProperties"])
+        },
+        methods: {
+            startTour() {
+                localStorage.setItem("tourDoneOrSkip", undefined);
+                this.$store.commit("core/setGuidedProperties", {tourStarted: false});
+                this.$tours["guidedTour"]?.start();
+            },
         }
     }
 </script>
