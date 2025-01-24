@@ -37,7 +37,7 @@ public class ExecutionUsage {
                 to,
                 DateUtils.GroupType.DAY,
                 null,
-                true);
+                true, null, null);
         } catch (UnsupportedOperationException ignored) {
 
         }
@@ -53,7 +53,7 @@ public class ExecutionUsage {
                 to,
                 DateUtils.GroupType.DAY,
                 null,
-                false))
+                false, null, null))
             .dailyTaskRunsCount(dailyTaskRunsCount)
             .build();
     }
@@ -70,7 +70,9 @@ public class ExecutionUsage {
                 from,
                 to,
                 DateUtils.GroupType.DAY,
-                true
+                true,
+                null,
+                null
             );
         } catch (UnsupportedOperationException ignored) {}
 
@@ -82,7 +84,9 @@ public class ExecutionUsage {
                 from,
                 to,
                 DateUtils.GroupType.DAY,
-                false
+                false,
+                null,
+                null
             ))
             .dailyTaskRunsCount(dailyTaskRunsCount)
             .build();

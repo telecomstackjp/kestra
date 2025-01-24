@@ -12,12 +12,14 @@ import io.kestra.core.repositories.FlowRepositoryInterface;
 import io.kestra.core.repositories.LogRepositoryInterface;
 import io.kestra.core.repositories.TriggerRepositoryInterface;
 import io.kestra.core.tenant.TenantService;
+import io.kestra.webserver.utils.RequestUtils;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.format.Format;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.validation.Validated;
@@ -31,7 +33,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Validated
 @Controller("/api/v1/stats")
@@ -76,7 +77,7 @@ public class StatsController {
             statisticRequest.endDate() != null ? statisticRequest.endDate().withZoneSameInstant(ZoneId.systemDefault()) : null,
             null,
             statisticRequest.state(),
-            false);
+            false, RequestUtils.toMap(statisticRequest.labels), statisticRequest.childFilter);
     }
 
     @ExecuteOn(TaskExecutors.IO)
@@ -93,7 +94,7 @@ public class StatsController {
             statisticRequest.endDate() != null ? statisticRequest.endDate().withZoneSameInstant(ZoneId.systemDefault()) : null,
             null,
             statisticRequest.state(),
-            true);
+            true, null, null);
     }
 
     @ExecuteOn(TaskExecutors.IO)
@@ -108,8 +109,8 @@ public class StatsController {
             statisticRequest.flows() != null && statisticRequest.flows().getFirst().getNamespace() != null && statisticRequest.flows().getFirst().getId() != null ? statisticRequest.flows() : null,
             statisticRequest.startDate() != null ? statisticRequest.startDate().withZoneSameInstant(ZoneId.systemDefault()) : null,
             statisticRequest.endDate() != null ? statisticRequest.endDate().withZoneSameInstant(ZoneId.systemDefault()) : null,
-            Boolean.TRUE.equals(statisticRequest.namespaceOnly())
-        );
+            Boolean.TRUE.equals(statisticRequest.namespaceOnly()),
+            null, null);
     }
 
     @ExecuteOn(TaskExecutors.IO)
@@ -168,7 +169,9 @@ public class StatsController {
         @Parameter(description = "A flow id filter") @Nullable String flowId,
         @Parameter(description = "The start datetime, default to now") @Nullable @Format("yyyy-MM-dd'T'HH:mm[:ss][.SSS][XXX]") ZonedDateTime startDate,
         @Parameter(description = "The end datetime, default to now") @Nullable @Format("yyyy-MM-dd'T'HH:mm[:ss][.SSS][XXX]")ZonedDateTime endDate,
-        @Parameter(description = "the state of the execution") @Nullable List<State.Type> state
+        @Parameter(description = "the state of the execution") @Nullable List<State.Type> state,
+        @Parameter(description = "A labels filter as a list of 'key:value'") @Nullable @QueryValue @Format("MULTI") List<String> labels,
+        @Parameter(description = "A execution child filter") @Nullable @QueryValue ExecutionRepositoryInterface.ChildFilter childFilter
     ) {}
 
     @Introspected
@@ -185,7 +188,9 @@ public class StatsController {
     public record ByNamespaceStatisticRequest(
         @Parameter(description = "A namespace filter prefix") @Nullable String namespace,
         @Parameter(description = "The start datetime, default to now") @Nullable @Format("yyyy-MM-dd'T'HH:mm[:ss][.SSS][XXX]") ZonedDateTime startDate,
-        @Parameter(description = "The end datetime, default to now") @Nullable @Format("yyyy-MM-dd'T'HH:mm[:ss][.SSS][XXX]")ZonedDateTime endDate
+        @Parameter(description = "The end datetime, default to now") @Nullable @Format("yyyy-MM-dd'T'HH:mm[:ss][.SSS][XXX]")ZonedDateTime endDate,
+        @Parameter(description = "A labels filter as a list of 'key:value'") @Nullable @QueryValue @Format("MULTI") List<String> labels,
+        @Parameter(description = "A execution child filter") @Nullable @QueryValue ExecutionRepositoryInterface.ChildFilter childFilter
     ) {}
 
     @Introspected
@@ -196,11 +201,15 @@ public class StatsController {
         @Parameter(description = "A list of flows filter") @Nullable List<ExecutionRepositoryInterface.FlowFilter> flows,
         @Parameter(description = "The start datetime, default to now") @Nullable @Format("yyyy-MM-dd'T'HH:mm[:ss][.SSS][XXX]") ZonedDateTime startDate,
         @Parameter(description = "The end datetime, default to now") @Nullable @Format("yyyy-MM-dd'T'HH:mm[:ss][.SSS][XXX]")ZonedDateTime endDate,
-        @Nullable Boolean namespaceOnly
+        @Nullable Boolean namespaceOnly,
+        @Parameter(description = "A labels filter as a list of 'key:value'") @Nullable @QueryValue @Format("MULTI") List<String> labels,
+        @Parameter(description = "A execution child filter") @Nullable @QueryValue ExecutionRepositoryInterface.ChildFilter childFilter
     ) {}
 
     @Introspected
     public record LastExecutionsRequest(
-        @Parameter(description = "A list of flows filter") @Nullable List<ExecutionRepositoryInterface.FlowFilter> flows
+        @Parameter(description = "A list of flows filter") @Nullable List<ExecutionRepositoryInterface.FlowFilter> flows,
+        @Parameter(description = "A labels filter as a list of 'key:value'") @Nullable @QueryValue @Format("MULTI") List<String> labels,
+        @Parameter(description = "A execution child filter") @Nullable @QueryValue ExecutionRepositoryInterface.ChildFilter childFilter
     ) {}
 }

@@ -130,7 +130,9 @@ public interface ExecutionRepositoryInterface extends SaveRepositoryInterface<Ex
         @Nullable ZonedDateTime startDate,
         @Nullable ZonedDateTime endDate,
         @Nullable DateUtils.GroupType groupBy,
-        boolean isTaskRun
+        boolean isTaskRun,
+        @Nullable Map<String, String> labels,
+        @Nullable ChildFilter childFilter
     );
 
     List<DailyExecutionStatistics> dailyStatistics(
@@ -143,7 +145,9 @@ public interface ExecutionRepositoryInterface extends SaveRepositoryInterface<Ex
         @Nullable ZonedDateTime endDate,
         @Nullable DateUtils.GroupType groupBy,
         List<State.Type> state,
-        boolean isTaskRun
+        boolean isTaskRun,
+        @Nullable Map<String, String> labels,
+        @Nullable ChildFilter childFilter
     );
 
     List<Execution> lastExecutions(
@@ -159,7 +163,10 @@ public interface ExecutionRepositoryInterface extends SaveRepositoryInterface<Ex
         @Nullable List<FlowFilter> flows,
         @Nullable ZonedDateTime startDate,
         @Nullable ZonedDateTime endDate,
-        boolean groupByNamespaceOnly
+        boolean groupByNamespaceOnly,
+        @Nullable Map<String, String> labels,
+        @Nullable ChildFilter childFilter
+
     );
 
     Map<String, ExecutionCountStatistics> executionCountsGroupedByNamespace(
