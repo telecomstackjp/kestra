@@ -89,7 +89,7 @@ public record QueryFilter(
         STATE("state") {
             @Override
             public List<Op> supportedOp() {
-                return List.of(Op.EQUALS, Op.NOT_EQUALS);
+                return List.of(Op.EQUALS, Op.NOT_EQUALS, Op.IN, Op.NOT_IN);
             }
         },
         TIME_RANGE("timeRange") {
