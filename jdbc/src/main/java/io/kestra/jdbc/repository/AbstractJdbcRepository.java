@@ -225,31 +225,33 @@ public abstract class AbstractJdbcRepository {
                 select = handleChildFilter(select, value);
                 continue;
             }
+            // Convert the field name to lowercase and quote it
+            String columnName =  "\"" + field.name().toLowerCase() + "\"";
 
             // Default handling for other fields
             switch (operation) {
-                case EQUALS -> select = select.and(DSL.field(field.name().toLowerCase()).eq(value));
-                case NOT_EQUALS -> select = select.and(DSL.field(field.name().toLowerCase()).ne(value));
-                case GREATER_THAN -> select = select.and(DSL.field(field.name().toLowerCase()).greaterThan(value));
-                case LESS_THAN -> select = select.and(DSL.field(field.name().toLowerCase()).lessThan(value));
+                case EQUALS -> select = select.and(DSL.field(columnName).eq(value));
+                case NOT_EQUALS -> select = select.and(DSL.field(columnName).ne(value));
+                case GREATER_THAN -> select = select.and(DSL.field(columnName).greaterThan(value));
+                case LESS_THAN -> select = select.and(DSL.field(columnName).lessThan(value));
                 case IN -> {
                     if (value instanceof Collection<?>) {
-                        select = select.and(DSL.field(field.name().toLowerCase()).in((Collection<?>) value));
+                        select = select.and(DSL.field(columnName).in((Collection<?>) value));
                     } else {
                         throw new IllegalArgumentException("IN operation requires a collection as value");
                     }
                 }
                 case NOT_IN -> {
                     if (value instanceof Collection<?>) {
-                        select = select.and(DSL.field(field.name().toLowerCase()).notIn((Collection<?>) value));
+                        select = select.and(DSL.field(columnName).notIn((Collection<?>) value));
                     } else {
                         throw new IllegalArgumentException("NOT_IN operation requires a collection as value");
                     }
                 }
-                case STARTS_WITH -> select = select.and(DSL.field(field.name().toLowerCase()).like(value + "%"));
-                case ENDS_WITH -> select = select.and(DSL.field(field.name().toLowerCase()).like("%" + value));
-                case CONTAINS -> select = select.and(DSL.field(field.name().toLowerCase()).like("%" + value + "%"));
-                case REGEX -> select = select.and(DSL.field(field.name().toLowerCase()).likeRegex((String) value));
+                case STARTS_WITH -> select = select.and(DSL.field(columnName).like(value + "%"));
+                case ENDS_WITH -> select = select.and(DSL.field(columnName).like("%" + value));
+                case CONTAINS -> select = select.and(DSL.field(columnName).like("%" + value + "%"));
+                case REGEX -> select = select.and(DSL.field(columnName).likeRegex((String) value));
                 default -> throw new UnsupportedOperationException("Unsupported operation: " + operation);
             }
         }
