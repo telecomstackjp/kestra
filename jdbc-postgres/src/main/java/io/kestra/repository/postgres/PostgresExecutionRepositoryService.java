@@ -4,6 +4,7 @@ import io.kestra.core.models.QueryFilter;
 import io.kestra.core.models.executions.Execution;
 import io.kestra.jdbc.AbstractJdbcRepository;
 import org.jooq.Condition;
+import org.jooq.Field;
 import org.jooq.impl.DSL;
 
 import java.util.ArrayList;
@@ -31,19 +32,19 @@ public abstract class PostgresExecutionRepositoryService {
         return conditions.isEmpty() ? DSL.trueCondition() : DSL.and(conditions);
     }
 
-    public static Condition findCondition(Object value, QueryFilter.Op operation) {
+    public static Condition findCondition(Map<?,?> labels, QueryFilter.Op operation) {
         List<Condition> conditions = new ArrayList<>();
 
-        if (value instanceof Map<?, ?> labels) {
-            labels.forEach((key, val) -> {
-                String sql = "value -> 'labels' @> '[{\"key\":\"" + key + "\", \"value\":\"" + val + "\"}]'";
+            labels.forEach((key, value) -> {
+                String sql = "value -> 'labels' @> '[{\"key\":\"" + key + "\", \"value\":\"" + value + "\"}]'";
                 if (operation.equals(EQUALS))
                     conditions.add(DSL.condition(sql));
                 else
                     conditions.add(DSL.not(DSL.condition(sql)));
 
             });
-        }
+
         return conditions.isEmpty() ? DSL.trueCondition() : DSL.and(conditions);
     }
+
 }

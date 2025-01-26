@@ -186,7 +186,7 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
     }
 
     abstract protected Condition findCondition(String query, Map<String, String> labels);
-    abstract protected Condition findCondition(Object value, QueryFilter.Op operation);
+    abstract protected Condition findCondition(Map<?, ?> value, QueryFilter.Op operation);
 
     protected Condition statesFilter(List<State.Type> state) {
         return field("state_current")
@@ -279,17 +279,16 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
             .where(this.defaultFilter(tenantId, false));
 
         if (filters != null)
-        for (QueryFilter filter : filters) {
-            QueryFilter.Field field = filter.field();
-            QueryFilter.Op operation = filter.operation();
-            Object value = filter.value();
+            for (QueryFilter filter : filters) {
+                QueryFilter.Field field = filter.field();
+                QueryFilter.Op operation = filter.operation();
+                Object value = filter.value();
 
-            if (field.equals(QueryFilter.Field.LABELS) && value instanceof Map<?, ?> labels)
-               select = select.and(findCondition(labels, operation));
-
-             else
-                select = getConditionOnField(select, field, value, operation);
-        }
+                if (field.equals(QueryFilter.Field.LABELS) && value instanceof Map<?, ?> labels)
+                    select = select.and(findCondition(labels, operation));
+                else
+                    select = getConditionOnField(select, field, value, operation);
+            }
 
         return select;
     }

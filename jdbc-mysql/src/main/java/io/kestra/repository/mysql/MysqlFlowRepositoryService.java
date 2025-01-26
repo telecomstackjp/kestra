@@ -33,16 +33,14 @@ public abstract class MysqlFlowRepositoryService {
         return jdbcRepository.fullTextCondition(Collections.singletonList("source_code"), query);
     }
 
-    public static Condition findCondition(Object value, QueryFilter.Op operation) {
+    public static Condition findCondition(Object labels, QueryFilter.Op operation) {
         List<Condition> conditions = new ArrayList<>();
 
-        if (value instanceof Map<?, ?> labels) {
-            labels.forEach((key, val) -> {
-                String sql = "JSON_CONTAINS(value, JSON_ARRAY(JSON_OBJECT('key', '" + key + "', 'value', '" + value + "')), '$.labels')";
-                if (operation.equals(EQUALS))
-                    conditions.add(DSL.condition(sql));
-                else
-                    conditions.add(DSL.not(DSL.condition(sql)));
+        if (labels instanceof Map<?, ?> labelValues) {
+            labelValues.forEach((key, value) -> {
+                Field<Boolean> valueField = DSL.field("JSON_CONTAINS(value, JSON_ARRAY(JSON_OBJECT('key', '" + key + "', 'value', '" + value + "')), '$.labels')", Boolean.class);
+               if(operation.equals(EQUALS))
+                conditions.add(valueField.eq(value != null));
 
             });
         }

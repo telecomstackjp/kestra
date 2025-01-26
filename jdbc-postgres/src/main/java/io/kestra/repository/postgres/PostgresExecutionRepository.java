@@ -16,7 +16,6 @@ import org.jooq.impl.SQLDataType;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Singleton
 @PostgresRepositoryEnabled
@@ -47,7 +46,7 @@ public class PostgresExecutionRepository extends AbstractJdbcExecutionRepository
     }
 
     @Override
-    protected Condition findCondition(Object value, QueryFilter.Op operation) {
+    protected Condition findCondition(Map<?, ?> value, QueryFilter.Op operation) {
         return PostgresExecutionRepositoryService.findCondition(value, operation);
     }
 }

@@ -31,11 +31,11 @@ public abstract class MysqlExecutionRepositoryService {
 
         return conditions.isEmpty() ? DSL.trueCondition() : DSL.and(conditions);
     }
-    public static Condition findCondition(Object value, QueryFilter.Op operation) {
+
+    public static Condition findCondition(Map<?,?> labels, QueryFilter.Op operation) {
         List<Condition> conditions = new ArrayList<>();
 
-        if (value instanceof Map<?, ?> labels) {
-            labels.forEach((key, val) -> {
+            labels.forEach((key, value) -> {
                 String sql = "JSON_CONTAINS(value, JSON_ARRAY(JSON_OBJECT('key', '" + key + "', 'value', '" + value + "')), '$.labels')";
                 if (operation.equals(EQUALS))
                     conditions.add(DSL.condition(sql));
@@ -43,7 +43,8 @@ public abstract class MysqlExecutionRepositoryService {
                     conditions.add(DSL.not(DSL.condition(sql)));
 
             });
-        }
+
         return conditions.isEmpty() ? DSL.trueCondition() : DSL.and(conditions);
     }
+
 }

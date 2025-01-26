@@ -30,7 +30,7 @@ public class H2ExecutionRepository extends AbstractJdbcExecutionRepository {
     }
 
     @Override
-    protected Condition findCondition(Object value, QueryFilter.Op operation) {
+    protected Condition findCondition(Map<?, ?> value, QueryFilter.Op operation) {
         return H2ExecutionRepositoryService.findCondition(value, operation);
     }
 }

@@ -35,19 +35,20 @@ public abstract class H2ExecutionRepositoryService {
         return conditions.isEmpty() ? DSL.trueCondition() : DSL.and(conditions);
     }
 
-    public static Condition findCondition(Object value, QueryFilter.Op operation) {
+    public static Condition findCondition(Map<?, ?> labels, QueryFilter.Op operation) {
         List<Condition> conditions = new ArrayList<>();
 
-        if (value instanceof Map<?, ?> labels) {
-            labels.forEach((key, val) -> {
-                String sql = "JQ_STRING(\"value\", '.labels[]? | select(.key == \"" + key + "\") | .value')";
-                if (operation.equals(EQUALS))
-                    conditions.add(DSL.condition(sql));
-                else
-                    conditions.add(DSL.not(DSL.condition(sql)));
-
+            labels.forEach((key, value) -> {
+                Field<String> valueField = DSL.field("JQ_STRING(\"value\", '.labels[]? | select(.key == \"" + key + "\") | .value')", String.class);
+                Condition condition = switch (operation) {
+                    case EQUALS -> value == null ? valueField.isNull() : valueField.eq((String) value);
+                    case NOT_EQUALS -> value == null ? valueField.isNotNull() : valueField.ne((String) value);
+                    default -> throw new UnsupportedOperationException("Unsupported operation: " + operation);
+                };
+                conditions.add(condition);
             });
-        }
+
+
         return conditions.isEmpty() ? DSL.trueCondition() : DSL.and(conditions);
     }
 }
