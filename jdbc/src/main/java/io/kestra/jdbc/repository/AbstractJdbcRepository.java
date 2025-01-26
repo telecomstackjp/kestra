@@ -226,7 +226,7 @@ public abstract class AbstractJdbcRepository {
                 continue;
             }
             // Convert the field name to lowercase and quote it
-            String columnName =  "\"" + field.name().toLowerCase() + "\"";
+            Name columnName = DSL.quotedName(field.name().toLowerCase());
 
             // Default handling for other fields
             switch (operation) {
@@ -265,16 +265,16 @@ public abstract class AbstractJdbcRepository {
             // List of State.Type values
             List<String> stateNames = list.stream().map(item -> ((State.Type) item).name()).toList();
             return switch (operation) {
-                case IN -> DSL.field("state_current").in(stateNames);
-                case NOT_IN -> DSL.field("state_current").notIn(stateNames);
+                case IN -> DSL.field(DSL.quotedName("state_current")).in(stateNames);
+                case NOT_IN -> DSL.field(DSL.quotedName("state_current")).notIn(stateNames);
                 default ->
                     throw new IllegalArgumentException("Unsupported operation for list of State.Type: " + operation);
             };
         } else if (value instanceof State.Type singleState) {
             // Single State.Type value
             return switch (operation) {
-                case EQUALS -> DSL.field("state_current").eq(singleState.name());
-                case NOT_EQUALS -> DSL.field("state_current").ne(singleState.name());
+                case EQUALS -> DSL.field(DSL.quotedName("state_current")).eq(singleState.name());
+                case NOT_EQUALS -> DSL.field(DSL.quotedName("state_current")).ne(singleState.name());
                 default ->
                     throw new IllegalArgumentException("Unsupported operation for single State.Type: " + operation);
             };
@@ -290,8 +290,8 @@ public abstract class AbstractJdbcRepository {
         }
 
         return switch (childFilter) {
-            case CHILD -> select.and(DSL.field("trigger_execution_id").isNotNull());
-            case MAIN -> select.and(DSL.field("trigger_execution_id").isNull());
+            case CHILD -> select.and(DSL.field(DSL.quotedName("trigger_execution_id")).isNotNull());
+            case MAIN -> select.and(DSL.field(DSL.quotedName("trigger_execution_id")).isNull());
         };
     }
 
