@@ -39,10 +39,11 @@ public abstract class H2FlowRepositoryService {
         return jdbcRepository.fullTextCondition(List.of("source_code"), query);
     }
 
-    public static Condition findCondition(Map<?,?> labels, QueryFilter.Op operation) {
+    public static Condition findCondition(Object labels, QueryFilter.Op operation) {
         List<Condition> conditions = new ArrayList<>();
 
-            labels.forEach((key, value) -> {
+        if (labels instanceof Map<?, ?> labelValues) {
+            labelValues.forEach((key, value) -> {
                 Field<String> valueField = DSL.field("JQ_STRING(\"value\", '.labels[]? | select(.key == \"" + key + "\") | .value')", String.class);
                 Condition condition = switch (operation) {
                     case EQUALS -> value == null ? valueField.isNull() : valueField.eq((String) value);
@@ -53,6 +54,7 @@ public abstract class H2FlowRepositoryService {
                 conditions.add(condition);
             });
 
+        }
         return conditions.isEmpty() ? DSL.trueCondition() : DSL.and(conditions);
     }
 }
