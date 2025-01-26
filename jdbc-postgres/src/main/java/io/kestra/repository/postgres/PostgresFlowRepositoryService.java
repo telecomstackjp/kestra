@@ -36,10 +36,11 @@ public abstract class PostgresFlowRepositoryService {
     }
 
 
-    public static Condition findCondition(Map<?, ?> labels, QueryFilter.Op operation) {
+    public static Condition findCondition(Object labels, QueryFilter.Op operation) {
         List<Condition> conditions = new ArrayList<>();
 
-            labels.forEach((key, value) -> {
+        if (labels instanceof Map<?, ?> labelValues) {
+            labelValues.forEach((key, value) -> {
                 String sql = "value -> 'labels' @> '[{\"key\":\"" + key + "\", \"value\":\"" + value + "\"}]'";
                 if (operation.equals(EQUALS))
                     conditions.add(DSL.condition(sql));
@@ -47,7 +48,7 @@ public abstract class PostgresFlowRepositoryService {
                     conditions.add(DSL.not(DSL.condition(sql)));
 
             });
-
+        }
        return conditions.isEmpty() ? DSL.trueCondition() : DSL.and(conditions);
     }
 
