@@ -5,6 +5,8 @@ import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
 import io.kestra.core.models.dashboards.Order;
 import io.kestra.core.models.flows.State;
+import io.kestra.core.repositories.ExecutionRepositoryInterface;
+import io.kestra.core.repositories.ExecutionRepositoryInterface.ChildFilter;
 import io.kestra.core.utils.DateUtils;
 import io.kestra.core.utils.ListUtils;
 import io.kestra.jdbc.services.JdbcFilterService;
@@ -218,31 +220,36 @@ public abstract class AbstractJdbcRepository {
                 select = select.and(generateStateCondition(value, operation));
                 continue;
             }
+            // Handle Field.CHILD_FILTER
+            if (field.equals(QueryFilter.Field.CHILD_FILTER)) {
+                select = handleChildFilter(select, value);
+                continue;
+            }
 
             // Default handling for other fields
             switch (operation) {
-                case EQUALS -> select = select.and(DSL.field(field.value()).eq(value));
-                case NOT_EQUALS -> select = select.and(DSL.field(field.value()).ne(value));
-                case GREATER_THAN -> select = select.and(DSL.field(field.value()).greaterThan(value));
-                case LESS_THAN -> select = select.and(DSL.field(field.value()).lessThan(value));
+                case EQUALS -> select = select.and(DSL.field(field.name().toLowerCase()).eq(value));
+                case NOT_EQUALS -> select = select.and(DSL.field(field.name().toLowerCase()).ne(value));
+                case GREATER_THAN -> select = select.and(DSL.field(field.name().toLowerCase()).greaterThan(value));
+                case LESS_THAN -> select = select.and(DSL.field(field.name().toLowerCase()).lessThan(value));
                 case IN -> {
                     if (value instanceof Collection<?>) {
-                        select = select.and(DSL.field(field.value()).in((Collection<?>) value));
+                        select = select.and(DSL.field(field.name().toLowerCase()).in((Collection<?>) value));
                     } else {
                         throw new IllegalArgumentException("IN operation requires a collection as value");
                     }
                 }
                 case NOT_IN -> {
                     if (value instanceof Collection<?>) {
-                        select = select.and(DSL.field(field.value()).notIn((Collection<?>) value));
+                        select = select.and(DSL.field(field.name().toLowerCase()).notIn((Collection<?>) value));
                     } else {
                         throw new IllegalArgumentException("NOT_IN operation requires a collection as value");
                     }
                 }
-                case STARTS_WITH -> select = select.and(DSL.field(field.value()).like(value + "%"));
-                case ENDS_WITH -> select = select.and(DSL.field(field.value()).like("%" + value));
-                case CONTAINS -> select = select.and(DSL.field(field.value()).like("%" + value + "%"));
-                case REGEX -> select = select.and(DSL.field(field.value()).likeRegex((String) value));
+                case STARTS_WITH -> select = select.and(DSL.field(field.name().toLowerCase()).like(value + "%"));
+                case ENDS_WITH -> select = select.and(DSL.field(field.name().toLowerCase()).like("%" + value));
+                case CONTAINS -> select = select.and(DSL.field(field.name().toLowerCase()).like("%" + value + "%"));
+                case REGEX -> select = select.and(DSL.field(field.name().toLowerCase()).likeRegex((String) value));
                 default -> throw new UnsupportedOperationException("Unsupported operation: " + operation);
             }
         }
@@ -273,6 +280,17 @@ public abstract class AbstractJdbcRepository {
         } else {
             throw new IllegalArgumentException("Field 'state' requires a State.Type or List<State.Type> value");
         }
+    }
+    // Handle CHILD_FILTER field logic
+    private <T extends Record> SelectConditionStep<T> handleChildFilter(SelectConditionStep<T> select, Object value) {
+        if (!(value instanceof ChildFilter childFilter)) {
+            throw new IllegalArgumentException("Field 'childFilter' requires a ChildFilter value");
+        }
+
+        return switch (childFilter) {
+            case CHILD -> select.and(DSL.field("trigger_execution_id").isNotNull());
+            case MAIN -> select.and(DSL.field("trigger_execution_id").isNull());
+        };
     }
 
 }
