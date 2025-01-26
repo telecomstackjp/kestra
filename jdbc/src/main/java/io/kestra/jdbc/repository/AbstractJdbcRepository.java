@@ -4,6 +4,7 @@ import io.kestra.core.models.QueryFilter;
 import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
 import io.kestra.core.models.dashboards.Order;
+import io.kestra.core.models.flows.State;
 import io.kestra.core.utils.DateUtils;
 import io.kestra.core.utils.ListUtils;
 import io.kestra.jdbc.services.JdbcFilterService;
@@ -200,16 +201,25 @@ public abstract class AbstractJdbcRepository {
         return column.getField() != null ? field(fieldsMapping.get(column.getField())) : null;
     }
 
-    protected  <T extends Record> SelectConditionStep<T> filter(
+    protected <T extends Record> SelectConditionStep<T> filter(
         SelectConditionStep<T> select,
         List<QueryFilter> filters
     ) {
-        if (filters==null) return select;
+        if (filters == null) return select;
+
         for (QueryFilter filter : filters) {
             QueryFilter.Field field = filter.field();
             QueryFilter.Op operation = filter.operation();
             Object value = filter.value();
 
+            // Handling for Field.STATE
+            if (field.equals(QueryFilter.Field.STATE)) {
+
+                select = select.and(generateStateCondition(value, operation));
+                continue;
+            }
+
+            // Default handling for other fields
             switch (operation) {
                 case EQUALS -> select = select.and(DSL.field(field.value()).eq(value));
                 case NOT_EQUALS -> select = select.and(DSL.field(field.value()).ne(value));
@@ -239,4 +249,30 @@ public abstract class AbstractJdbcRepository {
 
         return select;
     }
+
+    // Generate the condition for Field.STATE
+    private Condition generateStateCondition(Object value, QueryFilter.Op operation) {
+        if (value instanceof List<?> list && list.stream().allMatch(item -> item instanceof State.Type)) {
+            // List of State.Type values
+            List<String> stateNames = list.stream().map(item -> ((State.Type) item).name()).toList();
+            return switch (operation) {
+                case IN -> DSL.field("state_current").in(stateNames);
+                case NOT_IN -> DSL.field("state_current").notIn(stateNames);
+                default ->
+                    throw new IllegalArgumentException("Unsupported operation for list of State.Type: " + operation);
+            };
+        } else if (value instanceof State.Type singleState) {
+            // Single State.Type value
+            return switch (operation) {
+                case EQUALS -> DSL.field("state_current").eq(singleState.name());
+                case NOT_EQUALS -> DSL.field("state_current").ne(singleState.name());
+                default ->
+                    throw new IllegalArgumentException("Unsupported operation for single State.Type: " + operation);
+            };
+
+        } else {
+            throw new IllegalArgumentException("Field 'state' requires a State.Type or List<State.Type> value");
+        }
+    }
+
 }

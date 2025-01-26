@@ -47,6 +47,7 @@ public abstract class AbstractLogRepositoryTest {
 
         LogEntry save = logRepository.save(builder.build());
 
+        builder.tenantId("doe");
         find = logRepository.find(Pageable.UNPAGED, "doe", null);
         assertThat(find.size(), is(1));
         assertThat(find.getFirst().getExecutionId(), is(save.getExecutionId()));
