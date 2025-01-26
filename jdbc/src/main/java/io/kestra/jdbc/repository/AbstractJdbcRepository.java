@@ -214,75 +214,82 @@ public abstract class AbstractJdbcRepository {
             QueryFilter.Op operation = filter.operation();
             Object value = filter.value();
 
-            // Handling for Field.STATE
-            if (field.equals(QueryFilter.Field.STATE)) {
-
-                select = select.and(generateStateCondition(value, operation));
-                continue;
-            }
-            // Handle Field.CHILD_FILTER
-            if (field.equals(QueryFilter.Field.CHILD_FILTER)) {
-                select = handleChildFilter(select, value);
-                continue;
-            }
-            // Convert the field name to lowercase and quote it
-            Name columnName = DSL.quotedName(field.name().toLowerCase());
-
-            // Default handling for other fields
-            switch (operation) {
-                case EQUALS -> select = select.and(DSL.field(columnName).eq(value));
-                case NOT_EQUALS -> select = select.and(DSL.field(columnName).ne(value));
-                case GREATER_THAN -> select = select.and(DSL.field(columnName).greaterThan(value));
-                case LESS_THAN -> select = select.and(DSL.field(columnName).lessThan(value));
-                case IN -> {
-                    if (value instanceof Collection<?>) {
-                        select = select.and(DSL.field(columnName).in((Collection<?>) value));
-                    } else {
-                        throw new IllegalArgumentException("IN operation requires a collection as value");
-                    }
-                }
-                case NOT_IN -> {
-                    if (value instanceof Collection<?>) {
-                        select = select.and(DSL.field(columnName).notIn((Collection<?>) value));
-                    } else {
-                        throw new IllegalArgumentException("NOT_IN operation requires a collection as value");
-                    }
-                }
-                case STARTS_WITH -> select = select.and(DSL.field(columnName).like(value + "%"));
-                case ENDS_WITH -> select = select.and(DSL.field(columnName).like("%" + value));
-                case CONTAINS -> select = select.and(DSL.field(columnName).like("%" + value + "%"));
-                case REGEX -> select = select.and(DSL.field(columnName).likeRegex((String) value));
-                default -> throw new UnsupportedOperationException("Unsupported operation: " + operation);
-            }
+            select = getConditionOnField(select, field, value, operation);
         }
 
+        return select;
+    }
+
+    protected  <T extends Record> SelectConditionStep<T> getConditionOnField(SelectConditionStep<T> select, QueryFilter.Field field, Object value, QueryFilter.Op operation) {
+        // Handling for Field.STATE
+        if (field.equals(QueryFilter.Field.STATE)) {
+
+            select = select.and(generateStateCondition(value, operation));
+            return select;
+        }
+        // Handle Field.CHILD_FILTER
+        if (field.equals(QueryFilter.Field.CHILD_FILTER)) {
+            select = handleChildFilter(select, value);
+            return select;
+        }
+        // Convert the field name to lowercase and quote it
+        Name columnName = DSL.quotedName(field.name().toLowerCase());
+
+        // Default handling for other fields
+        switch (operation) {
+            case EQUALS -> select = select.and(DSL.field(columnName).eq(value));
+            case NOT_EQUALS -> select = select.and(DSL.field(columnName).ne(value));
+            case GREATER_THAN -> select = select.and(DSL.field(columnName).greaterThan(value));
+            case LESS_THAN -> select = select.and(DSL.field(columnName).lessThan(value));
+            case IN -> {
+                if (value instanceof Collection<?>) {
+                    select = select.and(DSL.field(columnName).in((Collection<?>) value));
+                } else {
+                    throw new IllegalArgumentException("IN operation requires a collection as value");
+                }
+            }
+            case NOT_IN -> {
+                if (value instanceof Collection<?>) {
+                    select = select.and(DSL.field(columnName).notIn((Collection<?>) value));
+                } else {
+                    throw new IllegalArgumentException("NOT_IN operation requires a collection as value");
+                }
+            }
+            case STARTS_WITH -> select = select.and(DSL.field(columnName).like(value + "%"));
+            case ENDS_WITH -> select = select.and(DSL.field(columnName).like("%" + value));
+            case CONTAINS -> select = select.and(DSL.field(columnName).like("%" + value + "%"));
+            case REGEX -> select = select.and(DSL.field(columnName).likeRegex((String) value));
+            default -> throw new UnsupportedOperationException("Unsupported operation: " + operation);
+        }
         return select;
     }
 
     // Generate the condition for Field.STATE
     private Condition generateStateCondition(Object value, QueryFilter.Op operation) {
         if (value instanceof List<?> list && list.stream().allMatch(item -> item instanceof State.Type)) {
-            // List of State.Type values
-            List<String> stateNames = list.stream().map(item -> ((State.Type) item).name()).toList();
+            // Cast the list to a list of State.Type
+            List<State.Type> stateList = list.stream().map(item -> (State.Type) item).toList();
             return switch (operation) {
-                case IN -> DSL.field(DSL.quotedName("state_current")).in(stateNames);
-                case NOT_IN -> DSL.field(DSL.quotedName("state_current")).notIn(stateNames);
-                default ->
-                    throw new IllegalArgumentException("Unsupported operation for list of State.Type: " + operation);
+                case IN -> statesFilter(stateList); // Use statesFilter for IN
+                case NOT_IN -> DSL.not(statesFilter(stateList)); // Negate statesFilter for NOT IN
+                default -> throw new IllegalArgumentException("Unsupported operation for list of State.Type: " + operation);
             };
         } else if (value instanceof State.Type singleState) {
             // Single State.Type value
             return switch (operation) {
-                case EQUALS -> DSL.field(DSL.quotedName("state_current")).eq(singleState.name());
-                case NOT_EQUALS -> DSL.field(DSL.quotedName("state_current")).ne(singleState.name());
-                default ->
-                    throw new IllegalArgumentException("Unsupported operation for single State.Type: " + operation);
+                case EQUALS -> statesFilter(List.of(singleState)); // Use statesFilter with a single value
+                case NOT_EQUALS -> DSL.not(statesFilter(List.of(singleState))); // Negate statesFilter for NOT EQUALS
+                default -> throw new IllegalArgumentException("Unsupported operation for single State.Type: " + operation);
             };
-
         } else {
             throw new IllegalArgumentException("Field 'state' requires a State.Type or List<State.Type> value");
         }
     }
+    protected Condition statesFilter(List<State.Type> state) {
+        return DSL.field(DSL.quotedName("state_current"))
+            .in(state.stream().map(Enum::name).toList());
+    }
+
     // Handle CHILD_FILTER field logic
     private <T extends Record> SelectConditionStep<T> handleChildFilter(SelectConditionStep<T> select, Object value) {
         if (!(value instanceof ChildFilter childFilter)) {

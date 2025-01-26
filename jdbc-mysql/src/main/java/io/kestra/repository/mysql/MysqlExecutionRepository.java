@@ -1,5 +1,6 @@
 package io.kestra.repository.mysql;
 
+import io.kestra.core.models.QueryFilter;
 import io.kestra.core.models.executions.Execution;
 import io.kestra.jdbc.repository.AbstractJdbcExecutionRepository;
 import io.kestra.jdbc.runner.AbstractJdbcExecutorStateStorage;
@@ -28,6 +29,11 @@ public class MysqlExecutionRepository extends AbstractJdbcExecutionRepository {
     @Override
     protected Condition findCondition(String query, Map<String, String> labels) {
         return MysqlExecutionRepositoryService.findCondition(this.jdbcRepository, query, labels);
+    }
+
+    @Override
+    protected Condition findCondition(Object value, QueryFilter.Op operation) {
+        return MysqlExecutionRepositoryService.findCondition(value, operation);
     }
 
     @Override
