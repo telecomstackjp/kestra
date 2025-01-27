@@ -84,6 +84,7 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -1253,15 +1254,12 @@ public class ExecutionController {
 
                 cancel.set(receive);
             }, FluxSink.OverflowStrategy.BUFFER)
-            .doOnCancel(() -> {
-                if (cancel.get() != null) {
-                    cancel.get().run();
-                }
-            })
-            .doOnComplete(() -> {
-                if (cancel.get() != null) {
-                    cancel.get().run();
-                }
+            .doFinally(ignored -> {
+                Schedulers.boundedElastic().schedule(() -> {
+                    if (cancel.get() != null) {
+                        cancel.get().run();
+                    }
+                });
             });
     }
 
