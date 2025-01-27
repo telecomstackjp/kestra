@@ -6,10 +6,9 @@
             v-for="(input, index) in newInputs"
             :key="index"
             @click="selectInput(input, index)"
-            class="w-100 mb-2"
         >
             <el-col :span="24" class="d-flex">
-                <el-input disabled :model-value="input.id" />
+                <InputText disabled :model-value="input.id" class="w-100" />
                 <DeleteOutline
                     @click.prevent.stop="deleteInput(index)"
                     class="ms-2 delete"
@@ -22,6 +21,7 @@
 
 <script setup>
     import MetadataInputsContent from "./MetadataInputsContent.vue";
+    import InputText from "../code/components/inputs/InputText.vue";
     import Add from "../code/components/Add.vue";
 
     import {DeleteOutline} from "../code/utils/icons";
@@ -31,10 +31,8 @@
     import {h} from "vue";
 
     import {mapState} from "vuex";
-    // import Drawer from "../Drawer.vue";
 
     export default {
-        // components: {Drawer},
         emits: ["update:modelValue"],
         props: {
             modelValue: {
