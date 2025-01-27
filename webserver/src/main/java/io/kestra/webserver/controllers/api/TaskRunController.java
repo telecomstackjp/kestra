@@ -3,6 +3,7 @@ package io.kestra.webserver.controllers.api;
 import io.kestra.core.converters.QueryFilterFormat;
 import io.kestra.core.models.QueryFilter;
 import io.kestra.core.models.executions.LogEntry;
+import com.google.common.annotations.VisibleForTesting;
 import io.kestra.core.models.executions.TaskRun;
 import io.kestra.core.models.flows.State;
 import io.kestra.core.repositories.ExecutionRepositoryInterface;
@@ -22,9 +23,11 @@ import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.Min;
 
+import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -49,12 +52,27 @@ public class TaskRunController {
         @Parameter(description = "Filters") @QueryFilterFormat List<QueryFilter> filters
     ) throws HttpStatusException {
 
+        final ZonedDateTime now = ZonedDateTime.now();
+
         return PagedResults.of(executionRepository.findTaskRun(
             PageableUtils.from(page, size, sort),
             tenantService.resolveTenant(),
             filters
         ));
     }
+
+    @VisibleForTesting
+    ZonedDateTime resolveAbsoluteDateTime(ZonedDateTime absoluteDateTime, Duration timeRange, ZonedDateTime now) {
+        if (timeRange != null) {
+            if (absoluteDateTime != null) {
+                throw new IllegalArgumentException("Parameters 'startDate' and 'timeRange' are mutually exclusive");
+            }
+            return now.minus(timeRange.abs());
+        }
+
+        return absoluteDateTime;
+    }
+
     @ExecuteOn(TaskExecutors.IO)
     @Get(uri = "/maxTaskRunSetting")
     @Hidden
