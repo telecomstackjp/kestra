@@ -15,7 +15,7 @@
 
             <div>
                 <div>right top</div>
-                <div>right bototm</div>
+                <div>right bottom</div>
             </div>
         </div>
         <Bar :data="parsedData" :options="options" class="tall" />
