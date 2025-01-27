@@ -69,7 +69,9 @@
 
         <div class="d-inline-flex align-items-center">
             <el-switch
+                v-if="!isNamespace"
                 v-model="editorViewType"
+                @change="changeEditorViewType"
                 active-value="NO_CODE"
                 inactive-value="YAML"
                 :inactive-text="$t('no_code.labels.no_code')"
@@ -114,9 +116,6 @@
                             params: {tenant: routeParams.tenant},
                         })
                 "
-                @open-new-error="isNewErrorOpen = true"
-                @open-new-trigger="isNewTriggerOpen = true"
-                @open-edit-metadata="isEditMetadataOpen = true"
                 @export="exportYaml"
                 :is-namespace="isNamespace"
             />
@@ -175,11 +174,11 @@
                 v-if="viewType === editorViewTypes.SOURCE_BLUEPRINTS"
                 class="combined-right-view enhance-readability"
             >
-                <Blueprints @loaded="blueprintsLoaded = true" embed />
+                <Blueprints @loaded="blueprintsLoaded = true" embed kind="flow" />
             </div>
 
             <div
-                v-if="viewType === editorViewTypes.SOURCE_TOPOLOGY || viewType === editorViewTypes.TOPOLOGY"
+                v-else-if="viewType === editorViewTypes.SOURCE_TOPOLOGY || viewType === editorViewTypes.TOPOLOGY"
                 :class="viewType === editorViewTypes.SOURCE_TOPOLOGY ? 'combined-right-view' : 'vueflow'"
                 class="topology-display"
             >
@@ -208,7 +207,7 @@
             </div>
 
             <PluginDocumentation
-                v-if="viewType === editorViewTypes.SOURCE_DOC"
+                v-else-if="viewType === editorViewTypes.SOURCE_DOC"
                 class="plugin-doc combined-right-view enhance-readability"
             />
         </div>
@@ -344,8 +343,8 @@
     import EditorButtons from "./EditorButtons.vue";
     import Drawer from "../Drawer.vue";
     import {ElMessageBox} from "element-plus";
-    
     import NoCode from "../code/NoCode.vue";
+    import localUtils from "../../utils/utils";
 
     const store = useStore();
     const router = useRouter();
@@ -496,7 +495,10 @@
     });
 
     const editorViewType = ref("YAML");
-   
+    const changeEditorViewType = (value) => {
+        localStorage.setItem(storageKeys.EDITOR_VIEW_TYPE, value);
+    }
+
     const handleTopologyEditClick = (params) => {
         editorViewType.value = "NO_CODE";
         nextTick(() => router.replace({query: {...route.query, ...params}}))
@@ -635,7 +637,7 @@
 
         // validate flow on first load
         store
-            .dispatch("flow/validateFlow", {flow: yamlWithNextRevision.value})
+            .dispatch("flow/validateFlow", {flow: props.isCreating ? flowYaml.value : yamlWithNextRevision.value})
             .then((value) => {
                 if (validationDomElement.value && editorDomElement.value) {
                     validationDomElement.value.onResize(
@@ -662,7 +664,7 @@
     };
 
     onMounted(async () => {
-        editorViewType.value = localStorage.getItem(storageKeys.EDITOR_VIEW_TYPE) || "YAML";
+        editorViewType.value = props.isNamespace ? "YAML" : (localStorage.getItem(storageKeys.EDITOR_VIEW_TYPE) || "YAML");
 
         if(!props.isNamespace) {
             initViewType()
@@ -739,7 +741,7 @@
         const pluginSingleList = store.getters["plugin/getPluginSingleList"];
         if (taskType && pluginSingleList && pluginSingleList.includes(taskType)) {
             store.dispatch("plugin/load", {cls: taskType}).then((plugin) => {
-                store.commit("plugin/setEditorPlugin", plugin);
+                store.commit("plugin/setEditorPlugin", {cls: taskType, ...plugin});
             });
         } else {
             store.commit("plugin/setEditorPlugin", undefined);
@@ -805,7 +807,7 @@
         if(!currentIsFlow) return;
 
         return store
-            .dispatch("flow/validateFlow", {flow: yamlWithNextRevision.value})
+            .dispatch("flow/validateFlow", {flow: props.isCreating ? flowYaml.value : yamlWithNextRevision.value})
             .then((value) => {
                 if (
                     flowHaveTasks() &&
@@ -911,7 +913,9 @@
         );
     };
 
-    const validateFlow = (flow = yamlWithNextRevision.value) => {
+    const validateFlow = (flow) => {
+        if(!flow) return;
+        
         return store
             .dispatch("flow/validateFlow", {flow})
             .then((value) => {
@@ -931,7 +935,7 @@
         if(shouldSave) {
             metadata.value = {...metadata.value, ...event};
             onSaveMetadata();
-            validateFlow()
+            validateFlow(flowYaml.value)
 
         } else {
             metadata.value = event;
@@ -1050,7 +1054,7 @@
 
         haveChange.value = false;
         await store.dispatch("flow/validateFlow", {
-            flow: yamlWithNextRevision.value,
+            flow: props.isCreating ? flowYaml.value : yamlWithNextRevision.value
         });
     };
 
@@ -1087,6 +1091,8 @@
                 }
             });
         } else {
+            if(!currentTab.value.dirty) return;
+
             await store.dispatch("namespace/createFile", {
                 namespace: props.namespace ?? routeParams.id,
                 path: currentTab.value.path ?? currentTab.value.name,
@@ -1319,10 +1325,9 @@
         closeTabs(openedTabs.value.slice(index + 1).filter(tab => tab !== FLOW_TAB.value), openedTabs.value[index]);
     };
 
-    import localUtils from "../../utils/utils";
     const exportYaml = () => {
         const blob = new Blob([flowYaml.value], {type: "text/yaml"});
-        localUtils.downloadUrl(blob, "flow.yaml");
+        localUtils.downloadUrl(window.URL.createObjectURL(blob), "flow.yaml");
     };
 </script>
 

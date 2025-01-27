@@ -167,10 +167,9 @@
                                 <template #default="scope">
                                     <!-- TODO: Replace the usage of StateChart with one of the new chart components -->
                                     <state-chart
-                                        :duration="true"
+                                        v-if="dailyGroupByFlowReady"
                                         :namespace="scope.row.namespace"
                                         :flow-id="scope.row.id"
-                                        v-if="dailyGroupByFlowReady"
                                         :data="chartData(scope.row)"
                                     />
                                 </template>

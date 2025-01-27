@@ -262,7 +262,7 @@
       "header": {
         "catch phrase": {
           "1": "Pierwszy krok jest zawsze najtrudniejszy.",
-          "2": "Odkryj blueprints, aby rozpocząć swój następny flow."
+          "2": "Eksploruj blueprints, aby rozpocząć swój następny {kind}."
         },
         "alt": "Ikona Blueprintów"
       },
@@ -298,7 +298,6 @@
     "Fold auto": "Edytor: automatyczne składanie wieloliniowych",
     "Fold content lines": "Złóż wieloliniowe ciągi",
     "Unfold content lines": "Rozwiń wieloliniowe ciągi",
-    "Max displayable": "Maksymalna liczba wyświetlanych",
     "Total": "Całkowity",
     "sub flow": "Subflow",
     "execute": "Wykonaj",
@@ -360,7 +359,7 @@
     },
     "cancel": "Anuluj",
     "homeDashboard": {
-      "title": "Dashboard",
+      "title": "Panele sterowania",
       "today": "Dzisiaj",
       "yesterday": "Wczoraj",
       "last28Days": "Ostatnie 28 dni",
@@ -646,7 +645,7 @@
     "welcome": {
       "tutorial": {
         "title": "Samouczek",
-        "text": "* [Samouczki wideo](https://kestra.io/tutorial-videos/all)\n* [Dokumentacja](https://kestra.io/docs)\n* [Blueprints](https://kestra.io/blueprints)"
+        "text": "* <a href=\"https://kestra.io/tutorial-videos/all\" target=\"_blank\">Samouczki wideo</a>  \n* <a href=\"https://kestra.io/docs\" target=\"_blank\">Dokumentacja</a>  \n* <a href=\"https://kestra.io/blueprints\" target=\"_blank\">Blueprinty</a>"
       },
       "tour": {
         "title": "Rozpocznij wycieczkę po produkcie",
@@ -886,7 +885,6 @@
     "concurrency": "Współbieżność",
     "open sidebar": "otwórz pasek boczny",
     "close sidebar": "zamknij pasek boczny",
-    "change_status": "Zmień status",
     "in-our-documentation": "w naszej dokumentacji.",
     "read-more": "Czytaj więcej o",
     "flow-dependencies": "zależności",
@@ -1077,7 +1075,9 @@
       },
       "save": {
         "tasks": "Zapisz task",
-        "triggers": "Zapisz trigger"
+        "triggers": "Zapisz trigger",
+        "error handlers": "Zapisz obsługę błędów",
+        "input": "Zapisz input"
       },
       "labels": {
         "no_code": "Edytor No Code",
@@ -1085,8 +1085,10 @@
         "label": "Etykieta",
         "variable": "Zmienna"
       },
-      "adding": "+ Dodaj {what}"
+      "adding": "+ Dodaj {what}",
+      "adding_default": "+ Dodaj nową wartość"
     },
-    "export_to_file": "Eksportuj do pliku"
+    "export_to_file": "Eksportuj do pliku",
+    "change state current state": "Aktualny status to:"
   }
 }

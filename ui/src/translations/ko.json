@@ -262,7 +262,7 @@
       "header": {
         "catch phrase": {
           "1": "첫 번째 단계가 항상 가장 어렵습니다.",
-          "2": "다음 flow를 시작하기 위해 blueprints를 탐색하세요."
+          "2": "다음 {kind}을 시작하기 위해 blueprint를 탐색하세요."
         },
         "alt": "블루프린트 아이콘"
       },
@@ -298,7 +298,6 @@
     "Fold auto": "편집기: 다중 라인 자동 접기",
     "Fold content lines": "다중 라인 문자열 접기",
     "Unfold content lines": "다중 라인 문자열 펼치기",
-    "Max displayable": "최대 표시 가능",
     "Total": "총계",
     "sub flow": "Subflow",
     "execute": "실행",
@@ -646,7 +645,7 @@
     "welcome": {
       "tutorial": {
         "title": "튜토리얼",
-        "text": "```\n* [비디오 튜토리얼](https://kestra.io/tutorial-videos/all)\n* [문서](https://kestra.io/docs)\n* [Blueprints](https://kestra.io/blueprints)\n```"
+        "text": "* <a href=\"https://kestra.io/tutorial-videos/all\" target=\"_blank\">비디오 튜토리얼</a>  \n* <a href=\"https://kestra.io/docs\" target=\"_blank\">문서</a>  \n* <a href=\"https://kestra.io/blueprints\" target=\"_blank\">Blueprints</a>"
       },
       "tour": {
         "title": "제품 투어 시작하기",
@@ -886,7 +885,6 @@
     "concurrency": "동시성",
     "open sidebar": "사이드바 열기",
     "close sidebar": "사이드바 닫기",
-    "change_status": "상태 변경",
     "in-our-documentation": "우리의 문서에서.",
     "read-more": "자세히 알아보기",
     "flow-dependencies": "종속성",
@@ -1077,7 +1075,9 @@
       },
       "save": {
         "tasks": "작업 저장",
-        "triggers": "트리거 저장"
+        "triggers": "트리거 저장",
+        "error handlers": "오류 처리기 저장",
+        "input": "입력 저장"
       },
       "labels": {
         "no_code": "코드 없는 편집기",
@@ -1085,8 +1085,10 @@
         "label": "레이블",
         "variable": "변수"
       },
-      "adding": "+ {what} 추가"
+      "adding": "+ {what} 추가",
+      "adding_default": "+ 새 value 추가"
     },
-    "export_to_file": "파일로 내보내기"
+    "export_to_file": "파일로 내보내기",
+    "change state current state": "현재 상태는:"
   }
 }

@@ -499,7 +499,8 @@
 
     watch(
         route,
-        () => {
+        async () => {
+            await handleCustomUpdate(route.params?.id ? {id: route.params?.id} : undefined);
             fetchAll();
         },
         {immediate: true, deep: true},
@@ -513,7 +514,7 @@ $spacing: 20px;
 
 .dashboard-filters,
 .dashboard {
-    padding: 0 32px;
+    padding: 0 2rem;
 
     & .el-row {
         width: 100%;
@@ -557,13 +558,13 @@ $spacing: 20px;
 }
 
 .description {
-    padding: 0px 32px;
+    padding: 0 2rem 1rem 2rem;
     margin: 0;
     color: var(--ks-content-secondary);
 }
 
 .custom {
-    padding: 24px 32px;
+    padding: 0 2rem 1rem 2rem;
 
     &.el-row {
         width: 100%;

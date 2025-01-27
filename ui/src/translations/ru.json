@@ -262,7 +262,7 @@
       "header": {
         "catch phrase": {
           "1": "Первый шаг всегда самый трудный.",
-          "2": "Исследуйте blueprints, чтобы начать ваш следующий flow."
+          "2": "Исследуйте blueprints, чтобы начать ваш следующий {kind}."
         },
         "alt": "Иконка Blueprints"
       },
@@ -298,7 +298,6 @@
     "Fold auto": "Редактор: автоматическое сворачивание многострочных строк",
     "Fold content lines": "Свернуть многострочные строки",
     "Unfold content lines": "Развернуть многострочные строки",
-    "Max displayable": "Максимально отображаемое",
     "Total": "Всего",
     "sub flow": "Подпроцесс",
     "execute": "Выполнить",
@@ -360,7 +359,7 @@
     },
     "cancel": "Отмена",
     "homeDashboard": {
-      "title": "Панель управления",
+      "title": "Панели мониторинга",
       "today": "Сегодня",
       "yesterday": "Вчера",
       "last28Days": "Последние 28 дней",
@@ -646,11 +645,11 @@
     "welcome": {
       "tutorial": {
         "title": "Учебник",
-        "text": "* [Видеоуроки](https://kestra.io/tutorial-videos/all)\n* [Документация](https://kestra.io/docs)\n* [Blueprints](https://kestra.io/blueprints)"
+        "text": "* <a href=\"https://kestra.io/tutorial-videos/all\" target=\"_blank\">Видеоуроки</a>  \n* <a href=\"https://kestra.io/docs\" target=\"_blank\">Документация</a>  \n* <a href=\"https://kestra.io/blueprints\" target=\"_blank\">Blueprints</a>"
       },
       "tour": {
         "title": "Пройдите экскурсию по продукту",
-        "text": "Выберите ваш вариант использования и следуйте пошаговому руководству, чтобы изучить возможности и функции Kestra. ❤️"
+        "text": "Выберите ваш сценарий использования и следуйте пошаговому руководству, чтобы изучить возможности и функции Kestra. ❤️"
       },
       "help": {
         "text": "Задайте любой вопрос в нашем сообществе Slack. Если вы застряли, мы здесь, чтобы помочь вам. ✋",
@@ -886,7 +885,6 @@
     "concurrency": "Конкурентность",
     "open sidebar": "открыть боковую панель",
     "close sidebar": "закрыть боковую панель",
-    "change_status": "Изменить статус",
     "in-our-documentation": "в нашей документации.",
     "read-more": "Узнать больше о",
     "flow-dependencies": "зависимости",
@@ -1077,7 +1075,9 @@
       },
       "save": {
         "tasks": "Сохранить task",
-        "triggers": "Сохранить trigger"
+        "triggers": "Сохранить trigger",
+        "error handlers": "Сохранить обработчик ошибок",
+        "input": "Сохранить input"
       },
       "labels": {
         "no_code": "Редактор No Code",
@@ -1085,8 +1085,10 @@
         "label": "Метка",
         "variable": "Переменная"
       },
-      "adding": "+ Добавить {what}"
+      "adding": "+ Добавить {what}",
+      "adding_default": "+ Добавить новое value"
     },
-    "export_to_file": "Экспортировать в файл"
+    "export_to_file": "Экспортировать в файл",
+    "change state current state": "Текущий статус:"
   }
 }

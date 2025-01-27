@@ -262,7 +262,7 @@
       "header": {
         "catch phrase": {
           "1": "पहला कदम हमेशा सबसे कठिन होता है।",
-          "2": "अपने अगले flow को किक-स्टार्ट करने के लिए Blueprints का अन्वेषण करें।"
+          "2": "अपने अगले {kind} को शुरू करने के लिए ब्लूप्रिंट्स का अन्वेषण करें।"
         },
         "alt": "ब्लूप्रिंट्स आइकन"
       },
@@ -298,7 +298,6 @@
     "Fold auto": "संपादक: मल्टीलाइन का स्वचालित फोल्ड",
     "Fold content lines": "मल्टीलाइन स्ट्रिंग्स फोल्ड करें",
     "Unfold content lines": "मल्टीलाइन स्ट्रिंग्स अनफोल्ड करें",
-    "Max displayable": "अधिकतम प्रदर्शनीय",
     "Total": "कुल",
     "sub flow": "Subflow",
     "execute": "निष्पादित करें",
@@ -360,7 +359,7 @@
     },
     "cancel": "रद्द करें",
     "homeDashboard": {
-      "title": "डैशबोर्ड",
+      "title": "डैशबोर्ड्स",
       "today": "आज",
       "yesterday": "कल",
       "last28Days": "पिछले 28 दिन",
@@ -646,11 +645,11 @@
     "welcome": {
       "tutorial": {
         "title": "ट्यूटोरियल",
-        "text": "* [वीडियो ट्यूटोरियल्स](https://kestra.io/tutorial-videos/all)\n* [दस्तावेज़ीकरण](https://kestra.io/docs)\n* [Blueprints](https://kestra.io/blueprints)"
+        "text": "* <a href=\"https://kestra.io/tutorial-videos/all\" target=\"_blank\">वीडियो ट्यूटोरियल्स</a>  \n* <a href=\"https://kestra.io/docs\" target=\"_blank\">दस्तावेज़ीकरण</a>  \n* <a href=\"https://kestra.io/blueprints\" target=\"_blank\">Blueprints</a>"
       },
       "tour": {
         "title": "उत्पाद टूर लें",
-        "text": "अपना उपयोग मामला चुनें और Kestra की विशेषताओं और क्षमताओं को सीखने के लिए चरण-दर-चरण गाइड का पालन करें। ❤️"
+        "text": "अपना उपयोग मामला चुनें और Kestra की विशेषताओं और क्षमताओं को सीखने के लिए चरण-दर-चरण मार्गदर्शिका का पालन करें। ❤️"
       },
       "help": {
         "text": "हमारे Slack समुदाय में कोई भी प्रश्न पूछें। यदि आप अटके हुए हैं, तो हम आपकी सहायता के लिए यहाँ हैं। ✋",
@@ -886,7 +885,6 @@
     "concurrency": "समानांतरता",
     "open sidebar": "साइडबार खोलें",
     "close sidebar": "साइडबार बंद करें",
-    "change_status": "स्थिति बदलें",
     "in-our-documentation": "हमारे दस्तावेज़ में।",
     "read-more": "और अधिक पढ़ें",
     "flow-dependencies": "निर्भरता",
@@ -1077,7 +1075,9 @@
       },
       "save": {
         "tasks": "कार्य सहेजें",
-        "triggers": "ट्रिगर सहेजें"
+        "triggers": "ट्रिगर सहेजें",
+        "error handlers": "त्रुटि हैंडलर सहेजें",
+        "input": "इनपुट सहेजें"
       },
       "labels": {
         "no_code": "कोड संपादक नहीं",
@@ -1085,8 +1085,10 @@
         "label": "लेबल",
         "variable": "वेरिएबल"
       },
-      "adding": "+ एक {what} जोड़ें"
+      "adding": "+ एक {what} जोड़ें",
+      "adding_default": "+ एक नया value जोड़ें"
     },
-    "export_to_file": "फ़ाइल में निर्यात करें"
+    "export_to_file": "फ़ाइल में निर्यात करें",
+    "change state current state": "वर्तमान स्थिति है:"
   }
 }

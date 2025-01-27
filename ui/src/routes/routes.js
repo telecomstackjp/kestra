@@ -9,7 +9,7 @@ export default [
     //Dashboards
     {name: "home", path: "/:tenant?/dashboards/:id?", component: () => import("../components/dashboard/Dashboard.vue")},
     {name: "dashboards/create", path: "/:tenant?/dashboards/new", component: () => import("../components/dashboard/components/DashboardCreate.vue")},
-    {name: "dashboards/update", path: "/:tenant?/dashboards/:id/edit", component: () => import("../components/dashboard/components/DashboardEdit.vue")},
+    {name: "dashboards/update", path: "/:tenant?/dashboards/:id/edit", component: () => import("override/components/dashboard/components/DashboardEdit.vue")},
 
     //Flows
     {name: "flows/list", path: "/:tenant?/flows", component: () => import("../components/flows/Flows.vue")},
@@ -25,8 +25,8 @@ export default [
     {name: "taskruns/list", path: "/:tenant?/taskruns", component: () => import("../components/taskruns/TaskRuns.vue")},
 
     //Blueprints
-    {name: "blueprints", path: "/:tenant?/blueprints", component: () => import("override/components/flows/blueprints/Blueprints.vue"), props: {topNavbar: false}},
-    {name: "blueprints/view", path: "/:tenant?/blueprints/:blueprintId", component: () => import("../components/flows/blueprints/BlueprintDetail.vue"), props: true},
+    {name: "blueprints", path: "/:tenant?/blueprints/:kind", component: () => import("override/components/flows/blueprints/Blueprints.vue"), props: true},
+    {name: "blueprints/view", path: "/:tenant?/blueprints/:kind/:blueprintId", component: () => import("../components/flows/blueprints/BlueprintDetail.vue"), props: true},
 
     //Documentation
     {name: "plugins/list", path: "/:tenant?/plugins", component: () => import("../components/plugins/Plugin.vue")},

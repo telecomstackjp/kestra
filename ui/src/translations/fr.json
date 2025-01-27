@@ -262,7 +262,7 @@
       "header": {
         "catch phrase": {
           "1": "La première étape est toujours la plus difficile.",
-          "2": "Explorez les blueprints pour créer rapidement vos flows."
+          "2": "Explorez les blueprints pour démarrer votre prochain {kind}."
         },
         "alt": "Icône des Blueprints"
       },
@@ -298,7 +298,6 @@
     "Fold auto": "Éditeur : Replier automatiquement le contenu multi-lignes",
     "Fold content lines": "Replier les multilignes",
     "Unfold content lines": "Déplier les multilignes",
-    "Max displayable": "Max affichables",
     "Total": "Total",
     "sub flow": "Sous-flow",
     "execute": "Exécuter",
@@ -360,7 +359,7 @@
     },
     "cancel": "Annuler",
     "homeDashboard": {
-      "title": "Tableau de bord",
+      "title": "Tableaux de bord",
       "today": "Aujourd'hui",
       "yesterday": "Hier",
       "last28Days": "Dernier 28 jours",
@@ -646,7 +645,7 @@
     "welcome": {
       "tutorial": {
         "title": "Tutoriel",
-        "text": "* [Tutoriels Vidéo](https://kestra.io/tutorial-videos/all)\n* [Documentation](https://kestra.io/docs)\n* [Blueprints](https://kestra.io/blueprints)"
+        "text": "* <a href=\"https://kestra.io/tutorial-videos/all\" target=\"_blank\">Tutoriels Vidéo</a>  \n* <a href=\"https://kestra.io/docs\" target=\"_blank\">Documentation</a>  \n* <a href=\"https://kestra.io/blueprints\" target=\"_blank\">Blueprints</a>"
       },
       "tour": {
         "title": "Faire une visite guidée du produit",
@@ -886,7 +885,6 @@
     "concurrency": "Concurrence",
     "open sidebar": "ouvrir la barre latérale",
     "close sidebar": "fermer la barre latérale",
-    "change_status": "Changer le statut",
     "in-our-documentation": "dans notre documentation.",
     "read-more": "En savoir plus sur",
     "flow-dependencies": "dépendances",
@@ -1077,7 +1075,9 @@
       },
       "save": {
         "tasks": "Enregistrer la tâche",
-        "triggers": "Enregistrer le trigger"
+        "triggers": "Enregistrer le trigger",
+        "error handlers": "Enregistrer le gestionnaire d'erreurs",
+        "input": "Enregistrer l'input"
       },
       "labels": {
         "no_code": "Éditeur sans code",
@@ -1085,8 +1085,10 @@
         "label": "Étiquette",
         "variable": "Variable"
       },
-      "adding": "+ Ajouter un {what}"
+      "adding": "+ Ajouter un {what}",
+      "adding_default": "+ Ajouter une nouvelle valeur"
     },
-    "export_to_file": "Exporter vers un fichier"
+    "export_to_file": "Exporter vers un fichier",
+    "change state current state": "Statut actuel :"
   }
 }

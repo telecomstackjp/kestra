@@ -21,13 +21,13 @@ import java.util.List;
 
 @CommandLine.Command(
     name = "doc",
-    description = "write documentation for all plugins currently installed"
+    description = "Generate documentation for all plugins currently installed"
 )
 public class PluginDocCommand extends AbstractCommand {
     @Inject
     private ApplicationContext applicationContext;
 
-    @CommandLine.Parameters(index = "0", description = "Path to write documentations files")
+    @CommandLine.Parameters(index = "0", description = "Path to write documentation files")
     private Path output = Paths.get(System.getProperty("user.dir"), "docs");
 
     @CommandLine.Option(names = {"--core"}, description = "Also write core tasks docs files")
@@ -36,7 +36,7 @@ public class PluginDocCommand extends AbstractCommand {
     @CommandLine.Option(names = {"--icons"}, description = "Also write icon for each task")
     private boolean icons = false;
 
-    @CommandLine.Option(names = {"--schema"}, description = "Also write json schema for each task")
+    @CommandLine.Option(names = {"--schema"}, description = "Also write JSON Schema for each task")
     private boolean schema = false;
 
     @Override

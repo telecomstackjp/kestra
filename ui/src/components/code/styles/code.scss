@@ -28,6 +28,13 @@ $code-font-sm: var(--el-font-size-small);
     font-size: $code-font-sm;
 }
 
+.delete {
+    cursor: pointer;
+    padding-left: 0;
+    color: $code-gray-700;
+    text-align: right;
+}
+
 .wrapper {
     :deep(*) {
         --el-disabled-text-color: #{$code-gray-700};

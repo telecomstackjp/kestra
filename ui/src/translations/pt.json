@@ -262,7 +262,7 @@
       "header": {
         "catch phrase": {
           "1": "O primeiro passo é sempre o mais difícil.",
-          "2": "Explore blueprints para iniciar seu próximo flow."
+          "2": "Explore blueprints para iniciar seu próximo {kind}."
         },
         "alt": "Ícone de Blueprints"
       },
@@ -298,7 +298,6 @@
     "Fold auto": "Editor: dobra automática de multilinhas",
     "Fold content lines": "Dobrar strings multilinhas",
     "Unfold content lines": "Desdobrar strings multilinhas",
-    "Max displayable": "Máximo exibível",
     "Total": "Total",
     "sub flow": "Subflow",
     "execute": "Executar",
@@ -360,7 +359,7 @@
     },
     "cancel": "Cancelar",
     "homeDashboard": {
-      "title": "Painel de Controle",
+      "title": "Dashboards",
       "today": "Hoje",
       "yesterday": "Ontem",
       "last28Days": "Últimos 28 dias",
@@ -646,7 +645,7 @@
     "welcome": {
       "tutorial": {
         "title": "Tutorial",
-        "text": "* [Tutoriais em Vídeo](https://kestra.io/tutorial-videos/all)\n* [Documentação](https://kestra.io/docs)\n* [Blueprints](https://kestra.io/blueprints)"
+        "text": "* <a href=\"https://kestra.io/tutorial-videos/all\" target=\"_blank\">Tutoriais em Vídeo</a>  \n* <a href=\"https://kestra.io/docs\" target=\"_blank\">Documentação</a>  \n* <a href=\"https://kestra.io/blueprints\" target=\"_blank\">Blueprints</a>"
       },
       "tour": {
         "title": "Faça um tour pelo produto",
@@ -886,7 +885,6 @@
     "concurrency": "Concorrência",
     "open sidebar": "abrir barra lateral",
     "close sidebar": "fechar barra lateral",
-    "change_status": "Alterar status",
     "in-our-documentation": "na nossa documentação.",
     "read-more": "Leia mais sobre",
     "flow-dependencies": "dependências",
@@ -1077,7 +1075,9 @@
       },
       "save": {
         "tasks": "Salvar task",
-        "triggers": "Salvar trigger"
+        "triggers": "Salvar trigger",
+        "error handlers": "Salvar manipulador de erro",
+        "input": "Salvar input"
       },
       "labels": {
         "no_code": "Editor Sem Código",
@@ -1085,8 +1085,10 @@
         "label": "Etiqueta",
         "variable": "Variável"
       },
-      "adding": "+ Adicionar um {what}"
+      "adding": "+ Adicionar um {what}",
+      "adding_default": "+ Adicionar um novo value"
     },
-    "export_to_file": "Exportar para arquivo"
+    "export_to_file": "Exportar para arquivo",
+    "change state current state": "Status atual é:"
   }
 }

@@ -46,11 +46,12 @@
     }
 
     &.is-text {
-        font-weight: bold;
         border: 1px solid var(--ks-border-primary);
         height: 32px;
         line-height: 32px;
-        background-color: var(--ks-background-card) !important;
+        font-weight: normal;
+        --el-button-background-color: var(--ks-background-card);
+        --el-button-text-color: var(--ks-content-primary);
 
         &.version {
             --el-button-text-color: var(--ks-content-primary);
@@ -160,6 +161,8 @@
 
 
 .el-select {
+    --el-disabled-text-color: var(--ks-content-inactive);
+
     &.fit-text .el-select__input {
         width: fit-content !important;
     }
@@ -181,6 +184,12 @@
         &.is-disabled {
             html.dark & {
                 background-color: var(--bs-gray-400);
+            }
+
+            .el-select__suffix {
+                .el-select__caret {
+                    color: var(--ks-content-inactive);
+                }
             }
         }
     }
@@ -362,13 +371,8 @@ form.ks-horizontal {
 
     --el-table-header-text-color: var(--ks-content-primary);
     --el-table-row-hover-bg-color: var(--bs-gray-200);
-    --el-table-header-bg-color: #f5f5ff;
-    --el-table-tr-bg-color: var(--bs-white);
-
-    html.dark & {
-        --el-table-tr-bg-color: var(--ks-background-card);
-        --el-table-header-bg-color: var(--ks-background-input);
-    }
+    --el-table-header-bg-color: var(--ks-background-table-header);
+    --el-table-tr-bg-color: var(--ks-background-card);
 
     outline: 1px solid var(--ks-border-primary);
     border-radius: var(--bs-border-radius-lg);
@@ -491,7 +495,6 @@ form.ks-horizontal {
 
         &.is-active > * {
             background-color: var(--ks-content-link);
-            font-weight: bold;
         }
 
         &.is-disabled a {
@@ -506,7 +509,7 @@ form.ks-horizontal {
 
     html.dark & {
         .el-tabs__active-bar {
-            background-color: var(--ks-button-background-secondary-active);
+            background-color: var(--ks-button-background-secondary-hover);
         }
 
         .el-tabs__item {
@@ -572,21 +575,17 @@ form.ks-horizontal {
                 padding: .5rem 1rem;
             }
 
+            a:hover{
+                color: var(--ks-content-link);
+            }
+
             &.is-active > a {
-                font-weight: bold;
-                background: var(--ks-button-background-secondary-active);
+                background: var(--ks-button-background-secondary-hover);
+                color: var(--ks-content-link);
                 border-radius: var(--bs-border-radius);
             }
         }
 
-
-        html.dark & {
-            .el-tabs__item {
-                &.is-active > a {
-                    color: var(--ks-content-primary);
-                }
-            }
-        }
     }
 
     &.el-tabs--card{

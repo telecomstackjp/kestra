@@ -103,13 +103,32 @@ export function useLeftMenu() {
                 }
             },
             {
-                href: {name: "blueprints"},
                 routes: routeStartWith("blueprints"),
                 title: t("blueprints.title"),
                 icon: {
                     element: shallowRef(BallotOutline),
                     class: "menu-icon"
                 },
+                child: [
+                    {
+                        title: t("flows"),
+                        routes: routeStartWith("blueprints/flow"),
+                        icon: {
+                            element: shallowRef(FileTreeOutline),
+                            class: "menu-icon"
+                        },
+                        href: {name: "blueprints", params: {kind: "flow"}},
+                    },
+                    {
+                        title: t("homeDashboard.title"),
+                        routes: routeStartWith("blueprints/dashboard"),
+                        icon: {
+                            element: shallowRef(ViewDashboardVariantOutline),
+                            class: "menu-icon"
+                        },
+                        href: {name: "blueprints", params: {kind: "dashboard"}},
+                    },
+                ]
             },
             {
                 href: {name: "plugins/list"},

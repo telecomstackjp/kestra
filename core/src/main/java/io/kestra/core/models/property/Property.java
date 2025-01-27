@@ -52,6 +52,10 @@ public class Property<T> {
         }
     }
 
+    String getExpression() {
+        return expression;
+    }
+
     /**
      * Build a new Property object with a value already set.<br>
      *
@@ -345,11 +349,6 @@ public class Property<T> {
     @Override
     public int hashCode() {
         return Objects.hash(expression);
-    }
-
-    // used only by the serializer
-    String getExpression() {
-        return this.expression;
     }
 
     // used only by the value extractor

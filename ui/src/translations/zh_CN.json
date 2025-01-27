@@ -262,7 +262,7 @@
       "header": {
         "catch phrase": {
           "1": "第一步总是最难的。",
-          "2": "探索蓝图以启动你的下一个流程。"
+          "2": "探索蓝图以启动您的下一个{kind}。"
         },
         "alt": "蓝图图标"
       },
@@ -298,7 +298,6 @@
     "Fold auto": "编辑器：自动折叠多行",
     "Fold content lines": "折叠多行字符串",
     "Unfold content lines": "展开多行字符串",
-    "Max displayable": "最大可显示",
     "Total": "总计",
     "sub flow": "子流程",
     "execute": "执行",
@@ -646,7 +645,7 @@
     "welcome": {
       "tutorial": {
         "title": "教程",
-        "text": "* [视频教程](https://kestra.io/tutorial-videos/all)\n* [文档](https://kestra.io/docs)\n* [Blueprints](https://kestra.io/blueprints)"
+        "text": "* <a href=\"https://kestra.io/tutorial-videos/all\" target=\"_blank\">视频教程</a>  \n* <a href=\"https://kestra.io/docs\" target=\"_blank\">文档</a>  \n* <a href=\"https://kestra.io/blueprints\" target=\"_blank\">Blueprints</a>"
       },
       "tour": {
         "title": "开始产品导览",
@@ -886,7 +885,6 @@
     "concurrency": "并发",
     "open sidebar": "打开侧边栏",
     "close sidebar": "关闭侧边栏",
-    "change_status": "更改状态",
     "in-our-documentation": "在我们的文档中。",
     "read-more": "了解更多关于",
     "flow-dependencies": "依赖项",
@@ -1077,7 +1075,9 @@
       },
       "save": {
         "tasks": "保存任务",
-        "triggers": "保存 trigger"
+        "triggers": "保存 trigger",
+        "error handlers": "保存错误处理程序",
+        "input": "保存输入"
       },
       "labels": {
         "no_code": "无代码编辑器",
@@ -1085,8 +1085,10 @@
         "label": "标签",
         "variable": "变量"
       },
-      "adding": "+ 添加{what}"
+      "adding": "+ 添加{what}",
+      "adding_default": "+ 添加新value"
     },
-    "export_to_file": "导出到文件"
+    "export_to_file": "导出到文件",
+    "change state current state": "当前状态是："
   }
 }
