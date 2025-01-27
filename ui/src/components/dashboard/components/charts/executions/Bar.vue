@@ -36,6 +36,7 @@
             :total="total"
             :duration="duration"
             :plugins="[barLegend]"
+            :small="isSmallScreen"
             class="tall"
         />
 
@@ -47,6 +48,8 @@
     import {ref} from "vue";
     import {useI18n} from "vue-i18n";
 
+    import {useMediaQuery} from "@vueuse/core";
+
     import {barLegend} from "../legend.js";
 
     import NoData from "../../../../layout/NoData.vue";
@@ -55,6 +58,8 @@
 
     const {t} = useI18n({useScope: "global"});
     const duration = ref(true);
+
+    const isSmallScreen = useMediaQuery("(max-width: 610px)");
 
     defineProps({
         data: {

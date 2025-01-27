@@ -14,8 +14,6 @@
     import moment from "moment";
     import {Bar} from "vue-chartjs";
 
-    import {useMediaQuery} from "@vueuse/core";
-
     import Utils from "../../../../../utils/utils.js";
     import {getScheme} from "../../../../../utils/scheme.js";
     import {defaultConfig, getFormat} from "../../../../../utils/charts.js";
@@ -42,6 +40,16 @@
             required: false,
             default: true,
         },
+        scales: {
+            type: Boolean,
+            required: false,
+            default: true,
+        },
+        small: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
         onClick: {
             type: Function,
             required: false,
@@ -50,7 +58,7 @@
         },
     });
 
-    const isSmallScreen = useMediaQuery("(max-width: 610px)");
+
 
     const parsedData = computed(() => {
         let datasets = props.data.reduce(function (accumulator, value) {
@@ -100,7 +108,7 @@
 
     const options = computed(() =>
         defaultConfig({
-            barThickness: isSmallScreen.value ? 8 : 12,
+            barThickness: props.small ? 8 : 12,
             skipNull: true,
             borderSkipped: false,
             borderColor: "transparent",
@@ -122,6 +130,7 @@
             },
             scales: {
                 x: {
+                    display: props.scales,
                     title: {
                         display: true,
                         text: t("date"),
@@ -130,10 +139,9 @@
                         display: false,
                     },
                     position: "bottom",
-                    display: true,
                     stacked: true,
                     ticks: {
-                        maxTicksLimit: isSmallScreen.value ? 5 : 8,
+                        maxTicksLimit: props.small ? 5 : 8,
                         callback: function (value) {
                             const label = this.getLabelForValue(value);
 
@@ -160,23 +168,23 @@
                     },
                 },
                 y: {
+                    display: props.scales,
                     title: {
-                        display: !isSmallScreen.value,
+                        display: !props.small,
                         text: t("executions"),
                     },
                     grid: {
                         display: false,
                     },
-                    display: true,
                     position: "left",
                     stacked: true,
                     ticks: {
-                        maxTicksLimit: isSmallScreen.value ? 5 : 8,
+                        maxTicksLimit: props.small ? 5 : 8,
                     },
                 },
                 yB: {
                     title: {
-                        display: props.duration && !isSmallScreen.value,
+                        display: props.duration && !props.small,
                         text: t("duration"),
                     },
                     grid: {
@@ -185,7 +193,7 @@
                     display: props.duration,
                     position: "right",
                     ticks: {
-                        maxTicksLimit: isSmallScreen.value ? 5 : 8,
+                        maxTicksLimit: props.small ? 5 : 8,
                         callback: function (value) {
                             return `${this.getLabelForValue(value)}s`;
                         },
