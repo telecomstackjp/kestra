@@ -270,20 +270,24 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
         @Nullable String tenantId,
         @Nullable List<QueryFilter> filters
     ) {
+        // extract Query field from the filters list
+        String query = getQuery(filters);
+
         SelectConditionStep<Record1<Object>> select = context
             .select(
                 field("value")
             )
             .hint(context.configuration().dialect().supports(SQLDialect.MYSQL) ? "SQL_CALC_FOUND_ROWS" : null)
             .from(this.jdbcRepository.getTable())
-            .where(this.defaultFilter(tenantId, false));
+            .where(this.defaultFilter(tenantId, false))
+            .and(this.findCondition(query, null));
 
         if (filters != null)
             for (QueryFilter filter : filters) {
                 QueryFilter.Field field = filter.field();
                 QueryFilter.Op operation = filter.operation();
                 Object value = filter.value();
-
+                if (field.equals(QueryFilter.Field.QUERY)) continue;
                 if (field.equals(QueryFilter.Field.LABELS) && value instanceof Map<?, ?> labels)
                     select = select.and(findCondition(labels, operation));
                 else
@@ -292,6 +296,7 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
 
         return select;
     }
+
     private SelectConditionStep<Record1<Object>> findSelect(
         DSLContext context,
         @Nullable String query,

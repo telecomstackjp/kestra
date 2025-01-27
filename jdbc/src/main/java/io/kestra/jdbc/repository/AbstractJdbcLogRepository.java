@@ -70,6 +70,8 @@ public abstract class AbstractJdbcLogRepository extends AbstractJdbcRepository i
         @Nullable String tenantId,
         @Nullable List<QueryFilter> filters
     ) {
+
+        String query = getQuery(filters);
         return this.jdbcRepository
             .getDslContextWrapper()
             .transactionResult(configuration -> {
@@ -79,7 +81,8 @@ public abstract class AbstractJdbcLogRepository extends AbstractJdbcRepository i
                     .select(field("value"))
                     .hint(context.configuration().dialect().supports(SQLDialect.MYSQL) ? "SQL_CALC_FOUND_ROWS" : null)
                     .from(this.jdbcRepository.getTable())
-                    .where(this.defaultFilter(tenantId));
+                    .where(this.defaultFilter(tenantId))
+                    .and(this.findCondition(query));
 
                this.filter(select, filters);
 

@@ -216,8 +216,9 @@ public abstract class AbstractJdbcRepository {
             QueryFilter.Field field = filter.field();
             QueryFilter.Op operation = filter.operation();
             Object value = filter.value();
-
-            select = getConditionOnField(select, field, value, operation);
+            if (!field.equals(QueryFilter.Field.QUERY)) {
+                select = getConditionOnField(select, field, value, operation);
+            }
         }
 
         return select;
@@ -323,7 +324,7 @@ public abstract class AbstractJdbcRepository {
         Object value,
         QueryFilter.Op operation
     ) {
-        Level minLevel = Level.valueOf((String) value);
+        Level minLevel = value instanceof Level ? (Level) value : Level.valueOf((String) value);
 
         switch (operation) {
             case EQUALS -> select = select.and(minLevelCondition(minLevel));
@@ -354,5 +355,12 @@ public abstract class AbstractJdbcRepository {
         }
         return select;
     }
-
+    protected static String getQuery(List<QueryFilter> filters) {
+        if (filters == null || filters.isEmpty()) return null;
+        return filters.stream()
+            .filter(filter -> filter.field() == QueryFilter.Field.QUERY)
+            .map(filter -> filter.value().toString())
+            .findFirst()
+            .orElse(null);
+    }
 }

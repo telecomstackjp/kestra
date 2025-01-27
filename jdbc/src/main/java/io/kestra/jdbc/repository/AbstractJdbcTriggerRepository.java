@@ -258,13 +258,16 @@ public abstract class AbstractJdbcTriggerRepository extends AbstractJdbcReposito
             .getDslContextWrapper()
             .transactionResult(configuration -> {
                 DSLContext context = DSL.using(configuration);
+                // extract Query field from the filters list
+                String query = getQuery(filters);
 
                 // Base query with table and DSL fields
                 SelectConditionStep<?> select = context
                     .select(field("value"))
                     .hint(context.configuration().dialect().supports(SQLDialect.MYSQL) ? "SQL_CALC_FOUND_ROWS" : null)
                     .from(this.jdbcRepository.getTable())
-                    .where(this.defaultFilter(tenantId));
+                    .where(this.fullTextCondition(query))
+                    .and(this.defaultFilter(tenantId));
 
                 filter(select, filters);
                 // Return paginated results
