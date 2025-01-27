@@ -11,6 +11,7 @@ import io.kestra.core.tenant.TenantService;
 import io.kestra.webserver.responses.PagedResults;
 import io.kestra.webserver.utils.PageableUtils;
 import io.kestra.webserver.utils.RequestUtils;
+import io.kestra.webserver.utils.TimeLineSearchUtils;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.format.Format;
@@ -53,6 +54,16 @@ public class TaskRunController {
     ) throws HttpStatusException {
 
         final ZonedDateTime now = ZonedDateTime.now();
+
+        TimeLineSearchUtils timeLineSearchUtils = TimeLineSearchUtils.extractFrom(filters);
+        validateTimeline(timeLineSearchUtils.startDate(), timeLineSearchUtils.endDate());
+
+        ZonedDateTime resolvedStartDate = resolveAbsoluteDateTime(timeLineSearchUtils.startDate(),
+            timeLineSearchUtils.timeRange(),
+            now);
+
+        // Update filters with the resolved startDate
+        filters = timeLineSearchUtils.updateFilters(filters, resolvedStartDate);
 
         return PagedResults.of(executionRepository.findTaskRun(
             PageableUtils.from(page, size, sort),
