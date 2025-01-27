@@ -1,21 +1,16 @@
 <template>
     <top-nav-bar :title="routeInfo.title" v-if="!isFullScreen()" />
-    <EmptyTemplate
-        :title="$t('errors.' + code + '.title')"
-        data-component="FILENAME_PLACEHOLDER"
-        :image="{
-            source: sourceImg,
-            alt: $t('errors.' + code + '.title')
-        }"
-    >
-        <template #message>
+    <EmptyTemplate>
+        <img :src="sourceImg" :alt="$t('errors.' + code + '.title')" class="img">
+        <h2>{{ $t("errors." + code + ".title") }}</h2>
+
+        <p>
             <span v-html="$t('errors.' + code + '.content')" />
-        </template>
-        <template #buttons>
-            <el-button v-if="!isFullScreen()" tag="router-link" :to="{name: 'home'}" type="primary" size="large">
-                {{ $t("back_to_dashboard") }}
-            </el-button>
-        </template>
+        </p>
+
+        <el-button v-if="!isFullScreen()" tag="router-link" :to="{name: 'home'}" type="primary" size="large">
+            {{ $t("back_to_dashboard") }}
+        </el-button>
     </EmptyTemplate>
 </template>
 
@@ -60,30 +55,20 @@
 
 
 <style lang="scss" scoped>
-    .errors {
-        margin-top: 0;
-        padding-top: 10rem;
-        padding-bottom: 3rem;
-        text-align: center;
-        background-image: url("../../assets/empty-page.svg#file");
-        background-repeat: no-repeat;
-        background-position: top center;
 
-        .img {
-            background: url("../../assets/errors/kestra-error.png") no-repeat center;
-            background-size: contain;
-            max-height: 156px;
-        }
-
-        h2 {
-            line-height: 30px;
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        p {
-            line-height: 22px;
-            font-size: 14px;
-        }
+    .img {
+        max-height: 156px;
     }
+
+    h2 {
+        line-height: 30px;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    p {
+        line-height: 22px;
+        font-size: 14px;
+    }
+
 </style>

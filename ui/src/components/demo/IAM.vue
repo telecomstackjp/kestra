@@ -1,6 +1,6 @@
 <template>
     <top-nav-bar :title="routeInfo.title" v-if="!isFullScreen()" />
-    <empty-template
+    <Layout
         title="IAM"
         :image="{source: sourceImg, alt: t('demos.IAM.title')}"
     >
@@ -12,21 +12,25 @@
                 {{ $t("demos.get_a_demo_button") }}
             </el-button>
         </template>
-    </empty-template>
+    </Layout>
 </template>
 
 <script setup lang="ts">
+    import {ref} from "vue";
     import {useI18n} from "vue-i18n";
-    import EmptyTemplate from "../layout/EmptyTemplate.vue";
+    import Layout from "./Layout.vue";
     // @ts-expect-error no types in TopNavBar yet
     import TopNavBar from "../../components/layout/TopNavBar.vue";
-    import sourceImg from "../../assets/errors/kestra-error.png";
+    import sourceImg from "../../assets/demo/user.webp";
+    import useRouteContext from "../../mixins/useRouteContext";
 
     const {t} = useI18n();
-    const routeInfo = {
-        title: "IAM"
-    };
 
+    const routeInfo = ref({
+        title: t("demos.IAM.title"),
+    });
+
+    useRouteContext(routeInfo);
 
     function isFullScreen() {
         return document.getElementsByTagName("html")[0].classList.contains("full-screen");
