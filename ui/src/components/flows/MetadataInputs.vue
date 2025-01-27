@@ -2,44 +2,29 @@
     <span v-if="required" class="me-1 text-danger">*</span>
     <span class="label">{{ label }}</span>
     <div class="mt-1 mb-2 wrapper">
-        <div class="w-100 mb-3">
-            <div>
-                <div
-                    class="d-flex w-100 mb-2"
-                    v-for="(input, index) in newInputs"
-                    :key="index"
-                >
-                    <div class="flex-fill flex-grow-1 w-100 me-2">
-                        <el-input disabled :model-value="input.id" />
-                    </div>
-                    <div class="flex-shrink-1">
-                        <el-button-group class="d-flex flex-nowrap">
-                            <el-button
-                                :icon="TextSearch"
-                                @click="selectInput(input, index)"
-                            />
-                            <el-button :icon="Plus" @click="addInput" />
-                            <el-button
-                                :icon="Minus"
-                                @click="deleteInput(index)"
-                                :disabled="
-                                    index === 0 && newInputs.length === 1
-                                "
-                            />
-                        </el-button-group>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <el-row
+            v-for="(input, index) in newInputs"
+            :key="index"
+            @click="selectInput(input, index)"
+            class="w-100 mb-2"
+        >
+            <el-col :span="24" class="d-flex">
+                <el-input disabled :model-value="input.id" />
+                <DeleteOutline
+                    @click.prevent.stop="deleteInput(index)"
+                    class="ms-2 delete"
+                />
+            </el-col>
+        </el-row>
+        <Add @add="addInput(index)" />
     </div>
 </template>
 
 <script setup>
-    import Plus from "vue-material-design-icons/Plus.vue";
-    import Minus from "vue-material-design-icons/Minus.vue";
-    import TextSearch from "vue-material-design-icons/TextSearch.vue";
-
     import MetadataInputsContent from "./MetadataInputsContent.vue";
+    import Add from "../code/components/Add.vue";
+
+    import {DeleteOutline} from "../code/utils/icons";
 </script>
 
 <script>
@@ -146,6 +131,7 @@
             },
             addInput() {
                 this.newInputs.push({type: "STRING"});
+                this.selectInput(this.newInputs.at(-1), 0);
             },
             onChangeType(value) {
                 this.loading = true;
