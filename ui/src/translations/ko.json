@@ -298,7 +298,6 @@
     "Fold auto": "편집기: 다중 라인 자동 접기",
     "Fold content lines": "다중 라인 문자열 접기",
     "Unfold content lines": "다중 라인 문자열 펼치기",
-    "Max displayable": "최대 표시 가능",
     "Total": "총계",
     "sub flow": "Subflow",
     "execute": "실행",
@@ -1077,7 +1076,8 @@
       "save": {
         "tasks": "작업 저장",
         "triggers": "트리거 저장",
-        "error handlers": "오류 처리기 저장"
+        "error handlers": "오류 처리기 저장",
+        "input": "입력 저장"
       },
       "labels": {
         "no_code": "코드 없는 편집기",

@@ -1,7 +1,7 @@
 <template>
     <top-nav-bar :title="routeInfo.title" />
     <section class="container" v-if="ready">
-        <data-table @page-changed="onPageChanged" ref="dataTable" :total="total" :max="maxTaskRunSetting">
+        <data-table @page-changed="onPageChanged" ref="dataTable" :total="total">
             <template #navbar>
                 <KestraFilter
                     prefix="taskruns"
@@ -144,7 +144,7 @@
             };
         },
         computed: {
-            ...mapState("taskrun", ["taskruns", "total", "maxTaskRunSetting"]),
+            ...mapState("taskrun", ["taskruns", "total"]),
             ...mapState("stat", ["taskRunDaily"]),
             routeInfo() {
                 return {
@@ -177,9 +177,6 @@
                     return a + Object.values(b.executionCounts).reduce((a, b) => a + b, 0);
                 }, 0);
             },
-        },
-        created() {
-            this.$store.dispatch("taskrun/maxTaskRunSetting");
         },
         methods: {
             onDateFilterTypeChange(event) {

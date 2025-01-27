@@ -298,7 +298,6 @@
     "Fold auto": "Editor: piegatura automatica delle righe multiple",
     "Fold content lines": "Piega stringhe multilinea",
     "Unfold content lines": "Spiega stringhe multilinea",
-    "Max displayable": "Max visualizzabile",
     "Total": "Totale",
     "sub flow": "Subflow",
     "execute": "Esegui",
@@ -1077,7 +1076,8 @@
       "save": {
         "tasks": "Salva task",
         "triggers": "Salva trigger",
-        "error handlers": "Salva gestore errori"
+        "error handlers": "Salva gestore errori",
+        "input": "Salva input"
       },
       "labels": {
         "no_code": "Editor Senza Codice",

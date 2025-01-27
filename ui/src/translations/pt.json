@@ -298,7 +298,6 @@
     "Fold auto": "Editor: dobra automática de multilinhas",
     "Fold content lines": "Dobrar strings multilinhas",
     "Unfold content lines": "Desdobrar strings multilinhas",
-    "Max displayable": "Máximo exibível",
     "Total": "Total",
     "sub flow": "Subflow",
     "execute": "Executar",
@@ -360,7 +359,7 @@
     },
     "cancel": "Cancelar",
     "homeDashboard": {
-      "title": "Painéis",
+      "title": "Dashboards",
       "today": "Hoje",
       "yesterday": "Ontem",
       "last28Days": "Últimos 28 dias",
@@ -1077,7 +1076,8 @@
       "save": {
         "tasks": "Salvar task",
         "triggers": "Salvar trigger",
-        "error handlers": "Salvar manipulador de erro"
+        "error handlers": "Salvar manipulador de erro",
+        "input": "Salvar input"
       },
       "labels": {
         "no_code": "Editor Sem Código",

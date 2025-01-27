@@ -298,7 +298,6 @@
     "Fold auto": "Editor: Automatisches Falten von Mehrzeilen",
     "Fold content lines": "Mehrzeilige Zeichenfolgen falten",
     "Unfold content lines": "Mehrzeilige Zeichenfolgen entfalten",
-    "Max displayable": "Maximal anzeigbar",
     "Total": "Gesamt",
     "sub flow": "Subflow",
     "execute": "Ausführen",
@@ -1077,7 +1076,8 @@
       "save": {
         "tasks": "Aufgabe speichern",
         "triggers": "Speicher Trigger",
-        "error handlers": "Fehlerbehandlungsroutine speichern"
+        "error handlers": "Fehlerbehandlungsroutine speichern",
+        "input": "Eingabe speichern"
       },
       "labels": {
         "no_code": "Kein Code-Editor",

@@ -298,7 +298,6 @@
     "Fold auto": "Edytor: automatyczne składanie wieloliniowych",
     "Fold content lines": "Złóż wieloliniowe ciągi",
     "Unfold content lines": "Rozwiń wieloliniowe ciągi",
-    "Max displayable": "Maksymalna liczba wyświetlanych",
     "Total": "Całkowity",
     "sub flow": "Subflow",
     "execute": "Wykonaj",
@@ -1077,7 +1076,8 @@
       "save": {
         "tasks": "Zapisz task",
         "triggers": "Zapisz trigger",
-        "error handlers": "Zapisz obsługę błędów"
+        "error handlers": "Zapisz obsługę błędów",
+        "input": "Zapisz input"
       },
       "labels": {
         "no_code": "Edytor No Code",

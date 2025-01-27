@@ -83,11 +83,4 @@ public class TaskRunController {
 
         return absoluteDateTime;
     }
-
-    @ExecuteOn(TaskExecutors.IO)
-    @Get(uri = "/maxTaskRunSetting")
-    @Hidden
-    public Integer maxTaskRunSetting() {
-        return executionRepository.maxTaskRunSetting();
-    }
 }

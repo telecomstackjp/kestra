@@ -298,7 +298,6 @@
     "Fold auto": "エディター：複数行の自動折りたたみ",
     "Fold content lines": "複数行文字列を折りたたむ",
     "Unfold content lines": "複数行文字列を展開する",
-    "Max displayable": "最大表示可能",
     "Total": "合計",
     "sub flow": "Subflow",
     "execute": "実行",
@@ -1077,7 +1076,8 @@
       "save": {
         "tasks": "タスクを保存",
         "triggers": "トリガーを保存",
-        "error handlers": "エラーハンドラーを保存"
+        "error handlers": "エラーハンドラーを保存",
+        "input": "入力を保存"
       },
       "labels": {
         "no_code": "コードエディタなし",

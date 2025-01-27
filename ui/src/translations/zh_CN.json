@@ -298,7 +298,6 @@
     "Fold auto": "编辑器：自动折叠多行",
     "Fold content lines": "折叠多行字符串",
     "Unfold content lines": "展开多行字符串",
-    "Max displayable": "最大可显示",
     "Total": "总计",
     "sub flow": "子流程",
     "execute": "执行",
@@ -1077,7 +1076,8 @@
       "save": {
         "tasks": "保存任务",
         "triggers": "保存 trigger",
-        "error handlers": "保存错误处理程序"
+        "error handlers": "保存错误处理程序",
+        "input": "保存输入"
       },
       "labels": {
         "no_code": "无代码编辑器",

@@ -360,11 +360,6 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
     }
 
     @Override
-    public Integer maxTaskRunSetting() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public List<DailyExecutionStatistics> dailyStatisticsForAllTenants(
         @Nullable String query,
         @Nullable String namespace,

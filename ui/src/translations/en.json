@@ -345,7 +345,6 @@
     "Fold auto": "Editor: automatic fold of multilines",
     "Fold content lines": "Fold multiline strings",
     "Unfold content lines": "Unfold multiline strings",
-    "Max displayable": "Max displayable",
     "Total": "Total",
     "sub flow": "Subflow",
     "execute": "Execute",
@@ -1101,7 +1100,8 @@
       "save": {
         "tasks": "Save task",
         "triggers": "Save trigger",
-        "error handlers": "Save error handler"
+        "error handlers": "Save error handler",
+        "input": "Save input"
       }
     }
   }

@@ -298,7 +298,6 @@
     "Fold auto": "Éditeur : Replier automatiquement le contenu multi-lignes",
     "Fold content lines": "Replier les multilignes",
     "Unfold content lines": "Déplier les multilignes",
-    "Max displayable": "Max affichables",
     "Total": "Total",
     "sub flow": "Sous-flow",
     "execute": "Exécuter",
@@ -1077,7 +1076,8 @@
       "save": {
         "tasks": "Enregistrer la tâche",
         "triggers": "Enregistrer le trigger",
-        "error handlers": "Enregistrer le gestionnaire d'erreurs"
+        "error handlers": "Enregistrer le gestionnaire d'erreurs",
+        "input": "Enregistrer l'input"
       },
       "labels": {
         "no_code": "Éditeur sans code",

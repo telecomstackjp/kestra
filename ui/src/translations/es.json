@@ -298,7 +298,6 @@
     "Fold auto": "Editor: plegado automático de multilíneas",
     "Fold content lines": "Plegar cadenas multilínea",
     "Unfold content lines": "Desplegar cadenas multilínea",
-    "Max displayable": "Máximo desplegable",
     "Total": "Total",
     "sub flow": "Subflow",
     "execute": "Ejecutar",
@@ -1077,7 +1076,8 @@
       "save": {
         "tasks": "Guardar tarea",
         "triggers": "Guardar trigger",
-        "error handlers": "Guardar controlador de errores"
+        "error handlers": "Guardar controlador de errores",
+        "input": "Guardar input"
       },
       "labels": {
         "no_code": "Editor Sin Código",
