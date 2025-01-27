@@ -298,7 +298,6 @@
     "Fold auto": "Editor: Automatisches Falten von Mehrzeilen",
     "Fold content lines": "Mehrzeilige Zeichenfolgen falten",
     "Unfold content lines": "Mehrzeilige Zeichenfolgen entfalten",
-    "Max displayable": "Maximal anzeigbar",
     "Total": "Gesamt",
     "sub flow": "Subflow",
     "execute": "Ausführen",
@@ -360,7 +359,7 @@
     },
     "cancel": "Abbrechen",
     "homeDashboard": {
-      "title": "Dashboard",
+      "title": "Dashboards",
       "today": "Heute",
       "yesterday": "Gestern",
       "last28Days": "Letzte 28 Tage",
@@ -1088,6 +1087,7 @@
       "adding": "+ {what} hinzufügen",
       "adding_default": "+ Neuen Wert hinzufügen"
     },
-    "export_to_file": "In Datei exportieren"
+    "export_to_file": "In Datei exportieren",
+    "change state current state": "Aktueller Zustand ist:"
   }
 }

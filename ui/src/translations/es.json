@@ -298,7 +298,6 @@
     "Fold auto": "Editor: plegado automático de multilíneas",
     "Fold content lines": "Plegar cadenas multilínea",
     "Unfold content lines": "Desplegar cadenas multilínea",
-    "Max displayable": "Máximo desplegable",
     "Total": "Total",
     "sub flow": "Subflow",
     "execute": "Ejecutar",
@@ -360,7 +359,7 @@
     },
     "cancel": "Cancelar",
     "homeDashboard": {
-      "title": "Tablero de control",
+      "title": "Tableros de control",
       "today": "Hoy",
       "yesterday": "Ayer",
       "last28Days": "Últimos 28 días",
@@ -1088,6 +1087,7 @@
       "adding": "+ Agregar un {what}",
       "adding_default": "+ Añadir un nuevo value"
     },
-    "export_to_file": "Exportar a archivo"
+    "export_to_file": "Exportar a archivo",
+    "change state current state": "Estado actual es:"
   }
 }

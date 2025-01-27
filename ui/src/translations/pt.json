@@ -298,7 +298,6 @@
     "Fold auto": "Editor: dobra automática de multilinhas",
     "Fold content lines": "Dobrar strings multilinhas",
     "Unfold content lines": "Desdobrar strings multilinhas",
-    "Max displayable": "Máximo exibível",
     "Total": "Total",
     "sub flow": "Subflow",
     "execute": "Executar",
@@ -360,7 +359,7 @@
     },
     "cancel": "Cancelar",
     "homeDashboard": {
-      "title": "Painel de Controle",
+      "title": "Painéis",
       "today": "Hoje",
       "yesterday": "Ontem",
       "last28Days": "Últimos 28 dias",
@@ -1088,6 +1087,7 @@
       "adding": "+ Adicionar um {what}",
       "adding_default": "+ Adicionar um novo value"
     },
-    "export_to_file": "Exportar para arquivo"
+    "export_to_file": "Exportar para arquivo",
+    "change state current state": "Status atual é:"
   }
 }

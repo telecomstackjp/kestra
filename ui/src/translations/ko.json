@@ -298,7 +298,6 @@
     "Fold auto": "편집기: 다중 라인 자동 접기",
     "Fold content lines": "다중 라인 문자열 접기",
     "Unfold content lines": "다중 라인 문자열 펼치기",
-    "Max displayable": "최대 표시 가능",
     "Total": "총계",
     "sub flow": "Subflow",
     "execute": "실행",
@@ -1088,6 +1087,7 @@
       "adding": "+ {what} 추가",
       "adding_default": "+ 새 value 추가"
     },
-    "export_to_file": "파일로 내보내기"
+    "export_to_file": "파일로 내보내기",
+    "change state current state": "현재 상태는:"
   }
 }
