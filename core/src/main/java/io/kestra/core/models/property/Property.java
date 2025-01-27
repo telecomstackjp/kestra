@@ -37,7 +37,6 @@ public class Property<T> {
         .copy()
         .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false);
 
-    @Getter
     private String expression;
     private T value;
 
@@ -51,6 +50,10 @@ public class Property<T> {
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    String getExpression() {
+        return expression;
     }
 
     /**

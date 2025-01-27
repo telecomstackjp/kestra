@@ -163,8 +163,12 @@ public final class ExecutableUtils {
                 "namespace", currentFlow.getNamespace(),
                 "flowId", currentFlow.getId(),
                 "flowRevision", currentFlow.getRevision(),
-                "taskRunId", currentTaskRun.getId()
+                "taskRunId", currentTaskRun.getId(),
+                "taskId", currentTaskRun.getTaskId()
             ));
+            if (currentTaskRun.getOutputs() != null) {
+                variables.put("taskRunOutputs", currentTaskRun.getOutputs());
+            }
             if (currentTaskRun.getValue() != null) {
                 variables.put("taskRunValue", currentTaskRun.getValue());
             }
@@ -277,5 +281,28 @@ public final class ExecutableUtils {
             return State.Type.WARNING;
         }
         return State.Type.SUCCESS;
+    }
+
+    public static SubflowExecutionResult subflowExecutionResultFromChildExecution(RunContext runContext, Flow flow, Execution execution, ExecutableTask<?> executableTask, TaskRun taskRun) {
+        try {
+            return executableTask
+                .createSubflowExecutionResult(runContext, taskRun, flow, execution)
+                .orElse(null);
+        } catch (Exception e) {
+            log.error("Unable to create the Subflow Execution Result", e);
+            // we return a fail subflow execution result to end the flow
+            return SubflowExecutionResult.builder()
+                .executionId(execution.getId())
+                .state(State.Type.FAILED)
+                .parentTaskRun(taskRun.withState(State.Type.FAILED).withAttempts(List.of(TaskRunAttempt.builder().state(new State().withState(State.Type.FAILED)).build())))
+                .build();
+        }
+    }
+
+    public static boolean isSubflow(Execution execution) {
+        return execution.getTrigger() != null && (
+            "io.kestra.plugin.core.flow.Subflow".equals(execution.getTrigger().getType()) ||
+                "io.kestra.plugin.core.flow.ForEachItem$ForEachItemExecutable".equals(execution.getTrigger().getType())
+        );
     }
 }

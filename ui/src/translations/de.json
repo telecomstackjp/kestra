@@ -360,7 +360,7 @@
     },
     "cancel": "Abbrechen",
     "homeDashboard": {
-      "title": "Dashboard",
+      "title": "Dashboards",
       "today": "Heute",
       "yesterday": "Gestern",
       "last28Days": "Letzte 28 Tage",
@@ -886,7 +886,6 @@
     "concurrency": "Nebenläufigkeit",
     "open sidebar": "Seitenleiste öffnen",
     "close sidebar": "Seitenleiste schließen",
-    "change_status": "Status ändern",
     "in-our-documentation": "in unserer Dokumentation.",
     "read-more": "Mehr erfahren über",
     "flow-dependencies": "Abhängigkeiten",
@@ -1089,6 +1088,7 @@
       "adding": "+ {what} hinzufügen",
       "adding_default": "+ Neuen Wert hinzufügen"
     },
-    "export_to_file": "In Datei exportieren"
+    "export_to_file": "In Datei exportieren",
+    "change state current state": "Aktueller Zustand ist:"
   }
 }

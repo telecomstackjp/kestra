@@ -47,8 +47,7 @@
                 v-model="inputsValues[input.id]"
                 @update:model-value="onChange(input)"
             >
-                <el-radio v-for="item in input.values" :key="item" :label="item" :value="item" />.
-                <!-- Allow customs input -->
+                <el-radio v-for="item in input.values" :key="item" :label="item" :value="item" />
                 <el-input
                     v-if="input.allowCustomValue"
                     v-model="inputsValues[input.id]"

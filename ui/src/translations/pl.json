@@ -360,7 +360,7 @@
     },
     "cancel": "Anuluj",
     "homeDashboard": {
-      "title": "Dashboard",
+      "title": "Panele sterowania",
       "today": "Dzisiaj",
       "yesterday": "Wczoraj",
       "last28Days": "Ostatnie 28 dni",
@@ -886,7 +886,6 @@
     "concurrency": "Współbieżność",
     "open sidebar": "otwórz pasek boczny",
     "close sidebar": "zamknij pasek boczny",
-    "change_status": "Zmień status",
     "in-our-documentation": "w naszej dokumentacji.",
     "read-more": "Czytaj więcej o",
     "flow-dependencies": "zależności",
@@ -1089,6 +1088,7 @@
       "adding": "+ Dodaj {what}",
       "adding_default": "+ Dodaj nową wartość"
     },
-    "export_to_file": "Eksportuj do pliku"
+    "export_to_file": "Eksportuj do pliku",
+    "change state current state": "Aktualny status to:"
   }
 }

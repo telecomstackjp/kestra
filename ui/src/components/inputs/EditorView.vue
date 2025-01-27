@@ -71,6 +71,7 @@
             <el-switch
                 v-if="!isNamespace"
                 v-model="editorViewType"
+                @change="changeEditorViewType"
                 active-value="NO_CODE"
                 inactive-value="YAML"
                 :inactive-text="$t('no_code.labels.no_code')"
@@ -494,6 +495,9 @@
     });
 
     const editorViewType = ref("YAML");
+    const changeEditorViewType = (value) => {
+        localStorage.setItem(storageKeys.EDITOR_VIEW_TYPE, value);
+    }
 
     const handleTopologyEditClick = (params) => {
         editorViewType.value = "NO_CODE";

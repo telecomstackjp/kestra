@@ -360,7 +360,7 @@
     },
     "cancel": "Cancelar",
     "homeDashboard": {
-      "title": "Painel de Controle",
+      "title": "Painéis",
       "today": "Hoje",
       "yesterday": "Ontem",
       "last28Days": "Últimos 28 dias",
@@ -886,7 +886,6 @@
     "concurrency": "Concorrência",
     "open sidebar": "abrir barra lateral",
     "close sidebar": "fechar barra lateral",
-    "change_status": "Alterar status",
     "in-our-documentation": "na nossa documentação.",
     "read-more": "Leia mais sobre",
     "flow-dependencies": "dependências",
@@ -1089,6 +1088,7 @@
       "adding": "+ Adicionar um {what}",
       "adding_default": "+ Adicionar um novo value"
     },
-    "export_to_file": "Exportar para arquivo"
+    "export_to_file": "Exportar para arquivo",
+    "change state current state": "Status atual é:"
   }
 }
