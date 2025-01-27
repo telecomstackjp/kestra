@@ -55,7 +55,9 @@
         padding-top: 10rem;
         padding-bottom: 3rem;
         text-align: center;
-        background: url("../../assets/empty-page.svg") no-repeat top center;
+        background-image: url("../../assets/empty-page.svg#file");
+        background-repeat: no-repeat;
+        background-position: top center;
 
         .img {
             background: url("../../assets/errors/kestra-error.png") no-repeat center;
