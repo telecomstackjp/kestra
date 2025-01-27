@@ -72,7 +72,7 @@
         </el-row>
     </div>
     <div v-else class="dashboard">
-        <el-row v-if="!props.flow">
+        <el-row v-if="!props.flow" class="dashboard-row">
             <el-col :xs="24" :sm="12" :lg="6">
                 <Card
                     :icon="CheckBold"
@@ -136,18 +136,18 @@
         </el-row>
 
         <el-row>
-            <el-col :xs="24" :lg="props.flow ? 24 : 16">
+            <el-col :xs="24" :lg="props.flow ? 7 : 24">
                 <ExecutionsBar
                     :data="graphData"
                     :total="stats.total"
                     :class="{'me-2': !props.flow}"
                 />
             </el-col>
-            <el-col v-if="!props.flow" :xs="24" :lg="8">
+            <el-col v-if="!props.flow" :xs="24" :lg="props.flow ? 7 : 24">
                 <ExecutionsDoughnut
                     :data="graphData"
                     :total="stats.total"
-                    class="ms-2"
+                    class="ms-1"
                 />
             </el-col>
         </el-row>
@@ -186,7 +186,7 @@
                     class="me-2"
                 />
             </el-col>
-            <el-col v-if="props.flow" :xs="24" :lg="10">
+            <el-col v-if="props.flow" :xs="24" :lg="10" :sm="12">
                 <ExecutionsNextScheduled
                     :flow="props.flowId"
                     :namespace="props.namespace"
@@ -514,14 +514,21 @@ $spacing: 20px;
 
 .dashboard-filters,
 .dashboard {
-    padding: 0 32px;
+    padding: 0 10px;
 
+    & .dashboard-row {
+        display: flex;
+        justify-content: stretch;
+        align-items: stretch;
+        flex-wrap: wrap;
+        gap: 0; 
+    }
     & .el-row {
         width: 100%;
 
         & .el-col {
+            min-width: 200px;
             padding-bottom: $spacing;
-
             & div {
                 background: var(--ks-background-card);
                 border: 1px solid var(--ks-border-primary);
