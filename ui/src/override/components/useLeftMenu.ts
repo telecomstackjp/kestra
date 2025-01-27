@@ -26,7 +26,12 @@ export function useLeftMenu() {
     const $router = useRouter()
     const store = useStore()
 
-    function routeStartWith(route) {
+    /**
+     * Returns all route names that start with the given route
+     * @param route
+     * @returns
+     */
+    function routeStartWith(route: string) {
         return $router?.getRoutes().filter(r => typeof r.name === "string" && r.name.startsWith(route)).map(r => r.name);
     }
 
@@ -148,15 +153,13 @@ export function useLeftMenu() {
                 },
                 child: [
                     {
+                        href: {name: "admin/iam"},
+                        routes: routeStartWith("admin/iam"),
                         title: t("iam"),
                         icon: {
                             element: shallowRef(AccountOutline),
                             class: "menu-icon"
                         },
-                        disabled: true,
-                        attributes: {
-                            locked: true
-                        }
                     },
                     {
                         title: t("auditlogs"),

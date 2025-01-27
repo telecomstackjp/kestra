@@ -1,5 +1,6 @@
 import OnlyLeftMenuLayout from "../components/layout/OnlyLeftMenuLayout.vue"
 import Errors from "../components/errors/Errors.vue"
+import IAM from "../components/demo/IAM.vue"
 
 export default [
     //Initial
@@ -56,4 +57,7 @@ export default [
 
     //Errors
     {name: "errors/404-wildcard", path: "/:pathMatch(.*)", component: Errors, props: {code: 404}},
+
+    //Demo Pages
+    {name: "admin/iam", path: "/:tenant?/admin/iam", component: IAM},
 ];

@@ -1,26 +1,33 @@
 <template>
     <top-nav-bar :title="routeInfo.title" v-if="!isFullScreen()" />
-    <section data-component="FILENAME_PLACEHOLDER" class="container errors">
-        <div class="img" />
-        <h2>{{ $t("errors." + code + ".title") }}</h2>
-
-        <p>
+    <EmptyTemplate
+        :title="$t('errors.' + code + '.title')"
+        data-component="FILENAME_PLACEHOLDER"
+        :image="{
+            source: sourceImg,
+            alt: $t('errors.' + code + '.title')
+        }"
+    >
+        <template #message>
             <span v-html="$t('errors.' + code + '.content')" />
-        </p>
-
-        <el-button v-if="!isFullScreen()" tag="router-link" :to="{name: 'home'}" type="primary" size="large">
-            {{ $t("back_to_dashboard") }}
-        </el-button>
-    </section>
+        </template>
+        <template #buttons>
+            <el-button v-if="!isFullScreen()" tag="router-link" :to="{name: 'home'}" type="primary" size="large">
+                {{ $t("back_to_dashboard") }}
+            </el-button>
+        </template>
+    </EmptyTemplate>
 </template>
 
 <script>
     import RouteContext from "../../mixins/routeContext";
     import TopNavBar from "../../components/layout/TopNavBar.vue";
+    import EmptyTemplate from "../../components/layout/EmptyTemplate.vue";
+    import sourceImg from "../../assets/errors/kestra-error.png";
 
     export default {
         mixins: [RouteContext],
-        components: {TopNavBar},
+        components: {TopNavBar, EmptyTemplate},
         props: {
             code: {
                 type: Number,
@@ -33,6 +40,9 @@
                     title: this.$t("errors." + this.code + ".title"),
                 };
             },
+            sourceImg() {
+                return sourceImg;
+            }
         },
         methods: {
             isFullScreen() {
