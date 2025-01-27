@@ -104,6 +104,7 @@
                         title: this.$t("blueprints.title"),
                         props: {
                             blueprintBaseUri: `${apiUrl(this.$store)}/blueprints/community`,
+                            tab: "community",
                             embed: this.embed,
                             system: true
                         }
@@ -145,7 +146,7 @@
                         query: {
                             id: this.$route.query.id
                         }
-                    },   
+                    },
                     {
                         name: "executions",
                         component: Executions,
@@ -168,7 +169,7 @@
                         query: {
                             id: this.$route.query.id
                         }
-                    },      
+                    },
                     {
                         name: "kv",
                         component: NamespaceKV,
@@ -181,7 +182,7 @@
                                 this.modalAddKvVisible = value
                             }
                         }
-                    },          
+                    },
                     {
                         name: "edit",
                         component: "",
@@ -218,7 +219,7 @@
                         },
                         disabled: true,
                         locked: true
-                    },              
+                    },
                     {
                         name: "secrets",
                         component: "",
@@ -247,7 +248,7 @@
                         },
                         disabled: true,
                         locked: true
-                    }             
+                    }
                 ])
 
                 return tabs;
