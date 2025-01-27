@@ -34,11 +34,16 @@ export default {
         clearBreadcrumbs(state: State) {
             state.breadcrumbs = [];
         },
-        setPanel(state: State, panel: Component) {
+        setPanel(
+            state: State,
+            {breadcrumb, panel}: { breadcrumb: Breadcrumb; panel: Component },
+        ) {
             state.panel = panel;
+            state.breadcrumbs[1] = {...breadcrumb, panel: true};
         },
         unsetPanel(state: State) {
             state.panel = undefined;
+            state.breadcrumbs.splice(1);
         },
     },
 };

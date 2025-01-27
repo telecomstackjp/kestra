@@ -1101,7 +1101,8 @@
       "save": {
         "tasks": "Save task",
         "triggers": "Save trigger",
-        "error handlers": "Save error handler"
+        "error handlers": "Save error handler",
+        "input": "Save input"
       }
     }
   }

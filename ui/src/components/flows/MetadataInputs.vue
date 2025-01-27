@@ -2,45 +2,6 @@
     <span v-if="required" class="me-1 text-danger">*</span>
     <span class="label">{{ label }}</span>
     <div class="mt-1 mb-2 wrapper">
-        <drawer v-if="isEditOpen" v-model="isEditOpen">
-            <template #header>
-                <code>inputs</code>
-            </template>
-
-            <template #footer>
-                <div>
-                    <el-button
-                        :icon="ContentSave"
-                        @click="update()"
-                        type="primary"
-                    >
-                        {{ $t("save") }}
-                    </el-button>
-                </div>
-            </template>
-            <div>
-                <el-select
-                    :model-value="selectedInput.type"
-                    @update:model-value="onChangeType"
-                >
-                    <el-option
-                        v-for="(input, index) in inputsType"
-                        :key="index"
-                        :label="input.type"
-                        :value="input.type"
-                    />
-                </el-select>
-                <task-root
-                    v-loading="loading"
-                    v-if="inputSchema"
-                    name="root"
-                    :model-value="selectedInput"
-                    @update:model-value="updateSelected($event, selectedIndex)"
-                    :schema="inputSchema.schema"
-                    :definitions="inputSchema.schema.definitions"
-                />
-            </div>
-        </drawer>
         <div class="w-100 mb-3">
             <div>
                 <div
@@ -72,19 +33,23 @@
         </div>
     </div>
 </template>
+
 <script setup>
     import Plus from "vue-material-design-icons/Plus.vue";
     import Minus from "vue-material-design-icons/Minus.vue";
     import TextSearch from "vue-material-design-icons/TextSearch.vue";
-    import ContentSave from "vue-material-design-icons/ContentSave.vue";
-    import TaskRoot from "./tasks/TaskRoot.vue";
+
+    import MetadataInputsContent from "./MetadataInputsContent.vue";
 </script>
+
 <script>
+    import {h} from "vue";
+
     import {mapState} from "vuex";
-    import Drawer from "../Drawer.vue";
+    // import Drawer from "../Drawer.vue";
 
     export default {
-        components: {Drawer},
+        // components: {Drawer},
         emits: ["update:modelValue"],
         props: {
             modelValue: {
@@ -104,7 +69,8 @@
         },
         mounted() {
             if (this.inputs && this.inputs.length > 0) {
-                this.newInputs = this.inputs;
+                if (this.inputs.at(-1).length) this.newInputs = this.inputs.at(-1);
+                else this.newInputs = this.inputs;
             }
 
             this.$store
@@ -125,8 +91,26 @@
                 this.loading = true;
                 this.selectedInput = input;
                 this.selectedIndex = index;
-                this.isEditOpen = true;
+                // this.isEditOpen = true;
                 this.loadSchema(input.type);
+
+                this.$store.commit("code/setPanel", {
+                    breadcrumb: {
+                        label: this.$t("inputs").toLowerCase(),
+                        to: {
+                            name: this.$route.name,
+                            params: this.$route.params,
+                            query: this.$route.query,
+                        },
+                    },
+                    panel: h(MetadataInputsContent, {
+                        modelValue: input,
+                        inputs: this.inputs,
+                        label: this.$t("inputs"),
+                        selectedIndex: index,
+                        "onUpdate:modelValue": this.updateSelected,
+                    }),
+                });
             },
             getCls(type) {
                 return this.inputsType.find((e) => e.type === type).cls;

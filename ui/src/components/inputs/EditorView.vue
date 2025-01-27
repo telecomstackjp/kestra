@@ -637,7 +637,7 @@
 
         // validate flow on first load
         store
-            .dispatch("flow/validateFlow", {flow: yamlWithNextRevision.value})
+            .dispatch("flow/validateFlow", {flow: props.isCreating ? flowYaml.value : yamlWithNextRevision.value})
             .then((value) => {
                 if (validationDomElement.value && editorDomElement.value) {
                     validationDomElement.value.onResize(
@@ -807,7 +807,7 @@
         if(!currentIsFlow) return;
 
         return store
-            .dispatch("flow/validateFlow", {flow: yamlWithNextRevision.value})
+            .dispatch("flow/validateFlow", {flow: props.isCreating ? flowYaml.value : yamlWithNextRevision.value})
             .then((value) => {
                 if (
                     flowHaveTasks() &&
@@ -913,7 +913,9 @@
         );
     };
 
-    const validateFlow = (flow = yamlWithNextRevision.value) => {
+    const validateFlow = (flow) => {
+        if(!flow) return;
+        
         return store
             .dispatch("flow/validateFlow", {flow})
             .then((value) => {
@@ -933,7 +935,7 @@
         if(shouldSave) {
             metadata.value = {...metadata.value, ...event};
             onSaveMetadata();
-            validateFlow()
+            validateFlow(flowYaml.value)
 
         } else {
             metadata.value = event;
@@ -1052,7 +1054,7 @@
 
         haveChange.value = false;
         await store.dispatch("flow/validateFlow", {
-            flow: yamlWithNextRevision.value,
+            flow: props.isCreating ? flowYaml.value : yamlWithNextRevision.value
         });
     };
 
