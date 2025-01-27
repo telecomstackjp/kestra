@@ -360,7 +360,7 @@
     },
     "cancel": "Отмена",
     "homeDashboard": {
-      "title": "Панель управления",
+      "title": "Панели мониторинга",
       "today": "Сегодня",
       "yesterday": "Вчера",
       "last28Days": "Последние 28 дней",
@@ -1088,6 +1088,7 @@
       "adding": "+ Добавить {what}",
       "adding_default": "+ Добавить новое value"
     },
-    "export_to_file": "Экспортировать в файл"
+    "export_to_file": "Экспортировать в файл",
+    "change state current state": "Текущий статус:"
   }
 }

@@ -360,7 +360,7 @@
     },
     "cancel": "रद्द करें",
     "homeDashboard": {
-      "title": "डैशबोर्ड",
+      "title": "डैशबोर्ड्स",
       "today": "आज",
       "yesterday": "कल",
       "last28Days": "पिछले 28 दिन",
@@ -1088,6 +1088,7 @@
       "adding": "+ एक {what} जोड़ें",
       "adding_default": "+ एक नया value जोड़ें"
     },
-    "export_to_file": "फ़ाइल में निर्यात करें"
+    "export_to_file": "फ़ाइल में निर्यात करें",
+    "change state current state": "वर्तमान स्थिति है:"
   }
 }

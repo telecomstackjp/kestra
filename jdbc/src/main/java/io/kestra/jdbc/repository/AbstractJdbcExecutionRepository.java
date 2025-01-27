@@ -881,7 +881,7 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
                 select = select.and(START_DATE_FIELD.greaterOrEqual(finalStartDate.toOffsetDateTime()));
                 select = select.and(START_DATE_FIELD.lessOrEqual(finalEndDate.toOffsetDateTime()));
 
-                if (states != null) {
+                if (!ListUtils.isEmpty(states)) {
                     select = select.and(this.statesFilter(states));
                 }
 
@@ -925,7 +925,7 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
 
         List<ExecutionCount> counts = new ArrayList<>();
         // fill missing with count at 0
-        if (flows != null) {
+        if (!ListUtils.isEmpty(flows)) {
             counts.addAll(flows
                 .stream()
                 .map(flow -> result
@@ -943,7 +943,7 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
                 .toList());
         }
 
-        if (namespaces != null) {
+        if (!ListUtils.isEmpty(namespaces)) {
             Map<String, Long> groupedByNamespace = result.stream()
                 .collect(Collectors.groupingBy(
                     ExecutionCount::getNamespace,

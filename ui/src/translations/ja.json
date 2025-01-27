@@ -1088,6 +1088,7 @@
       "adding": "+ {what}を追加",
       "adding_default": "+ 新しいvalueを追加"
     },
-    "export_to_file": "ファイルにエクスポート"
+    "export_to_file": "ファイルにエクスポート",
+    "change state current state": "現在のステータスは:"
   }
 }

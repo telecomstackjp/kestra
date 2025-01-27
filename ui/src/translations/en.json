@@ -412,7 +412,7 @@
     },
     "cancel": "Cancel",
     "homeDashboard": {
-      "title": "Dashboard",
+      "title": "Dashboards",
       "welcome": "Welcome to Kestra",
       "wel_text": "Welcome!",
       "start": "Let's get your first workflow up and running.",

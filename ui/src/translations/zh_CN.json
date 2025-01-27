@@ -1088,6 +1088,7 @@
       "adding": "+ 添加{what}",
       "adding_default": "+ 添加新value"
     },
-    "export_to_file": "导出到文件"
+    "export_to_file": "导出到文件",
+    "change state current state": "当前状态是："
   }
 }
