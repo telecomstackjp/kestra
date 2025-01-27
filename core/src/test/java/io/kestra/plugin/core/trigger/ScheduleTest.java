@@ -310,6 +310,7 @@ class ScheduleTest {
     void conditions() throws Exception {
         Schedule trigger = Schedule.builder()
             .id("schedule")
+            .type(Schedule.class.getName())
             .cron("0 12 * * 1")
             .timezone("Europe/Paris")
             .conditions(List.of(
@@ -343,6 +344,7 @@ class ScheduleTest {
     void impossibleNextConditions() throws Exception {
         Schedule trigger = Schedule.builder()
             .id("schedule")
+            .type(Schedule.class.getName())
             .cron("0 12 * * 1")
             .timezone("Europe/Paris")
             .conditions(List.of(
