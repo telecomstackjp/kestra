@@ -96,6 +96,14 @@
                 :infos="flowInfos"
             />
 
+            <el-tooltip :content="$t('export_to_file')" :hide-after="0" :persistent="false" effect="light">
+                <el-button
+                    v-if="!isNamespace"
+                    :icon="Download"
+                    @click="exportYaml"
+                />
+            </el-tooltip>
+
             <EditorButtons
                 v-if="isCreating || openedTabs.length"
                 :is-creating="props.isCreating"
@@ -130,6 +138,7 @@
         >
             <template v-if="editorViewType === 'YAML'">
                 <editor
+                    class="position-relative"
                     v-if="isCreating || openedTabs.length"
                     ref="editorDomElement"
                     @save="save"
@@ -144,7 +153,11 @@
                     @restart-guided-tour="() => persistViewType(editorViewTypes.SOURCE)"
                     :read-only="isReadOnly"
                     :navbar="false"
-                />
+                >
+                    <template #absolute>
+                        <key-shortcuts />
+                    </template>
+                </editor>
                 <section v-else class="no-tabs-opened">
                     <div class="img" />
 
@@ -328,6 +341,7 @@
     import ValidationError from "../flows/ValidationError.vue";
     import Blueprints from "override/components/flows/blueprints/Blueprints.vue";
     import SwitchView from "./SwitchView.vue";
+    import KeyShortcuts from "./KeyShortcuts.vue";
     import PluginDocumentation from "../plugins/PluginDocumentation.vue";
     import permission from "../../models/permission";
     import action from "../../models/action";
