@@ -9,7 +9,7 @@ export default [
     //Dashboards
     {name: "home", path: "/:tenant?/dashboards/:id?", component: () => import("../components/dashboard/Dashboard.vue")},
     {name: "dashboards/create", path: "/:tenant?/dashboards/new", component: () => import("../components/dashboard/components/DashboardCreate.vue")},
-    {name: "dashboards/update", path: "/:tenant?/dashboards/:id/edit", component: () => import("../components/dashboard/components/DashboardEdit.vue")},
+    {name: "dashboards/update", path: "/:tenant?/dashboards/:id/edit", component: () => import("override/components/dashboard/components/DashboardEdit.vue")},
 
     //Flows
     {name: "flows/list", path: "/:tenant?/flows", component: () => import("../components/flows/Flows.vue")},
