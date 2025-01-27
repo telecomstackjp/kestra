@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 @Singleton
 public class QueryFilterFormatBinder implements AnnotatedRequestArgumentBinder<QueryFilterFormat, List<QueryFilter>> {
 
-    private static final Pattern FILTER_PATTERN = Pattern.compile("filters\\[(.*?)\\]\\[(.*?)\\](?:\\[(\\d+)\\])?");
+    private static final Pattern FILTER_PATTERN = Pattern.compile("filters\\[(.*?)\\]\\[(.*?)](?:\\[(\\w+)])?");
 
     @VisibleForTesting
     static List<QueryFilter> getQueryFilters(Map<String, List<String>> queryParams) {

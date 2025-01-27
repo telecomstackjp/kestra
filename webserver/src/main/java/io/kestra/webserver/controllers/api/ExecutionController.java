@@ -43,6 +43,7 @@ import io.kestra.webserver.responses.BulkResponse;
 import io.kestra.webserver.responses.PagedResults;
 import io.kestra.webserver.utils.PageableUtils;
 import io.kestra.webserver.utils.RequestUtils;
+import io.kestra.webserver.utils.TimeLineSearchUtils;
 import io.kestra.webserver.utils.filepreview.FileRender;
 import io.kestra.webserver.utils.filepreview.FileRenderBuilder;
 import io.micronaut.context.annotation.Value;
@@ -193,10 +194,20 @@ public class ExecutionController {
         @Parameter(description = "Filters") @QueryFilterFormat List<QueryFilter> filters
 
     ) {
-       // validateTimeline(startDate, endDate);
         final ZonedDateTime now = ZonedDateTime.now();
-        // TODO: handle the time range with the resolveAbsoluteDateTime method
+
+        TimeLineSearchUtils timeLineSearchUtils = TimeLineSearchUtils.extractFrom(filters);
+        validateTimeline(timeLineSearchUtils.startDate(), timeLineSearchUtils.endDate());
+
+        ZonedDateTime resolvedStartDate = resolveAbsoluteDateTime(timeLineSearchUtils.startDate(),
+            timeLineSearchUtils.timeRange(),
+            now);
+
+        // Update filters with the resolved startDate
+        filters = timeLineSearchUtils.updateFilters(filters, resolvedStartDate);
+
         return PagedResults.of(executionRepository.find(
+
             PageableUtils.from(page, size, sort, executionRepository.sortMapping()),
             tenantService.resolveTenant(),
             filters
