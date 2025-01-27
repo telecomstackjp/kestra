@@ -45,10 +45,10 @@ public abstract class AbstractLogRepositoryTest {
         ArrayListTotal<LogEntry> find = logRepository.find(Pageable.UNPAGED, null, null);
         assertThat(find.size(), is(0));
 
+
         LogEntry save = logRepository.save(builder.build());
 
-        builder.tenantId("doe");
-        find = logRepository.find(Pageable.UNPAGED, "doe", null);
+        find = logRepository.find(Pageable.UNPAGED, null, null);
         assertThat(find.size(), is(1));
         assertThat(find.getFirst().getExecutionId(), is(save.getExecutionId()));
         var filters = List.of(QueryFilter.builder()

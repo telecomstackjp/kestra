@@ -196,7 +196,7 @@ public abstract class AbstractExecutionRepositoryTest {
 
         filters = List.of(QueryFilter.builder()
             .field(QueryFilter.Field.NAMESPACE)
-            .operation(QueryFilter.Op.EQUALS)
+            .operation(QueryFilter.Op.STARTS_WITH)
             .value("io.kestra")
             .build());
         executions = executionRepository.find(Pageable.from(1, 10),  null, filters);

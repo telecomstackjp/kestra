@@ -4,6 +4,7 @@ import io.kestra.core.models.QueryFilter;
 import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
 import io.kestra.core.models.dashboards.Order;
+import io.kestra.core.models.executions.LogEntry;
 import io.kestra.core.models.flows.State;
 import io.kestra.core.repositories.ExecutionRepositoryInterface;
 import io.kestra.core.repositories.ExecutionRepositoryInterface.ChildFilter;
@@ -15,6 +16,7 @@ import io.micronaut.data.model.Pageable;
 import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
+import org.slf4j.event.Level;
 
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -232,6 +234,11 @@ public abstract class AbstractJdbcRepository {
             select = handleChildFilter(select, value);
             return select;
         }
+        // Handling for Field.MIN_LEVEL
+        if (field.equals(QueryFilter.Field.MIN_LEVEL)) {
+            return handleMinLevelField(select, value, operation);
+        }
+
         // Convert the field name to lowercase and quote it
         Name columnName = DSL.quotedName(field.name().toLowerCase());
 
@@ -300,6 +307,33 @@ public abstract class AbstractJdbcRepository {
             case CHILD -> select.and(DSL.field(DSL.quotedName("trigger_execution_id")).isNotNull());
             case MAIN -> select.and(DSL.field(DSL.quotedName("trigger_execution_id")).isNull());
         };
+    }
+
+    private <T extends Record> SelectConditionStep<T> handleMinLevelField(
+        SelectConditionStep<T> select,
+        Object value,
+        QueryFilter.Op operation
+    ) {
+        if (!(value instanceof Level minLevel)) {
+            throw new IllegalArgumentException("MIN_LEVEL filter requires a Level value");
+        }
+
+        // Handle operations
+        switch (operation) {
+            case EQUALS -> select = select.and(minLevelCondition(minLevel));
+            case NOT_EQUALS -> select = select.and(minLevelCondition(minLevel).not());
+            default -> throw new UnsupportedOperationException(
+                "Unsupported operation for MIN_LEVEL: " + operation
+            );
+        }
+        return select;
+    }
+    private Condition minLevelCondition(Level minLevel) {
+        return levelsCondition(LogEntry.findLevelsByMin(minLevel));
+    }
+
+    protected Condition levelsCondition(List<Level> levels) {
+        return field("level").in(levels.stream().map(level -> level.name()).toList());
     }
 
 }
