@@ -46,7 +46,7 @@ public class LogController {
 
     @ExecuteOn(TaskExecutors.IO)
     @Get(uri = "logs/search")
-    @Operation(tags = {"Flows"}, summary = "Search for flows")
+    @Operation(tags = {"Logs"}, summary = "Search for logs")
     public PagedResults<LogEntry> find(
         @Parameter(description = "The current page") @QueryValue(defaultValue = "1") @Min(1) int page,
         @Parameter(description = "The current page size") @QueryValue(defaultValue = "10") @Min(1) int size,

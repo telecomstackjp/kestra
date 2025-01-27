@@ -502,11 +502,13 @@ public abstract class AbstractJdbcFlowRepository extends AbstractJdbcRepository 
                         switch (field) {
                             case QUERY -> {
                                 if (value instanceof String query) {
-                                    if (operation.equals(EQUALS))
+                                    if (operation.equals(EQUALS)) {
                                         select.and(jdbcRepository.fullTextCondition(Collections.singletonList("fulltext"), query));
-                                    else
+                                    } else {
                                         select.and(DSL.not(jdbcRepository.fullTextCondition(Collections.singletonList("fulltext"), query)));
+                                    }
                                 }
+
                             }
                             case SCOPE -> {
                                 if (value instanceof List<?> scopeValues && !scopeValues.containsAll(Arrays.stream(FlowScope.values()).toList())) {
