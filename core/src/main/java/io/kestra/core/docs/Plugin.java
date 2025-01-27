@@ -35,6 +35,7 @@ public class Plugin {
     private List<String> appBlocks;
     private List<String> charts;
     private List<String> dataFilters;
+    private List<String> logExporters;
     private List<PluginSubGroup.PluginCategory> categories;
     private String subGroup;
 
@@ -89,6 +90,7 @@ public class Plugin {
         plugin.appBlocks = filterAndGetClassName(registeredPlugin.getAppBlocks()).stream().filter(c -> subgroup == null || c.startsWith(subgroup)).toList();
         plugin.charts = filterAndGetClassName(registeredPlugin.getCharts()).stream().filter(c -> subgroup == null || c.startsWith(subgroup)).toList();
         plugin.dataFilters = filterAndGetClassName(registeredPlugin.getDataFilters()).stream().filter(c -> subgroup == null || c.startsWith(subgroup)).toList();
+        plugin.logExporters = filterAndGetClassName(registeredPlugin.getLogExporters()).stream().filter(c -> subgroup == null || c.startsWith(subgroup)).toList();
 
         return plugin;
     }
