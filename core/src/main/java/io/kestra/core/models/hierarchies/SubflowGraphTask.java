@@ -52,7 +52,7 @@ public class SubflowGraphTask extends AbstractGraphTask {
         }
 
         @Override
-        public Optional<SubflowExecutionResult> createSubflowExecutionResult(RunContext runContext, TaskRun taskRun, Flow flow, Execution execution) {
+        public Optional<SubflowExecutionResult> createSubflowExecutionResult(RunContext runContext, TaskRun taskRun, Flow flow, Execution execution) throws IllegalVariableEvaluationException {
             return subflowTask.createSubflowExecutionResult(runContext, taskRun, flow, execution);
         }
 

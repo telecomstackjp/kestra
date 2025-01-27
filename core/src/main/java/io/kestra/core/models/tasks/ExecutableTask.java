@@ -1,5 +1,6 @@
 package io.kestra.core.models.tasks;
 
+import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.exceptions.InternalException;
 import io.kestra.core.models.executions.Execution;
 import io.kestra.core.models.executions.TaskRun;
@@ -31,7 +32,7 @@ public interface ExecutableTask<T extends Output>{
     Optional<SubflowExecutionResult> createSubflowExecutionResult(RunContext runContext,
                                                                          TaskRun taskRun,
                                                                          Flow flow,
-                                                                         Execution execution);
+                                                                         Execution execution) throws IllegalVariableEvaluationException;
 
     /**
      * Whether to wait for the execution(s) of the subflow before terminating this tasks

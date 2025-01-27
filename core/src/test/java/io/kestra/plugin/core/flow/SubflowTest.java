@@ -54,7 +54,7 @@ class SubflowTest {
     }
 
     @Test
-    void shouldNotReturnResultForExecutionNotTerminated() {
+    void shouldNotReturnResultForExecutionNotTerminated() throws IllegalVariableEvaluationException {
         TaskRun taskRun = TaskRun
             .builder()
             .state(State.of(State.Type.CREATED, Collections.emptyList()))
@@ -72,7 +72,7 @@ class SubflowTest {
 
     @SuppressWarnings("deprecation")
     @Test
-    void shouldNotReturnOutputsForSubflowOutputsDisabled() {
+    void shouldNotReturnOutputsForSubflowOutputsDisabled() throws IllegalVariableEvaluationException {
         // Given
         Mockito.when(applicationContext.getProperty(Subflow.PLUGIN_FLOW_OUTPUTS_ENABLED, Boolean.class))
             .thenReturn(Optional.of(false));

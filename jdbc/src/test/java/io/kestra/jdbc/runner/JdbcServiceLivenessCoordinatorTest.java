@@ -208,7 +208,7 @@ public abstract class JdbcServiceLivenessCoordinatorTest {
         Sleep bash = Sleep.builder()
             .type(Sleep.class.getName())
             .id("unit-test")
-            .duration(sleep)
+            .duration(io.kestra.core.models.property.Property.of(sleep))
             .build();
 
         Execution execution = TestsUtils.mockExecution(flowBuilder(sleep), ImmutableMap.of());
@@ -242,7 +242,7 @@ public abstract class JdbcServiceLivenessCoordinatorTest {
         Sleep bash = Sleep.builder()
             .type(Sleep.class.getName())
             .id("unit-test")
-            .duration(sleep)
+            .duration(io.kestra.core.models.property.Property.of(sleep))
             .build();
 
         SleepTrigger trigger = SleepTrigger.builder()
