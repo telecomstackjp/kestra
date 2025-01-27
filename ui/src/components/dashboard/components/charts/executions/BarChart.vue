@@ -49,13 +49,7 @@
             type: Boolean,
             required: false,
             default: false,
-        },
-        onClick: {
-            type: Function,
-            required: false,
-            default: () => () => {
-            },
-        },
+        }
     });
 
 
@@ -118,7 +112,7 @@
                     containerID: "executions",
                 },
                 tooltip: {
-                    enabled: true,
+                    enabled: props.scales,
                     filter: (value) => value.raw,
                     callbacks: {
                         label: (value) => {
