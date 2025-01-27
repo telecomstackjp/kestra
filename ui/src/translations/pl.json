@@ -1089,6 +1089,7 @@
       "adding_default": "+ Dodaj nową wartość"
     },
     "export_to_file": "Eksportuj do pliku",
-    "change state current state": "Aktualny status to:"
+    "change state current state": "Aktualny status to:",
+    "create_dashboard": "Utwórz Dashboard"
   }
 }

@@ -1089,6 +1089,7 @@
       "adding_default": "+ एक नया value जोड़ें"
     },
     "export_to_file": "फ़ाइल में निर्यात करें",
-    "change state current state": "वर्तमान स्थिति है:"
+    "change state current state": "वर्तमान स्थिति है:",
+    "create_dashboard": "डैशबोर्ड बनाएं"
   }
 }

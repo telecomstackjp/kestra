@@ -1089,6 +1089,7 @@
       "adding_default": "+ 新しいvalueを追加"
     },
     "export_to_file": "ファイルにエクスポート",
-    "change state current state": "現在のステータスは:"
+    "change state current state": "現在のステータスは:",
+    "create_dashboard": "ダッシュボードを作成"
   }
 }

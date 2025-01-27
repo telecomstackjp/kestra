@@ -1089,6 +1089,7 @@
       "adding_default": "+ Añadir un nuevo value"
     },
     "export_to_file": "Exportar a archivo",
-    "change state current state": "Estado actual es:"
+    "change state current state": "Estado actual es:",
+    "create_dashboard": "Crear Panel de Control"
   }
 }

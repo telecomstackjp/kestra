@@ -1089,6 +1089,7 @@
       "adding_default": "+ 添加新value"
     },
     "export_to_file": "导出到文件",
-    "change state current state": "当前状态是："
+    "change state current state": "当前状态是：",
+    "create_dashboard": "创建仪表板"
   }
 }

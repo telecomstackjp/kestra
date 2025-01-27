@@ -1089,6 +1089,7 @@
       "adding_default": "+ Добавить новое value"
     },
     "export_to_file": "Экспортировать в файл",
-    "change state current state": "Текущий статус:"
+    "change state current state": "Текущий статус:",
+    "create_dashboard": "Создать Dashboard"
   }
 }
