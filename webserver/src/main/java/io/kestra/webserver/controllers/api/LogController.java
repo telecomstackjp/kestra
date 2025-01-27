@@ -24,6 +24,7 @@ import jakarta.inject.Named;
 import org.slf4j.event.Level;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
+import reactor.core.scheduler.Schedulers;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -152,15 +153,12 @@ public class LogController {
 
                 cancel.set(receive);
             }, FluxSink.OverflowStrategy.BUFFER)
-            .doOnCancel(() -> {
-                if (cancel.get() != null) {
-                    cancel.get().run();
-                }
-            })
-            .doOnComplete(() -> {
-                if (cancel.get() != null) {
-                    cancel.get().run();
-                }
+            .doFinally(ignored -> {
+                Schedulers.boundedElastic().schedule(() -> {
+                    if (cancel.get() != null) {
+                        cancel.get().run();
+                    }
+                });
             });
     }
 

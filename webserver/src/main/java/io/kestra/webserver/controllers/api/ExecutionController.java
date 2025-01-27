@@ -1278,15 +1278,12 @@ public class ExecutionController {
 
                 cancel.set(receive);
             }, FluxSink.OverflowStrategy.BUFFER)
-            .doOnCancel(() -> {
-                if (cancel.get() != null) {
-                    cancel.get().run();
-                }
-            })
-            .doOnComplete(() -> {
-                if (cancel.get() != null) {
-                    cancel.get().run();
-                }
+            .doFinally(ignored -> {
+                Schedulers.boundedElastic().schedule(() -> {
+                    if (cancel.get() != null) {
+                        cancel.get().run();
+                    }
+                });
             });
     }
 
