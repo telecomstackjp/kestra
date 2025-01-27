@@ -6,7 +6,6 @@ import io.kestra.core.models.dashboards.DataFilter;
 import io.kestra.core.models.dashboards.Order;
 import io.kestra.core.models.executions.LogEntry;
 import io.kestra.core.models.flows.State;
-import io.kestra.core.repositories.ExecutionRepositoryInterface;
 import io.kestra.core.repositories.ExecutionRepositoryInterface.ChildFilter;
 import io.kestra.core.utils.DateUtils;
 import io.kestra.core.utils.ListUtils;
@@ -20,6 +19,8 @@ import org.slf4j.event.Level;
 
 import java.sql.Timestamp;
 import java.time.Duration;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 public abstract class AbstractJdbcRepository {
@@ -239,6 +240,14 @@ public abstract class AbstractJdbcRepository {
             return handleMinLevelField(select, value, operation);
         }
 
+        // Special handling for START_DATE and END_DATE
+        if (field == QueryFilter.Field.START_DATE || field == QueryFilter.Field.END_DATE) {
+            OffsetDateTime dateTime = (value instanceof ZonedDateTime)
+                ? ((ZonedDateTime) value).toOffsetDateTime()
+                : ZonedDateTime.parse(value.toString()).toOffsetDateTime();
+            return applyDateCondition(select, dateTime, operation);
+        }
+
         // Convert the field name to lowercase and quote it
         Name columnName = DSL.quotedName(field.name().toLowerCase());
 
@@ -314,11 +323,8 @@ public abstract class AbstractJdbcRepository {
         Object value,
         QueryFilter.Op operation
     ) {
-        if (!(value instanceof Level minLevel)) {
-            throw new IllegalArgumentException("MIN_LEVEL filter requires a Level value");
-        }
+        Level minLevel = Level.valueOf((String) value);
 
-        // Handle operations
         switch (operation) {
             case EQUALS -> select = select.and(minLevelCondition(minLevel));
             case NOT_EQUALS -> select = select.and(minLevelCondition(minLevel).not());
@@ -334,6 +340,19 @@ public abstract class AbstractJdbcRepository {
 
     protected Condition levelsCondition(List<Level> levels) {
         return field("level").in(levels.stream().map(level -> level.name()).toList());
+    }
+
+    private <T extends Record> SelectConditionStep<T> applyDateCondition(
+        SelectConditionStep<T> select, OffsetDateTime dateTime, QueryFilter.Op operation
+    ) {
+        switch (operation) {
+            case LESS_THAN -> select = select.and(DSL.field("timestamp").lessThan(dateTime));
+            case GREATER_THAN -> select = select.and(DSL.field("timestamp").greaterThan(dateTime));
+            case EQUALS -> select = select.and(DSL.field("timestamp").eq(dateTime));
+            case NOT_EQUALS -> select = select.and(DSL.field("timestamp").ne(dateTime));
+            default -> throw new UnsupportedOperationException("Unsupported operation for date condition: " + operation);
+        }
+        return select;
     }
 
 }

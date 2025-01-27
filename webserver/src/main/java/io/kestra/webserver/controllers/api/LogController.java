@@ -8,6 +8,7 @@ import io.kestra.core.services.ExecutionLogService;
 import io.kestra.core.tenant.TenantService;
 import io.kestra.webserver.responses.PagedResults;
 import io.kestra.webserver.utils.PageableUtils;
+import io.kestra.webserver.utils.TimeLineSearchUtils;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.format.Format;
@@ -29,6 +30,8 @@ import reactor.core.publisher.Flux;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+
+import static io.kestra.core.utils.DateUtils.validateTimeline;
 
 
 @Validated
@@ -53,6 +56,8 @@ public class LogController {
         @Parameter(description = "The sort of current page") @Nullable @QueryValue List<String> sort,
         @Parameter(description = "Filters") @QueryFilterFormat List<QueryFilter> filters
     ) throws HttpStatusException {
+        TimeLineSearchUtils timeLineSearchUtils = TimeLineSearchUtils.extractFrom(filters);
+        validateTimeline(timeLineSearchUtils.startDate(), timeLineSearchUtils.endDate());
 
         return PagedResults.of(logRepository.find(
             PageableUtils.from(page, size, sort),
