@@ -192,6 +192,10 @@ public class RunContextLogger implements Supplier<org.slf4j.Logger> {
         return this.logger;
     }
 
+    public void resetMDC() {
+        MDC.clear();
+    }
+
     @Override
     public org.slf4j.Logger get() {
         return logger();
