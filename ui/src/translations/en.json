@@ -304,6 +304,8 @@
       "github": "Open a GitHub issue"
     },
     "blueprints": {
+      "community": "Community",
+      "custom": "Custom blueprints",
       "title": "Blueprints",
       "empty": "No blueprints to show.",
       "header": {
@@ -805,6 +807,10 @@
       "instance": {
         "title": "Upgrade Your Concurrency",
         "message": "With Kestra Enterprise Edition, you unlock advanced capabilities like multi-tenancy"
+      },
+      "blueprints": {
+        "title": "Add your Private Blueprints",
+        "message": "in Kestra Enterprise edition you can add your private blueprints and keep them private in your own instances"
       },
       "namespace": {
         "edit": {

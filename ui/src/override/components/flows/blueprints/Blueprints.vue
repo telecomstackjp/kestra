@@ -16,7 +16,22 @@
                 :blueprint-base-uri="blueprintUri"
                 :blueprint-kind="kind"
                 @go-to-detail="blueprintId => selectedBlueprintId = blueprintId"
-            />
+            >
+                <template #nav>
+                    <tabs
+                        :top="false"
+                        @changed="tabChanged"
+                        v-if="isFlow"
+                        :embed-active-tab="embed ? embeddedTab : undefined"
+                        :route-name="$route.name"
+                        :tabs="tabs"
+                        type="card"
+                    />
+                </template>
+                <template v-if="embeddedTab === 'custom'" #content>
+                    <DemoBlueprints />
+                </template>
+            </blueprints-browser>
         </section>
     </dotted-layout>
 </template>
@@ -25,6 +40,8 @@
     import TopNavBar from "../../../../components/layout/TopNavBar.vue";
     import DottedLayout from "../../../../components/layout/DottedLayout.vue";
     import BlueprintDetail from "../../../../components/flows/blueprints/BlueprintDetail.vue";
+    import DemoBlueprints from "../../../../components/demo/Blueprints.vue";
+    import Tabs from "../../../..//components/Tabs.vue";
     import BlueprintsBrowser from "./BlueprintsBrowser.vue";
     import {apiUrl} from "override/utils/route";
 
@@ -38,7 +55,9 @@
             DottedLayout,
             BlueprintDetail,
             BlueprintsBrowser,
-            TopNavBar
+            TopNavBar,
+            Tabs,
+            DemoBlueprints
         },
         emits: [
             "loaded"
@@ -48,13 +67,21 @@
                 type: String,
                 required: true
             },
+            tab: {
+                type: String,
+                default: "community"
+            }
         },
         data() {
             return {
                 selectedBlueprintId: undefined,
                 headerImage,
-                headerImageDark
+                headerImageDark,
+                embeddedTab: "community"
             }
+        },
+        mounted(){
+            if(!this.$route?.params?.tab) this.$router.push({name: "blueprints", params: {tab: "community"}})
         },
         computed: {
             routeInfo() {
@@ -62,9 +89,35 @@
                     title: this.$t("blueprints.title")
                 };
             },
+            tabs() {
+                return [
+                    {
+                        name: "community",
+                        title: this.$t("blueprints.community"),
+                        query: this.$route.query
+                    },
+                    {
+                        name: "custom",
+                        title: this.$t("blueprints.custom"),
+                        query: this.$route.query
+                    }
+                ]
+            },
             blueprintUri() {
                 return `${apiUrl(this.$store)}/blueprints/community`
-            }
+            },
+            isFlow() {
+                return this.kind === "flow";
+            },
+        },
+        methods: {
+            tabChanged(newTab) {
+                if (!newTab?.name) {
+                    return;
+                }
+                this.embeddedTab = newTab.name;
+            },
+
         }
     };
 </script>

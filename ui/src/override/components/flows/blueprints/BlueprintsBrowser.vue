@@ -2,97 +2,99 @@
     <errors code="404" v-if="error && embed" />
     <div v-else>
         <slot name="nav" />
-        <data-table class="blueprints" @page-changed="onPageChanged" ref="dataTable" :total="total" divider>
-            <template #navbar>
-                <el-radio-group v-if="ready && !system" v-model="selectedTag" class="tags-selection">
-                    <el-radio-button
-                        :key="0"
-                        :value="0"
-                        class="hoverable"
+        <slot name="content">
+            <data-table class="blueprints" @page-changed="onPageChanged" ref="dataTable" :total="total" divider>
+                <template #navbar>
+                    <el-radio-group v-if="ready && !system" v-model="selectedTag" class="tags-selection">
+                        <el-radio-button
+                            :key="0"
+                            :value="0"
+                            class="hoverable"
+                        >
+                            {{ $t("all tags") }}
+                        </el-radio-button>
+                        <el-radio-button
+                            v-for="tag in Object.values(tags || {})"
+                            :key="tag.id"
+                            :value="tag.id"
+                            class="hoverable"
+                            @dblclick.stop="selectedTag = 0"
+                        >
+                            {{ tag.name }}
+                        </el-radio-button>
+                    </el-radio-group>
+                    <nav v-else-if="system" class="header pb-3">
+                        <p class="mb-0 fw-lighter">
+                            {{ $t("system_namespace") }}
+                        </p>
+                        <p class="fs-5 fw-semibold">
+                            {{ $t("system_namespace_description") }}
+                        </p>
+                    </nav>
+                </template>
+                <template #top>
+                    <KestraFilter :prefix="`blueprintsBrowser${tab}`" :placeholder="$t('search')" :decode="false" />
+                </template>
+                <template #table>
+                    <el-alert type="info" v-if="ready && (!blueprints || blueprints.length === 0)" :closable="false">
+                        {{ $t('blueprints.empty') }}
+                    </el-alert>
+                    <el-card
+                        class="blueprint-card"
+                        :class="{'embed': embed}"
+                        v-for="blueprint in blueprints"
+                        :key="blueprint.id"
+                        @click="goToDetail(blueprint.id)"
                     >
-                        {{ $t("all tags") }}
-                    </el-radio-button>
-                    <el-radio-button
-                        v-for="tag in Object.values(tags || {})"
-                        :key="tag.id"
-                        :value="tag.id"
-                        class="hoverable"
-                        @dblclick.stop="selectedTag = 0"
-                    >
-                        {{ tag.name }}
-                    </el-radio-button>
-                </el-radio-group>
-                <nav v-else-if="system" class="header pb-3">
-                    <p class="mb-0 fw-lighter">
-                        {{ $t("system_namespace") }}
-                    </p>
-                    <p class="fs-5 fw-semibold">
-                        {{ $t("system_namespace_description") }}
-                    </p>
-                </nav>
-            </template>
-            <template #top>
-                <KestraFilter :prefix="`blueprintsBrowser${tab}`" :placeholder="$t('search')" :decode="false" />
-            </template>
-            <template #table>
-                <el-alert type="info" v-if="ready && (!blueprints || blueprints.length === 0)" :closable="false">
-                    {{ $t('blueprints.empty') }}
-                </el-alert>
-                <el-card
-                    class="blueprint-card"
-                    :class="{'embed': embed}"
-                    v-for="blueprint in blueprints"
-                    :key="blueprint.id"
-                    @click="goToDetail(blueprint.id)"
-                >
-                    <component
-                        class="blueprint-link"
-                        :is="embed ? 'div' : 'router-link'"
-                        :to="embed ? undefined : {name: 'blueprints/view', params: {blueprintId: blueprint.id, tab, kind: blueprintKind}}"
-                    >
-                        <div class="left">
-                            <div class="blueprint">
-                                <div class="ps-0 title">
-                                    {{ blueprint.title }}
-                                </div>
-                                <div v-if="!system" class="tags text-uppercase">
-                                    <div v-for="(tag, index) in blueprint.tags" :key="index" class="tag-box">
-                                        <el-tag size="small">
-                                            {{ tag }}
-                                        </el-tag>
+                        <component
+                            class="blueprint-link"
+                            :is="embed ? 'div' : 'router-link'"
+                            :to="embed ? undefined : {name: 'blueprints/view', params: {blueprintId: blueprint.id, tab, kind: blueprintKind}}"
+                        >
+                            <div class="left">
+                                <div class="blueprint">
+                                    <div class="ps-0 title">
+                                        {{ blueprint.title }}
+                                    </div>
+                                    <div v-if="!system" class="tags text-uppercase">
+                                        <div v-for="(tag, index) in blueprint.tags" :key="index" class="tag-box">
+                                            <el-tag size="small">
+                                                {{ tag }}
+                                            </el-tag>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="tasks-container">
+                                    <task-icon
+                                        :icons="icons"
+                                        :cls="task"
+                                        :key="task"
+                                        v-for="task in [...new Set(blueprint.includedTasks)]"
+                                    />
+                                </div>
                             </div>
-                            <div class="tasks-container">
-                                <task-icon
-                                    :icons="icons"
-                                    :cls="task"
-                                    :key="task"
-                                    v-for="task in [...new Set(blueprint.includedTasks)]"
-                                />
-                            </div>
-                        </div>
-                        <div class="side buttons ms-auto">
-                            <slot name="buttons" :blueprint="blueprint" />
-                            <el-tooltip v-if="embed" trigger="click" content="Copied" placement="left" :auto-close="2000" effect="light">
-                                <el-button
-                                    @click.prevent.stop="copy(blueprint.id)"
-                                    :icon="icon.ContentCopy"
-                                    size="large"
-                                    text
-                                    bg
-                                >
-                                    {{ $t('copy') }}
+                            <div class="side buttons ms-auto">
+                                <slot name="buttons" :blueprint="blueprint" />
+                                <el-tooltip v-if="embed" trigger="click" content="Copied" placement="left" :auto-close="2000" effect="light">
+                                    <el-button
+                                        @click.prevent.stop="copy(blueprint.id)"
+                                        :icon="icon.ContentCopy"
+                                        size="large"
+                                        text
+                                        bg
+                                    >
+                                        {{ $t('copy') }}
+                                    </el-button>
+                                </el-tooltip>
+                                <el-button v-else type="primary" size="default" @click.prevent.stop="blueprintToEditor(blueprint.id)">
+                                    {{ $t('use') }}
                                 </el-button>
-                            </el-tooltip>
-                            <el-button v-else type="primary" size="default" @click.prevent.stop="blueprintToEditor(blueprint.id)">
-                                {{ $t('use') }}
-                            </el-button>
-                        </div>
-                    </component>
-                </el-card>
-            </template>
-        </data-table>
+                            </div>
+                        </component>
+                    </el-card>
+                </template>
+            </data-table>
+        </slot>
         <slot name="bottom-bar" />
     </div>
 </template>
