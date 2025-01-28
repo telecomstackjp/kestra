@@ -145,7 +145,8 @@ public class PluginController {
                     plugin.getTasks().stream(),
                     plugin.getTriggers().stream(),
                     plugin.getConditions().stream(),
-                    plugin.getTaskRunners().stream()
+                    plugin.getTaskRunners().stream(),
+                    plugin.getLogExporters().stream()
                 )
                 .flatMap(i -> i)
                 .map(e -> new AbstractMap.SimpleEntry<>(

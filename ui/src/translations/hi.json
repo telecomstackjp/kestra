@@ -524,8 +524,7 @@
     "worker group": "Worker समूह",
     "version": "संस्करण",
     "services": "सेवाएँ",
-    "cluster": "क्लस्टर",
-    "server type": "सर्वर प्रकार",
+        "server type": "सर्वर प्रकार",
     "hostname": "होस्टनाम",
     "port": "पोर्ट",
     "management port": "प्रबंधन पोर्ट",
@@ -1066,7 +1065,8 @@
         "triggers": "ट्रिगर्स",
         "main": "मुख्य गुणधर्म",
         "error_handlers": "त्रुटि हैंडलर",
-        "tasks": "कार्य"
+        "tasks": "कार्य",
+        "advanced": "उन्नत कॉन्फ़िगरेशन"
       },
       "creation": {
         "select": "किसी {section} का चयन करें",
@@ -1091,6 +1091,7 @@
     },
     "export_to_file": "फ़ाइल में निर्यात करें",
     "change state current state": "वर्तमान स्थिति है:",
-    "create_dashboard": "डैशबोर्ड बनाएं"
+    "create_dashboard": "डैशबोर्ड बनाएं",
+    "instance": "इंस्टेंस"
   }
 }

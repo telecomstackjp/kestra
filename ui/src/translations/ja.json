@@ -524,8 +524,7 @@
     "worker group": "Workerグループ",
     "version": "バージョン",
     "services": "サービス",
-    "cluster": "クラスター",
-    "server type": "サーバータイプ",
+        "server type": "サーバータイプ",
     "hostname": "ホスト名",
     "port": "ポート",
     "management port": "管理ポート",
@@ -1066,7 +1065,8 @@
         "triggers": "トリガー",
         "main": "メインプロパティ",
         "error_handlers": "エラーハンドラー",
-        "tasks": "タスク"
+        "tasks": "タスク",
+        "advanced": "高度な設定"
       },
       "creation": {
         "select": "{section}を選択してください",
@@ -1091,6 +1091,7 @@
     },
     "export_to_file": "ファイルにエクスポート",
     "change state current state": "現在のステータスは:",
-    "create_dashboard": "ダッシュボードを作成"
+    "create_dashboard": "ダッシュボードを作成",
+    "instance": "インスタンス"
   }
 }

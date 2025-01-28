@@ -524,8 +524,7 @@
     "worker group": "工作组",
     "version": "版本",
     "services": "服务",
-    "cluster": "集群",
-    "server type": "服务器类型",
+        "server type": "服务器类型",
     "hostname": "主机名",
     "port": "端口",
     "management port": "管理端口",
@@ -1066,7 +1065,8 @@
         "triggers": "触发器",
         "main": "主要属性",
         "error_handlers": "错误处理程序",
-        "tasks": "任务"
+        "tasks": "任务",
+        "advanced": "高级配置"
       },
       "creation": {
         "select": "选择一个{section}",
@@ -1091,6 +1091,7 @@
     },
     "export_to_file": "导出到文件",
     "change state current state": "当前状态是：",
-    "create_dashboard": "创建仪表板"
+    "create_dashboard": "创建仪表板",
+    "instance": "实例"
   }
 }

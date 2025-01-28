@@ -182,7 +182,7 @@ export function useLeftMenu() {
                     {
                         href: {name: "admin/instance"},
                         routes: routeStartWith("admin/instance"),
-                        title: t("cluster"),
+                        title: t("instance"),
                         icon: {
                             element: shallowRef(ServerOutline),
                             class: "menu-icon"

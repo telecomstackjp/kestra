@@ -1,5 +1,5 @@
 import JsYaml from "js-yaml";
-import yaml, {Document, YAMLMap, isSeq, isMap, Pair, Scalar, YAMLSeq, LineCounter, isPair} from "yaml";
+import yaml, {Document, isMap, isPair, isSeq, LineCounter, Pair, Scalar, YAMLMap, YAMLSeq} from "yaml";
 import _cloneDeep from "lodash/cloneDeep"
 import {SECTIONS} from "./constants.js";
 
@@ -191,23 +191,21 @@ export default class YamlUtils {
         }
     }
 
-    static extractFieldFromMaps(source, fieldName, yamlDocPredicate = (_) => true) {
+    static extractFieldFromMaps(source, fieldName, parentPathPredicate = (_) => true) {
         const yamlDoc = yaml.parseDocument(source);
         const maps = [];
-        if (yamlDocPredicate(yamlDoc)) {
-            yaml.visit(yamlDoc, {
-                Map(_, map) {
-                    if (map.items) {
-                        for (const item of map.items) {
-                            if (item.key.value === fieldName) {
-                                const fieldValue = item.value?.value ?? item.value?.items;
-                                maps.push({[fieldName]: fieldValue, range: map.range});
-                            }
+        yaml.visit(yamlDoc, {
+            Map(_, map, parent) {
+                if (parentPathPredicate(parent.filter(p => yaml.isPair(p)).map(p => p.key.value).join(".")) && map.items) {
+                    for (const item of map.items) {
+                        if (item.key.value === fieldName) {
+                            const fieldValue = item.value?.value ?? item.value?.items;
+                            maps.push({[fieldName]: fieldValue, range: map.range});
                         }
                     }
                 }
-            })
-        }
+            }
+        })
         return maps;
     }
 
@@ -247,12 +245,8 @@ export default class YamlUtils {
         return maps;
     }
 
-    static extractAllTaskIds(source) {
-        return this.extractFieldFromMaps(source, "id", (yamlDoc) => yamlDoc.contents && yamlDoc.contents.items && yamlDoc.contents.items.find(e => ["tasks"].includes(e.key?.value)))
-    }
-
     static extractAllTypes(source) {
-        return this.extractFieldFromMaps(source, "type", (yamlDoc) => yamlDoc.contents && yamlDoc.contents.items && yamlDoc.contents.items.find(e => ["tasks", "triggers", "errors"].includes(e.key?.value)))
+        return this.extractFieldFromMaps(source, "type", (parentKey) => ["tasks", "triggers", "errors", "tasks.logExporters"].some(k => k === parentKey))
     }
 
     static getTaskType(source, position) {

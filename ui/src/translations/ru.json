@@ -524,8 +524,7 @@
     "worker group": "Группа workers",
     "version": "Версия",
     "services": "Сервисы",
-    "cluster": "Кластер",
-    "server type": "Тип сервера",
+        "server type": "Тип сервера",
     "hostname": "Имя хоста",
     "port": "Порт",
     "management port": "Порт управления",
@@ -1066,7 +1065,8 @@
         "triggers": "Триггеры",
         "main": "Основные свойства",
         "error_handlers": "Обработчики ошибок",
-        "tasks": "Задачи"
+        "tasks": "Задачи",
+        "advanced": "Расширенная конфигурация"
       },
       "creation": {
         "select": "Выберите {section}",
@@ -1091,6 +1091,7 @@
     },
     "export_to_file": "Экспортировать в файл",
     "change state current state": "Текущий статус:",
-    "create_dashboard": "Создать Dashboard"
+    "create_dashboard": "Создать Dashboard",
+    "instance": "Экземпляр"
   }
 }

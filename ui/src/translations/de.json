@@ -524,8 +524,7 @@
     "worker group": "Worker-Gruppe",
     "version": "Version",
     "services": "Dienste",
-    "cluster": "Cluster",
-    "server type": "Servertyp",
+        "server type": "Servertyp",
     "hostname": "Hostname",
     "port": "Port",
     "management port": "Management-Port",
@@ -1066,7 +1065,8 @@
         "triggers": "Trigger",
         "main": "Haupteigenschaften",
         "error_handlers": "Fehlerbehandler",
-        "tasks": "Aufgaben"
+        "tasks": "Aufgaben",
+        "advanced": "Erweiterte Konfiguration"
       },
       "creation": {
         "select": "Wählen Sie einen {section} aus",
@@ -1091,6 +1091,7 @@
     },
     "export_to_file": "In Datei exportieren",
     "change state current state": "Aktueller Zustand ist:",
-    "create_dashboard": "Dashboard erstellen"
+    "create_dashboard": "Dashboard erstellen",
+    "instance": "Instanz"
   }
 }

@@ -524,8 +524,7 @@
     "worker group": "Worker 그룹",
     "version": "버전",
     "services": "서비스",
-    "cluster": "클러스터",
-    "server type": "서버 유형",
+        "server type": "서버 유형",
     "hostname": "호스트 이름",
     "port": "포트",
     "management port": "관리 포트",
@@ -1066,7 +1065,8 @@
         "triggers": "트리거",
         "main": "주요 속성",
         "error_handlers": "오류 처리기",
-        "tasks": "작업"
+        "tasks": "작업",
+        "advanced": "고급 구성"
       },
       "creation": {
         "select": "{section}을 선택하십시오",
@@ -1091,6 +1091,7 @@
     },
     "export_to_file": "파일로 내보내기",
     "change state current state": "현재 상태는:",
-    "create_dashboard": "대시보드 생성"
+    "create_dashboard": "대시보드 생성",
+    "instance": "인스턴스"
   }
 }
