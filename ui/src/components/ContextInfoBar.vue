@@ -33,7 +33,7 @@
     </div>
     <div class="panelWrapper" :class="{panelTabResizing: resizing}" :style="{width: activeTab?.length ? `${panelWidth}px` : 0}">
         <div :style="{overflow: 'hidden'}">
-            <button v-if="activeTab.length" class="closeButton" @click="activeTab = ''">
+            <button v-if="activeTab.length" class="closeButton" @click="setActiveTab('')">
                 <Close />
             </button>
             <ContextDocs v-if="activeTab === 'docs'" />

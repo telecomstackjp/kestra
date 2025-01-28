@@ -13,7 +13,15 @@
 </template>
 
 <script lang="ts" setup>
+    import {onMounted} from "vue";
+    import {useStore} from "vuex";
     import EmptyTemplate from "../layout/EmptyTemplate.vue";
+
+    const store = useStore();
+
+    onMounted(() => {
+        store.commit("misc/setContextInfoBarOpenTab", "docs")
+    });
 
     defineProps<{
         title: string;
