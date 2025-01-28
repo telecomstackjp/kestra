@@ -266,7 +266,9 @@
         },
         "alt": "Иконка Blueprints"
       },
-      "empty": "Нет blueprints для отображения."
+      "empty": "Нет blueprints для отображения.",
+      "custom": "Пользовательские blueprints",
+      "community": "Сообщество"
     },
     "use": "Использовать",
     "plugins": {
@@ -524,7 +526,7 @@
     "worker group": "Группа workers",
     "version": "Версия",
     "services": "Сервисы",
-        "server type": "Тип сервера",
+    "server type": "Тип сервера",
     "hostname": "Имя хоста",
     "port": "Порт",
     "management port": "Порт управления",
@@ -1092,6 +1094,52 @@
     "export_to_file": "Экспортировать в файл",
     "change state current state": "Текущий статус:",
     "create_dashboard": "Создать Dashboard",
-    "instance": "Экземпляр"
+    "instance": "Экземпляр",
+    "demos": {
+      "namespace": {
+        "plugin-defaults": {
+          "title": "Обновите ваш Namespace (значения по умолчанию для плагина)",
+          "message": "С Kestra Enterprise Edition вы получаете доступ к расширенным возможностям, таким как multi-tenancy."
+        },
+        "audit-logs": {
+          "message": "С Kestra Enterprise Edition вы получаете доступ к расширенным возможностям, таким как multi-tenancy.",
+          "title": "Обновите ваш Namespace (audit-logs)"
+        },
+        "secrets": {
+          "title": "Обновите ваш Namespace (secrets)",
+          "message": "С Kestra Enterprise Edition вы получаете доступ к расширенным возможностям, таким как multi-tenancy."
+        },
+        "variables": {
+          "message": "С помощью Kestra Enterprise Edition вы получаете доступ к расширенным возможностям, таким как multi-tenancy.",
+          "title": "Обновите ваш Namespace (переменные)"
+        },
+        "edit": {
+          "message": "С Kestra Enterprise Edition вы получаете доступ к расширенным возможностям, таким как multi-tenancy (редактировать сообщение).",
+          "title": "Обновите ваш Namespace (изменить заголовок)"
+        }
+      },
+      "instance": {
+        "title": "Обновите вашу Конкурентность",
+        "message": "С Kestra Enterprise Edition вы получаете доступ к расширенным возможностям, таким как multi-tenancy."
+      },
+      "audit-logs": {
+        "message": "С Kestra Enterprise Edition и удобными audit logs",
+        "title": "Обновите ваши Audit Logs"
+      },
+      "blueprints": {
+        "message": "В версии Kestra Enterprise вы можете добавлять свои частные blueprints и хранить их в своих собственных экземплярах.",
+        "title": "Добавьте ваши Private Blueprints"
+      },
+      "enterprise_edition": "Enterprise Edition (Корпоративная версия)",
+      "IAM": {
+        "title": "Обновите ваш IAM",
+        "message": "сообщение для IAM"
+      },
+      "tenants": {
+        "title": "Обновите управление вашими tenantами",
+        "message": "С Kestra Enterprise Edition вы получаете доступ к расширенным возможностям, таким как многопользовательская поддержка (multi-tenancy), изоляция на уровне команды и повышенная безопасность, чтобы удовлетворить потребности вашей организации."
+      },
+      "get_a_demo_button": "Получить демонстрацию"
+    }
   }
 }

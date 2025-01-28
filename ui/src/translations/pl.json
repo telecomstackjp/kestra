@@ -266,7 +266,9 @@
         },
         "alt": "Ikona Blueprintów"
       },
-      "empty": "Brak blueprintów do wyświetlenia."
+      "empty": "Brak blueprintów do wyświetlenia.",
+      "custom": "Niestandardowe blueprints",
+      "community": "Społeczność"
     },
     "use": "Użyj",
     "plugins": {
@@ -524,7 +526,7 @@
     "worker group": "Grupa Worker",
     "version": "Wersja",
     "services": "Usługi",
-        "server type": "Typ serwera",
+    "server type": "Typ serwera",
     "hostname": "Nazwa hosta",
     "port": "Port",
     "management port": "Port zarządzania",
@@ -1092,6 +1094,52 @@
     "export_to_file": "Eksportuj do pliku",
     "change state current state": "Aktualny status to:",
     "create_dashboard": "Utwórz Dashboard",
-    "instance": "Instancja"
+    "instance": "Instancja",
+    "demos": {
+      "namespace": {
+        "plugin-defaults": {
+          "title": "Ulepsz swój Namespace (domyślne ustawienia pluginu)",
+          "message": "W wersji Kestra Enterprise Edition odblokowujesz zaawansowane funkcje, takie jak multi-tenancy."
+        },
+        "audit-logs": {
+          "message": "W wersji Kestra Enterprise Edition odblokowujesz zaawansowane funkcje, takie jak multi-tenancy.",
+          "title": "Ulepsz swój Namespace (audit-logs)"
+        },
+        "secrets": {
+          "title": "Ulepsz swój Namespace (secrets)",
+          "message": "W wersji Kestra Enterprise Edition odblokowujesz zaawansowane funkcje, takie jak multi-tenancy."
+        },
+        "variables": {
+          "message": "Dzięki Kestra Enterprise Edition odblokowujesz zaawansowane funkcje, takie jak multi-tenancy.",
+          "title": "Ulepsz swój Namespace (zmienne)"
+        },
+        "edit": {
+          "message": "W wersji Kestra Enterprise Edition odblokowujesz zaawansowane funkcje, takie jak multi-tenancy (edytuj wiadomość)",
+          "title": "Ulepsz swój Namespace (edytuj tytuł)"
+        }
+      },
+      "instance": {
+        "title": "Ulepsz swoją Nebenläufigkeit",
+        "message": "W wersji Kestra Enterprise Edition odblokowujesz zaawansowane funkcje, takie jak multi-tenancy."
+      },
+      "audit-logs": {
+        "message": "Wersja Kestra Enterprise Edition, z przyjaznymi audit logs",
+        "title": "Ulepsz swoje Audit Logs"
+      },
+      "blueprints": {
+        "message": "W edycji Kestra Enterprise możesz dodawać swoje prywatne blueprints i przechowywać je prywatnie w swoich instancjach.",
+        "title": "Dodaj swoje prywatne Blueprints"
+      },
+      "enterprise_edition": "Edycja Enterprise",
+      "IAM": {
+        "title": "Zaktualizuj swoje IAM",
+        "message": "wiadomość dla IAM"
+      },
+      "tenants": {
+        "title": "Ulepsz zarządzanie Tenantami",
+        "message": "W wersji Kestra Enterprise Edition odblokowujesz zaawansowane funkcje, takie jak multi-tenancy, izolacja na poziomie zespołu oraz zwiększone bezpieczeństwo, aby sprostać potrzebom Twojej organizacji."
+      },
+      "get_a_demo_button": "Uzyskaj Demo"
+    }
   }
 }

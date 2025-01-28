@@ -266,7 +266,9 @@
         },
         "alt": "蓝图图标"
       },
-      "empty": "没有可显示的blueprints。"
+      "empty": "没有可显示的blueprints。",
+      "custom": "自定义blueprints",
+      "community": "社区"
     },
     "use": "使用",
     "plugins": {
@@ -524,7 +526,7 @@
     "worker group": "工作组",
     "version": "版本",
     "services": "服务",
-        "server type": "服务器类型",
+    "server type": "服务器类型",
     "hostname": "主机名",
     "port": "端口",
     "management port": "管理端口",
@@ -1092,6 +1094,52 @@
     "export_to_file": "导出到文件",
     "change state current state": "当前状态是：",
     "create_dashboard": "创建仪表板",
-    "instance": "实例"
+    "instance": "实例",
+    "demos": {
+      "namespace": {
+        "plugin-defaults": {
+          "title": "升级您的Namespace（插件默认值）",
+          "message": "使用 Kestra Enterprise Edition，您可以解锁高级功能，例如多租户功能。"
+        },
+        "audit-logs": {
+          "message": "使用 Kestra 企业版，您可以解锁高级功能，如多租户功能。",
+          "title": "升级您的 Namespace (audit-logs)"
+        },
+        "secrets": {
+          "title": "升级您的Namespace（secrets）",
+          "message": "使用 Kestra 企业版，您可以解锁高级功能，例如多租户功能。"
+        },
+        "variables": {
+          "message": "使用 Kestra 企业版，您可以解锁高级功能，如多租户功能。",
+          "title": "升级您的Namespace（变量）"
+        },
+        "edit": {
+          "message": "使用 Kestra 企业版，您可以解锁高级功能，如多租户（编辑消息）",
+          "title": "升级您的Namespace（编辑标题）"
+        }
+      },
+      "instance": {
+        "title": "升级您的并发性",
+        "message": "使用 Kestra 企业版，您可以解锁高级功能，如多租户功能。"
+      },
+      "audit-logs": {
+        "message": "使用 Kestra Enterprise Edition，并享受优质的审计日志",
+        "title": "升级您的Audit Logs"
+      },
+      "blueprints": {
+        "message": "在 Kestra Enterprise 版本中，您可以添加自己的私有蓝图，并在您自己的实例中保持其私密性。",
+        "title": "添加您的私人 Blueprints"
+      },
+      "enterprise_edition": "企业版",
+      "IAM": {
+        "title": "升级您的IAM",
+        "message": "IAM的消息"
+      },
+      "tenants": {
+        "title": "升级您的Tenants管理",
+        "message": "使用 Kestra 企业版，您可以解锁高级功能，如多租户、团队级别隔离和增强的安全性，以满足您组织的需求。"
+      },
+      "get_a_demo_button": "获取演示"
+    }
   }
 }

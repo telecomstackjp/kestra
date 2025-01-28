@@ -266,7 +266,9 @@
         },
         "alt": "블루프린트 아이콘"
       },
-      "empty": "블루프린트가 없습니다."
+      "empty": "블루프린트가 없습니다.",
+      "custom": "사용자 정의 blueprints",
+      "community": "커뮤니티"
     },
     "use": "사용",
     "plugins": {
@@ -524,7 +526,7 @@
     "worker group": "Worker 그룹",
     "version": "버전",
     "services": "서비스",
-        "server type": "서버 유형",
+    "server type": "서버 유형",
     "hostname": "호스트 이름",
     "port": "포트",
     "management port": "관리 포트",
@@ -1092,6 +1094,52 @@
     "export_to_file": "파일로 내보내기",
     "change state current state": "현재 상태는:",
     "create_dashboard": "대시보드 생성",
-    "instance": "인스턴스"
+    "instance": "인스턴스",
+    "demos": {
+      "namespace": {
+        "plugin-defaults": {
+          "title": "네임스페이스 업그레이드 (플러그인 기본값)",
+          "message": "Kestra Enterprise Edition을 사용하면 multi-tenancy와 같은 고급 기능을 사용할 수 있습니다."
+        },
+        "audit-logs": {
+          "message": "Kestra Enterprise Edition을 사용하면 multi-tenancy와 같은 고급 기능을 활용할 수 있습니다.",
+          "title": "네임스페이스 업그레이드 (audit-logs)"
+        },
+        "secrets": {
+          "title": "네임스페이스 업그레이드 (secrets)",
+          "message": "Kestra Enterprise Edition을 사용하면 multi-tenancy와 같은 고급 기능을 활용할 수 있습니다."
+        },
+        "variables": {
+          "message": "Kestra Enterprise Edition을 사용하면 multi-tenancy와 같은 고급 기능을 활용할 수 있습니다.",
+          "title": "네임스페이스 업그레이드 (variables)"
+        },
+        "edit": {
+          "message": "Kestra Enterprise Edition을 사용하면 멀티-tenancy와 같은 고급 기능을 사용할 수 있습니다 (메시지 편집)",
+          "title": "네임스페이스 업그레이드 (제목 편집)"
+        }
+      },
+      "instance": {
+        "title": "동시성 업그레이드",
+        "message": "Kestra Enterprise Edition을 사용하면 multi-tenancy와 같은 고급 기능을 사용할 수 있습니다."
+      },
+      "audit-logs": {
+        "message": "Kestra Enterprise Edition을 사용하면, 멋진 감사 로그와 함께",
+        "title": "감사 Log 업그레이드"
+      },
+      "blueprints": {
+        "message": "Kestra Enterprise 에디션에서는 개인 blueprints를 추가하고 자신의 인스턴스에서 비공개로 유지할 수 있습니다.",
+        "title": "개인 Blueprint 추가"
+      },
+      "enterprise_edition": "엔터프라이즈 에디션",
+      "IAM": {
+        "title": "IAM 업그레이드하기",
+        "message": "IAM에 대한 메시지"
+      },
+      "tenants": {
+        "title": "테넌트 관리 업그레이드",
+        "message": "Kestra Enterprise Edition을 사용하면 다중 tenant, 팀 수준의 격리, 그리고 조직의 요구를 충족시키기 위한 강화된 보안과 같은 고급 기능을 활용할 수 있습니다."
+      },
+      "get_a_demo_button": "데모 받기"
+    }
   }
 }
