@@ -719,7 +719,8 @@
       },
       "tutorial": {
         "title": "Tutorial",
-        "text": " * <a href=\"https://kestra.io/tutorial-videos/all\" target=\"_blank\">Video Tutorials</a> \n* <a href=\"https://kestra.io/docs\" target=\"_blank\">Documentation</a> \n* <a href=\"https://kestra.io/blueprints\" target=\"_blank\">Blueprints</a>"      },
+        "text": " * <a href=\"https://kestra.io/tutorial-videos/all\" target=\"_blank\">Video Tutorials</a> \n* <a href=\"https://kestra.io/docs\" target=\"_blank\">Documentation</a> \n* <a href=\"https://kestra.io/blueprints\" target=\"_blank\">Blueprints</a>"
+      },
       "help": {
         "title": "Need help?",
         "text": "Ask any question in our Slack community. If you are stuck, we are help to help you. ✋"
@@ -961,8 +962,8 @@
       }
     },
     "concurrency-view": {
-      "title_no_executions":"No ongoing Executions for this Flow.",
-      "desc_no_executions":"Read more about <strong><a href=\"https://kestra.io/docs/workflow-components/execution\" target=\"_blank\">Executions</a></strong> in our documentation.",
+      "title_no_executions": "No ongoing Executions for this Flow.",
+      "desc_no_executions": "Read more about <strong><a href=\"https://kestra.io/docs/workflow-components/execution\" target=\"_blank\">Executions</a></strong> in our documentation.",
       "title_no_limit": "No limits are set for this Flow.",
       "desc_no_limit": "Read more about <strong><a href=\"https://kestra.io/docs/workflow-components/concurrency\" target=\"_blank\">Concurrency Limits</a></strong> in our documentation."
     },
@@ -1072,6 +1073,7 @@
       "sections": {
         "main": "Main properties",
         "general": "General properties",
+        "advanced": "Advanced configuration",
         "tasks": "Tasks",
         "triggers": "Triggers",
         "error_handlers": "Error Handlers"
