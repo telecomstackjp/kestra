@@ -1,7 +1,7 @@
 <template>
     <Layout
         :title="t(`demos.blueprints.title`)"
-        :image="{source: sourceImg, alt: t(`demos.namespace.title`)}"
+        :image="{source: sourceImg, alt: t(`demos.blueprints.title`)}"
     >
         <template #message>
             {{ $t(`demos.blueprints.message`) }}
