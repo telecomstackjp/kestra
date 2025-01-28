@@ -1139,7 +1139,12 @@
         "title": "Améliorez la Gestion de vos Tenants",
         "message": "Avec Kestra Enterprise Edition, vous débloquez des fonctionnalités avancées telles que la multi-tenance, l'isolation au niveau de l'équipe et une sécurité renforcée pour répondre aux besoins de votre organisation."
       },
-      "get_a_demo_button": "Obtenir une démo"
-    }
+      "get_a_demo_button": "Obtenir une démo",
+      "apps": {
+        "title": "Les applications sont l'avenir de Kestra",
+        "message": "Exposer l'utilisateur final à des mises en page personnalisées avec des applications"
+      }
+    },
+    "apps": "Applications"
   }
 }

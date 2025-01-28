@@ -1139,7 +1139,12 @@
         "title": "테넌트 관리 업그레이드",
         "message": "Kestra Enterprise Edition을 사용하면 다중 tenant, 팀 수준의 격리, 그리고 조직의 요구를 충족시키기 위한 강화된 보안과 같은 고급 기능을 활용할 수 있습니다."
       },
-      "get_a_demo_button": "데모 받기"
-    }
+      "get_a_demo_button": "데모 받기",
+      "apps": {
+        "title": "앱은 Kestra의 미래입니다",
+        "message": "앱을 사용하여 최종 사용자에게 맞춤 레이아웃 노출"
+      }
+    },
+    "apps": "앱"
   }
 }

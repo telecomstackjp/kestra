@@ -1139,7 +1139,12 @@
         "title": "升级您的Tenants管理",
         "message": "使用 Kestra 企业版，您可以解锁高级功能，如多租户、团队级别隔离和增强的安全性，以满足您组织的需求。"
       },
-      "get_a_demo_button": "获取演示"
-    }
+      "get_a_demo_button": "获取演示",
+      "apps": {
+        "title": "应用是Kestra的未来",
+        "message": "向终端用户展示带有应用程序的自定义布局"
+      }
+    },
+    "apps": "应用程序"
   }
 }

@@ -1139,7 +1139,12 @@
         "title": "Aktualisieren Sie Ihr Mandantenmanagement",
         "message": "Mit der Kestra Enterprise Edition schalten Sie erweiterte Funktionen frei, wie Multi-Tenancy, teambezogene Isolation und verbesserte Sicherheit, um die Anforderungen Ihrer Organisation zu erfüllen."
       },
-      "get_a_demo_button": "Demo anfordern"
-    }
+      "get_a_demo_button": "Demo anfordern",
+      "apps": {
+        "title": "Apps sind die Zukunft von Kestra",
+        "message": "Endbenutzer benutzerdefinierten Layouts mit Apps aussetzen"
+      }
+    },
+    "apps": "Apps"
   }
 }

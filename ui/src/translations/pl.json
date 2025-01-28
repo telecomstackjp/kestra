@@ -1139,7 +1139,12 @@
         "title": "Ulepsz zarządzanie Tenantami",
         "message": "W wersji Kestra Enterprise Edition odblokowujesz zaawansowane funkcje, takie jak multi-tenancy, izolacja na poziomie zespołu oraz zwiększone bezpieczeństwo, aby sprostać potrzebom Twojej organizacji."
       },
-      "get_a_demo_button": "Uzyskaj Demo"
-    }
+      "get_a_demo_button": "Uzyskaj Demo",
+      "apps": {
+        "title": "Aplikacje są przyszłością Kestra",
+        "message": "Udostępnij użytkownikowi końcowemu niestandardowe układy z aplikacjami"
+      }
+    },
+    "apps": "Aplikacje"
   }
 }
