@@ -20,7 +20,7 @@ import io.kestra.core.utils.ListUtils;
 import io.kestra.core.utils.TruthUtils;
 import io.kestra.plugin.core.flow.Pause;
 import io.kestra.plugin.core.flow.Subflow;
-import io.kestra.plugin.core.flow.WaitFor;
+import io.kestra.plugin.core.flow.LoopUntil;
 import io.kestra.plugin.core.flow.WorkingDirectory;
 import io.micronaut.context.ApplicationContext;
 import io.opentelemetry.api.OpenTelemetry;
@@ -562,7 +562,7 @@ public class ExecutorService {
                 }
             }
             // WaitFor case
-            else if (task instanceof WaitFor waitFor && taskRun.getState().isRunning()) {
+            else if (task instanceof LoopUntil waitFor && taskRun.getState().isRunning()) {
                 if (waitFor.childTaskRunExecuted(executor.getExecution(), taskRun)) {
                     Output newOutput = waitFor.outputs(taskRun);
                     TaskRun updatedTaskRun = taskRun.withOutputs(newOutput.toMap());

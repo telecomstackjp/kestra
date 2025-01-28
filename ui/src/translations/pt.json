@@ -298,7 +298,6 @@
     "Fold auto": "Editor: dobra automática de multilinhas",
     "Fold content lines": "Dobrar strings multilinhas",
     "Unfold content lines": "Desdobrar strings multilinhas",
-    "Max displayable": "Máximo exibível",
     "Total": "Total",
     "sub flow": "Subflow",
     "execute": "Executar",
@@ -360,7 +359,7 @@
     },
     "cancel": "Cancelar",
     "homeDashboard": {
-      "title": "Painéis",
+      "title": "Dashboards",
       "today": "Hoje",
       "yesterday": "Ontem",
       "last28Days": "Últimos 28 dias",
@@ -871,7 +870,8 @@
       "see_all": "Ver todos",
       "success_ratio_tooltip": "A Taxa de Sucesso é a soma das execuções em estados SUCCESS, CANCELLED e WARNING dividida pelo número total de execuções em um estado terminado.",
       "failure_ratio_tooltip": "A proporção de falhas é a soma das execuções FAILED, KILLED e RETRIED dividida pelo número total de execuções em um estado terminado.",
-      "preview": "Pré-visualização do Dashboard"
+      "preview": "Pré-visualização do Dashboard",
+      "click_chart_preview": "Clique no código-fonte do gráfico para ver a pré-visualização"
     },
     "delete_log": "Tem certeza de que deseja excluir o log?",
     "docs": "Documentos",
@@ -1077,7 +1077,8 @@
       "save": {
         "tasks": "Salvar task",
         "triggers": "Salvar trigger",
-        "error handlers": "Salvar manipulador de erro"
+        "error handlers": "Salvar manipulador de erro",
+        "input": "Salvar input"
       },
       "labels": {
         "no_code": "Editor Sem Código",
@@ -1089,6 +1090,7 @@
       "adding_default": "+ Adicionar um novo value"
     },
     "export_to_file": "Exportar para arquivo",
-    "change state current state": "Status atual é:"
+    "change state current state": "Status atual é:",
+    "create_dashboard": "Criar Dashboard"
   }
 }

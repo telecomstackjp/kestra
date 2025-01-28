@@ -84,6 +84,7 @@
                             c.value.includes(filter.value),
                         ),
                         disabled: isOptionDisabled(filter),
+                        'level-3': true
                     }"
                     @click="
                         () => !isOptionDisabled(filter) && valueCallback(filter)
@@ -877,13 +878,14 @@ $dashboards: 52px;
         }
     }
 
+    .el-select-dropdown__empty span {
+        padding: 0 1rem;
+        color: var(--ks-content-inactive);
+    }
+
     & .el-date-editor.el-input__wrapper {
         background-color: initial;
         box-shadow: none;
-    }
-
-    & .el-select-dropdown__item {
-        padding-right: 20px;
     }
 
     & .el-select-dropdown__item .material-design-icon {

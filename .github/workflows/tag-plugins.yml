@@ -1,4 +1,4 @@
-name: Run Gradle Release for Kestra Plugins
+name: Update and Tag Kestra Plugins
 
 on:
   workflow_dispatch:
@@ -7,16 +7,12 @@ on:
         description: 'The release version (e.g., 0.21.0)'
         required: true
         type: string
-      nextVersion:
-        description: 'The next version (e.g., 0.22.0-SNAPSHOT)'
-        required: true
-        type: string
       dryRun:
         description: 'Use DRY_RUN mode'
         required: false
         default: 'false'
 jobs:
-  release:
+  tag:
     name: Release plugins
     runs-on: kestra-private-standard
     steps:
@@ -34,15 +30,14 @@ jobs:
           plugin-version: 'LATEST'
 
       # Execute
-      - name: Run Gradle Release
+      - name: Tag Plugins
         if: ${{ github.event.inputs.dryRun == 'false' }}
         env:
           GITHUB_PAT: ${{ secrets.GH_PERSONAL_TOKEN }}
         run: |
-          chmod +x ./release-plugins.sh;
-          ./release-plugins.sh \
+          chmod +x ./tag-release-plugins.sh;
+          ./tag-release-plugins.sh \
           --release-version=${{github.event.inputs.releaseVersion}} \
-          --next-version=${{github.event.inputs.nextVersion}} \
           --yes \
            ${{ steps.plugins-list.outputs.repositories }}
 
@@ -51,10 +46,9 @@ jobs:
         env:
           GITHUB_PAT: ${{ secrets.GH_PERSONAL_TOKEN }}
         run: |
-          chmod +x ./release-plugins.sh;
-          ./release-plugins.sh \
+          chmod +x ./tag-release-plugins.sh;
+          ./tag-release-plugins.sh \
           --release-version=${{github.event.inputs.releaseVersion}} \
-          --next-version=${{github.event.inputs.nextVersion}} \
           --dry-run \
           --yes \
           ${{ steps.plugins-list.outputs.repositories }}

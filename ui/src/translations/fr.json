@@ -298,7 +298,6 @@
     "Fold auto": "Éditeur : Replier automatiquement le contenu multi-lignes",
     "Fold content lines": "Replier les multilignes",
     "Unfold content lines": "Déplier les multilignes",
-    "Max displayable": "Max affichables",
     "Total": "Total",
     "sub flow": "Sous-flow",
     "execute": "Exécuter",
@@ -871,7 +870,8 @@
       "see_all": "Voir tout",
       "success_ratio_tooltip": "Le ratio de succès est la somme des exécutions en état SUCCESS, CANCELLED et WARNING divisée par le nombre total d'exécutions dans un état terminé.",
       "failure_ratio_tooltip": "Le ratio d'échec est la somme des exécutions en état FAILED, KILLED et RETRIED divisée par le nombre total d'exécutions dans un état terminé.",
-      "preview": "Aperçu du tableau de bord"
+      "preview": "Aperçu du tableau de bord",
+      "click_chart_preview": "Cliquez sur un code source de graphique pour voir l'aperçu"
     },
     "delete_log": "Êtes-vous sûr de vouloir supprimer le log ?",
     "docs": "Documentation",
@@ -1077,7 +1077,8 @@
       "save": {
         "tasks": "Enregistrer la tâche",
         "triggers": "Enregistrer le trigger",
-        "error handlers": "Enregistrer le gestionnaire d'erreurs"
+        "error handlers": "Enregistrer le gestionnaire d'erreurs",
+        "input": "Enregistrer l'input"
       },
       "labels": {
         "no_code": "Éditeur sans code",
@@ -1089,6 +1090,7 @@
       "adding_default": "+ Ajouter une nouvelle valeur"
     },
     "export_to_file": "Exporter vers un fichier",
-    "change state current state": "Statut actuel :"
+    "change state current state": "Statut actuel :",
+    "create_dashboard": "Créer un tableau de bord"
   }
 }

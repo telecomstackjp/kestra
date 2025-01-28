@@ -298,7 +298,6 @@
     "Fold auto": "संपादक: मल्टीलाइन का स्वचालित फोल्ड",
     "Fold content lines": "मल्टीलाइन स्ट्रिंग्स फोल्ड करें",
     "Unfold content lines": "मल्टीलाइन स्ट्रिंग्स अनफोल्ड करें",
-    "Max displayable": "अधिकतम प्रदर्शनीय",
     "Total": "कुल",
     "sub flow": "Subflow",
     "execute": "निष्पादित करें",
@@ -871,7 +870,8 @@
       "see_all": "सभी देखें",
       "success_ratio_tooltip": "सफलता अनुपात SUCCESS, CANCELLED और WARNING निष्पादन का योग है, जिसे समाप्त स्थिति में कुल निष्पादन की संख्या से विभाजित किया जाता है।",
       "failure_ratio_tooltip": "असफल अनुपात, FAILED, KILLED और RETRIED निष्पादन का योग है, जिसे समाप्त स्थिति में कुल निष्पादन की संख्या से विभाजित किया जाता है।",
-      "preview": "डैशबोर्ड पूर्वावलोकन"
+      "preview": "डैशबोर्ड पूर्वावलोकन",
+      "click_chart_preview": "चार्ट स्रोत कोड पर क्लिक करें ताकि पूर्वावलोकन देखा जा सके।"
     },
     "delete_log": "क्या आप वाकई log को हटाना चाहते हैं?",
     "docs": "डॉक्स",
@@ -1077,7 +1077,8 @@
       "save": {
         "tasks": "कार्य सहेजें",
         "triggers": "ट्रिगर सहेजें",
-        "error handlers": "त्रुटि हैंडलर सहेजें"
+        "error handlers": "त्रुटि हैंडलर सहेजें",
+        "input": "इनपुट सहेजें"
       },
       "labels": {
         "no_code": "कोड संपादक नहीं",
@@ -1089,6 +1090,7 @@
       "adding_default": "+ एक नया value जोड़ें"
     },
     "export_to_file": "फ़ाइल में निर्यात करें",
-    "change state current state": "वर्तमान स्थिति है:"
+    "change state current state": "वर्तमान स्थिति है:",
+    "create_dashboard": "डैशबोर्ड बनाएं"
   }
 }

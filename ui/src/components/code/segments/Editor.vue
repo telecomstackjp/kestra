@@ -1,34 +1,47 @@
 <template>
     <div class="p-4">
         <template v-if="!route.query.section && !route.query.identifier">
-            <component
-                v-for="([k, v], index) in Object.entries(getFields())"
-                :key="index"
-                :is="v.component"
-                v-model="v.value"
-                v-bind="trimmed(v)"
-                @update:model-value="emits('updateMetadata', k, v.value)"
-            />
+            <template v-if="panel">
+                <component
+                    :is="panel.type"
+                    :model-value="panel.props.modelValue"
+                    v-bind="panel.props"
+                    @update:model-value="
+                        (value) => emits('updateMetadata', 'inputs', value)
+                    "
+                />
+            </template>
 
-            <hr class="my-4">
+            <template v-else>
+                <component
+                    v-for="([k, v], index) in Object.entries(getFields())"
+                    :key="index"
+                    :is="v.component"
+                    v-model="v.value"
+                    v-bind="trimmed(v)"
+                    @update:model-value="emits('updateMetadata', k, v.value)"
+                />
 
-            <Collapse
-                :items="sections"
-                creation
-                :flow
-                @remove="(yaml) => emits('updateTask', yaml)"
-            />
+                <hr class="my-4">
 
-            <hr class="my-4">
+                <Collapse
+                    :items="sections"
+                    creation
+                    :flow
+                    @remove="(yaml) => emits('updateTask', yaml)"
+                />
 
-            <component
-                v-for="([k, v], index) in Object.entries(getFields(false))"
-                :key="index"
-                :is="v.component"
-                v-model="v.value"
-                v-bind="trimmed(v)"
-                @update:model-value="emits('updateMetadata', k, v.value)"
-            />
+                <hr class="my-4">
+
+                <component
+                    v-for="([k, v], index) in Object.entries(getFields(false))"
+                    :key="index"
+                    :is="v.component"
+                    v-model="v.value"
+                    v-bind="trimmed(v)"
+                    @update:model-value="emits('updateMetadata', k, v.value)"
+                />
+            </template>
         </template>
 
         <Task
@@ -61,6 +74,11 @@
 
     import {useI18n} from "vue-i18n";
     const {t} = useI18n({useScope: "global"});
+
+    import {useStore} from "vuex";
+    const store = useStore();
+
+    const panel = computed(() => store.state.code.panel);
 
     const emits = defineEmits(["save", "updateTask", "updateMetadata"]);
 

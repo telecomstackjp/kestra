@@ -1,35 +1,34 @@
 <template>
-    <span v-if="required" class="me-1 text-danger">*</span>
-    <span class="label">{{ label }}</span>
-    <div class="mt-1 mb-2 wrapper">
-        <el-row
-            v-for="(input, index) in newInputs"
+    <el-select
+        :model-value="selectedInput.type"
+        @update:model-value="onChangeType"
+        class="mb-3"
+    >
+        <el-option
+            v-for="(input, index) in inputsType"
             :key="index"
-            @click="selectInput(input, index)"
-        >
-            <el-col :span="24" class="d-flex">
-                <InputText disabled :model-value="input.id" class="w-100" />
-                <DeleteOutline
-                    @click.prevent.stop="deleteInput(index)"
-                    class="ms-2 delete"
-                />
-            </el-col>
-        </el-row>
-        <Add @add="addInput(index)" />
-    </div>
+            :label="input.type"
+            :value="input.type"
+        />
+    </el-select>
+    <task-root
+        v-loading="loading"
+        name="root"
+        :model-value="selectedInput"
+        @update:model-value="updateSelected($event, selectedIndex)"
+        :schema="inputSchema?.schema"
+        :definitions="inputSchema?.schema?.definitions"
+    />
+
+    <Save @click="update" what="input" class="w-100 mt-3" />
 </template>
 
 <script setup>
-    import MetadataInputsContent from "./MetadataInputsContent.vue";
-    import InputText from "../code/components/inputs/InputText.vue";
-    import Add from "../code/components/Add.vue";
-
-    import {DeleteOutline} from "../code/utils/icons";
+    import TaskRoot from "./tasks/TaskRoot.vue";
+    import Save from "../code/components/Save.vue";
 </script>
 
 <script>
-    import {h} from "vue";
-
     import {mapState} from "vuex";
 
     export default {
@@ -44,17 +43,19 @@
                 default: () => [],
             },
             label: {type: String, required: true},
+            selectedIndex: {type: Number, required: true},
             required: {type: Boolean, default: false},
             disabled: {type: Boolean, default: false},
         },
         computed: {
             ...mapState("plugin", ["inputSchema", "inputsType"]),
         },
-        mounted() {
+        created() {
             if (this.inputs && this.inputs.length > 0) {
-                if (this.inputs.at(-1).length) this.newInputs = this.inputs.at(-1);
-                else this.newInputs = this.inputs;
+                this.newInputs = this.inputs;
             }
+
+            this.selectedInput = this.modelValue ?? {type: "STRING"};
 
             this.$store
                 .dispatch("plugin/loadInputsType")
@@ -64,36 +65,14 @@
             return {
                 newInputs: [{type: "STRING"}],
                 selectedInput: undefined,
-                selectedIndex: undefined,
-                isEditOpen: false,
                 loading: false,
             };
         },
         methods: {
-            selectInput(input, index) {
+            selectInput(input) {
                 this.loading = true;
                 this.selectedInput = input;
-                this.selectedIndex = index;
-                // this.isEditOpen = true;
                 this.loadSchema(input.type);
-
-                this.$store.commit("code/setPanel", {
-                    breadcrumb: {
-                        label: this.$t("inputs").toLowerCase(),
-                        to: {
-                            name: this.$route.name,
-                            params: this.$route.params,
-                            query: this.$route.query,
-                        },
-                    },
-                    panel: h(MetadataInputsContent, {
-                        modelValue: input,
-                        inputs: this.inputs,
-                        label: this.$t("inputs"),
-                        selectedIndex: index,
-                        "onUpdate:modelValue": this.updateSelected,
-                    }),
-                });
             },
             getCls(type) {
                 return this.inputsType.find((e) => e.type === type).cls;
@@ -117,11 +96,14 @@
                         message: this.$t("duplicate input id"),
                     });
                 } else {
-                    this.isEditOpen = false;
-                    this.$emit("update:modelValue", this.newInputs);
+                    this.$store.commit("code/unsetPanel");
+                    this.$emit("update:modelValue", [...this.inputs]);
                 }
             },
             updateSelected(value) {
+                if (!this.selectedIndex) {
+                    return;
+                }
                 this.newInputs[this.selectedIndex] = value;
             },
             deleteInput(index) {
@@ -129,7 +111,6 @@
             },
             addInput() {
                 this.newInputs.push({type: "STRING"});
-                this.selectInput(this.newInputs.at(-1), 0);
             },
             onChangeType(value) {
                 this.loading = true;

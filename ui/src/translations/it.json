@@ -298,7 +298,6 @@
     "Fold auto": "Editor: piegatura automatica delle righe multiple",
     "Fold content lines": "Piega stringhe multilinea",
     "Unfold content lines": "Spiega stringhe multilinea",
-    "Max displayable": "Max visualizzabile",
     "Total": "Totale",
     "sub flow": "Subflow",
     "execute": "Esegui",
@@ -871,7 +870,8 @@
       "see_all": "Vedi tutto",
       "success_ratio_tooltip": "Il Rapporto di Successo è la somma delle esecuzioni in stato SUCCESS, CANCELLED e WARNING divisa per il numero totale di esecuzioni in uno stato terminato.",
       "failure_ratio_tooltip": "Il rapporto di errore è la somma delle esecuzioni FAILED, KILLED e RETRIED divisa per il numero totale di esecuzioni in uno stato terminato.",
-      "preview": "Anteprima dashboard"
+      "preview": "Anteprima dashboard",
+      "click_chart_preview": "Fai clic sul codice sorgente di un grafico per vedere l'anteprima"
     },
     "delete_log": "Sei sicuro di voler eliminare il log?",
     "docs": "Documenti",
@@ -1077,7 +1077,8 @@
       "save": {
         "tasks": "Salva task",
         "triggers": "Salva trigger",
-        "error handlers": "Salva gestore errori"
+        "error handlers": "Salva gestore errori",
+        "input": "Salva input"
       },
       "labels": {
         "no_code": "Editor Senza Codice",
@@ -1089,6 +1090,7 @@
       "adding_default": "+ Aggiungi un nuovo value"
     },
     "export_to_file": "Esporta su file",
-    "change state current state": "Lo stato attuale è:"
+    "change state current state": "Lo stato attuale è:",
+    "create_dashboard": "Crea Dashboard"
   }
 }

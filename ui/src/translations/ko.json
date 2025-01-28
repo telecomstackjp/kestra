@@ -298,7 +298,6 @@
     "Fold auto": "편집기: 다중 라인 자동 접기",
     "Fold content lines": "다중 라인 문자열 접기",
     "Unfold content lines": "다중 라인 문자열 펼치기",
-    "Max displayable": "최대 표시 가능",
     "Total": "총계",
     "sub flow": "Subflow",
     "execute": "실행",
@@ -871,7 +870,8 @@
       "see_all": "모두 보기",
       "success_ratio_tooltip": "성공 비율은 SUCCESS, CANCELLED 및 WARNING 실행의 합계를 종료된 상태의 총 실행 수로 나눈 값입니다.",
       "failure_ratio_tooltip": "실패 비율은 FAILED, KILLED, RETRIED 실행의 합을 종료된 상태의 전체 실행 수로 나눈 값입니다.",
-      "preview": "대시보드 미리보기"
+      "preview": "대시보드 미리보기",
+      "click_chart_preview": "차트 소스 코드를 클릭하여 미리보기를 확인하세요."
     },
     "delete_log": "로그를 삭제하시겠습니까?",
     "docs": "문서",
@@ -1077,7 +1077,8 @@
       "save": {
         "tasks": "작업 저장",
         "triggers": "트리거 저장",
-        "error handlers": "오류 처리기 저장"
+        "error handlers": "오류 처리기 저장",
+        "input": "입력 저장"
       },
       "labels": {
         "no_code": "코드 없는 편집기",
@@ -1089,6 +1090,7 @@
       "adding_default": "+ 새 value 추가"
     },
     "export_to_file": "파일로 내보내기",
-    "change state current state": "현재 상태는:"
+    "change state current state": "현재 상태는:",
+    "create_dashboard": "대시보드 생성"
   }
 }

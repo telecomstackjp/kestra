@@ -298,7 +298,6 @@
     "Fold auto": "Editor: Automatisches Falten von Mehrzeilen",
     "Fold content lines": "Mehrzeilige Zeichenfolgen falten",
     "Unfold content lines": "Mehrzeilige Zeichenfolgen entfalten",
-    "Max displayable": "Maximal anzeigbar",
     "Total": "Gesamt",
     "sub flow": "Subflow",
     "execute": "Ausführen",
@@ -871,7 +870,8 @@
       "see_all": "Alle anzeigen",
       "success_ratio_tooltip": "Erfolgsquote ist die Summe der SUCCESS, CANCELLED und WARNING Ausführungen, geteilt durch die Gesamtanzahl der Ausführungen in einem beendeten Zustand.",
       "failure_ratio_tooltip": "Der Fehlerrate ist die Summe der FAILED, KILLED und RETRIED Ausführungen, geteilt durch die Gesamtanzahl der Ausführungen in einem beendeten Zustand.",
-      "preview": "Dashboard-Vorschau"
+      "preview": "Dashboard-Vorschau",
+      "click_chart_preview": "Klicken Sie auf einen Diagramm-Quellcode, um die Vorschau anzuzeigen."
     },
     "delete_log": "Sind Sie sicher, dass Sie das Log löschen möchten?",
     "docs": "Dokumentation",
@@ -1077,7 +1077,8 @@
       "save": {
         "tasks": "Aufgabe speichern",
         "triggers": "Speicher Trigger",
-        "error handlers": "Fehlerbehandlungsroutine speichern"
+        "error handlers": "Fehlerbehandlungsroutine speichern",
+        "input": "Eingabe speichern"
       },
       "labels": {
         "no_code": "Kein Code-Editor",
@@ -1089,6 +1090,7 @@
       "adding_default": "+ Neuen Wert hinzufügen"
     },
     "export_to_file": "In Datei exportieren",
-    "change state current state": "Aktueller Zustand ist:"
+    "change state current state": "Aktueller Zustand ist:",
+    "create_dashboard": "Dashboard erstellen"
   }
 }
