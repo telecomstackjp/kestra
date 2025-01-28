@@ -32,11 +32,11 @@ public class RunContextLogger implements Supplier<org.slf4j.Logger> {
     private static final int MAX_MESSAGE_LENGTH = 1024*10;
 
     private final String loggerName;
-    private Logger logger;
+    private volatile Logger logger; // must be volatile as it is built lazily via DCL
     private QueueInterface<LogEntry> logQueue;
     private LogEntry logEntry;
     private Level loglevel;
-    private List<String> useSecrets = new ArrayList<>();
+    private final List<String> useSecrets = new ArrayList<>();
     private final boolean logToFile;
     @Getter
     private File logFile;
@@ -144,49 +144,55 @@ public class RunContextLogger implements Supplier<org.slf4j.Logger> {
 
     public org.slf4j.Logger logger() {
         if (this.logger == null) {
-            LoggerContext loggerContext = new LoggerContext();
-            LogbackMDCAdapter mdcAdapter = new LogbackMDCAdapter();
+            synchronized (this) {
+                if (this.logger == null) { // Double Checked Locking (DCL) idiom
+                    LoggerContext loggerContext = new LoggerContext();
+                    LogbackMDCAdapter mdcAdapter = new LogbackMDCAdapter();
 
-            loggerContext.setMDCAdapter(mdcAdapter);
-            loggerContext.start();
+                    loggerContext.setMDCAdapter(mdcAdapter);
+                    loggerContext.start();
 
-            this.logger = loggerContext.getLogger(this.loggerName);
+                    Logger logger = loggerContext.getLogger(this.loggerName);
 
-            if (this.logEntry != null) {
-                MDC.setContextMap(this.logEntry.toMap());
-            }
+                    if (this.logEntry != null) {
+                        MDC.setContextMap(this.logEntry.toMap());
+                    }
 
-            // unit tests don't always have the log queue as we construct a logger directly without it
-            if (this.logQueue != null && !this.logToFile) {
-                ContextAppender contextAppender = new ContextAppender(this, this.logger, this.logQueue, this.logEntry);
-                contextAppender.setContext(loggerContext);
-                contextAppender.start();
+                    // unit tests don't always have the log queue as we construct a logger directly without it
+                    if (this.logQueue != null && !this.logToFile) {
+                        ContextAppender contextAppender = new ContextAppender(this, logger, this.logQueue, this.logEntry);
+                        contextAppender.setContext(loggerContext);
+                        contextAppender.start();
 
-                this.logger.addAppender(contextAppender);
-            }
+                        logger.addAppender(contextAppender);
+                    }
 
-            if (this.logToFile) {
-                try {
-                    this.logFile = File.createTempFile("log", ".txt");
-                    this.logFileOS = new BufferedOutputStream(new FileOutputStream(logFile));
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
+                    if (this.logToFile) {
+                        try {
+                            this.logFile = File.createTempFile("log", ".txt");
+                            this.logFileOS = new BufferedOutputStream(new FileOutputStream(logFile));
+                        } catch (IOException e) {
+                            throw new UncheckedIOException(e);
+                        }
+                        FileAppender fileAppender = new FileAppender(this, logger, this.logFileOS);
+                        fileAppender.setContext(loggerContext);
+                        fileAppender.start();
+
+                        logger.addAppender(fileAppender);
+                    }
+
+                    // forward flow logs to the server log
+                    ForwardAppender forwardAppender = new ForwardAppender(this, logger);
+                    forwardAppender.setContext(loggerContext);
+                    forwardAppender.start();
+                    logger.addAppender(forwardAppender);
+
+                    logger.setLevel(this.loglevel);
+                    logger.setAdditive(true);
+
+                    this.logger = logger;
                 }
-                FileAppender fileAppender = new FileAppender(this, this.logger, this.logFileOS);
-                fileAppender.setContext(loggerContext);
-                fileAppender.start();
-
-                this.logger.addAppender(fileAppender);
             }
-
-            // forward flow logs to the server log
-            ForwardAppender forwardAppender = new ForwardAppender(this, this.logger);
-            forwardAppender.setContext(loggerContext);
-            forwardAppender.start();
-            this.logger.addAppender(forwardAppender);
-
-            this.logger.setLevel(this.loglevel);
-            this.logger.setAdditive(true);
         }
 
         return this.logger;
