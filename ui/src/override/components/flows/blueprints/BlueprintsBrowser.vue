@@ -48,7 +48,7 @@
                     <component
                         class="blueprint-link"
                         :is="embed ? 'div' : 'router-link'"
-                        :to="embed ? undefined : {name: 'blueprints/view', params: {blueprintId: blueprint.id, tab, kind: blueprintKind}}"
+                        :to="embed ? undefined : {name: 'blueprints/view', params: {blueprintId: blueprint.id, tab: blueprintType, kind: blueprintKind}}"
                     >
                         <div class="left">
                             <div class="blueprint">
@@ -110,7 +110,6 @@
     import Utils from "../../../../utils/utils";
     import Errors from "../../../../components/errors/Errors.vue";
     import {editorViewTypes} from "../../../../utils/constants";
-    import {apiUrl} from "override/utils/route.js";
     import KestraFilter from "../../../../components/filter/KestraFilter.vue";
 
     export default {
@@ -118,13 +117,9 @@
         components: {TaskIcon, DataTable, Errors, KestraFilter},
         emits: ["goToDetail", "loaded"],
         props: {
-            blueprintBaseUri: {
+            blueprintType: {
                 type: String,
-                required: true
-            },
-            tab: {
-                type: String,
-                default: undefined,
+                default: "community"
             },
             blueprintKind: {
                 type: String,
@@ -168,7 +163,7 @@
             async blueprintToEditor(blueprintId) {
                 localStorage.setItem(editorViewTypes.STORAGE_KEY, editorViewTypes.SOURCE_TOPOLOGY);
                 const query = this.blueprintKind === "flow" ?
-                    {blueprintId: blueprintId, blueprintSource: this.embedFriendlyBlueprintBaseUri.includes("community") ? "community" : "custom"} :
+                    {blueprintId: blueprintId, blueprintSource: this.blueprintType} :
                     {blueprintId: blueprintId};
                 this.$router.push({
                     name: `${this.blueprintKind}s/create`,
@@ -183,7 +178,7 @@
                     this.$emit("goToDetail", blueprintId);
                 }
             },
-            loadTags(beforeLoadBlueprintBaseUri) {
+            loadTags(beforeLoadBlueprintType) {
                 const query = {}
                 if (this.$route.query.q || this.q) {
                     query.q = this.$route.query.q || this.q;
@@ -191,12 +186,12 @@
                 return this.$store.dispatch("blueprints/getBlueprintTagsForQuery", {type: this.blueprintType, kind: this.blueprintKind, ...query})
                     .then(data => {
                         // Handle switch tab while fetching data
-                        if (this.embedFriendlyBlueprintBaseUri === beforeLoadBlueprintBaseUri) {
+                        if (this.blueprintType === beforeLoadBlueprintType) {
                             this.tags = this.tagsResponseMapper(data);
                         }
                     });
             },
-            loadBlueprints(beforeLoadBlueprintBaseUri) {
+            loadBlueprints(beforeLoadBlueprintType) {
                 const query = {}
 
                 if (this.$route.query.page || this.internalPageNumber) {
@@ -221,18 +216,18 @@
                     .dispatch("blueprints/getBlueprintsForQuery", {type: this.blueprintType, kind: this.blueprintKind, params: query})
                     .then(data => {
                         // Handle switch tab while fetching data
-                        if (this.embedFriendlyBlueprintBaseUri === beforeLoadBlueprintBaseUri) {
+                        if (this.blueprintType === beforeLoadBlueprintType) {
                             this.total = data.total;
                             this.blueprints = data.results;
                         }
                     });
             },
             loadData(callback) {
-                const beforeLoadBlueprintBaseUri = this.embedFriendlyBlueprintBaseUri;
+                const beforeLoadBlueprintType = this.blueprintType;
 
                 Promise.all([
-                    this.loadTags(beforeLoadBlueprintBaseUri),
-                    this.loadBlueprints(beforeLoadBlueprintBaseUri)
+                    this.loadTags(beforeLoadBlueprintType),
+                    this.loadBlueprints(beforeLoadBlueprintType)
                 ]).then(() => {
                     this.$emit("loaded");
                 }).catch(() => {
@@ -243,7 +238,7 @@
                     }
                 }).finally(() => {
                     // Handle switch tab while fetching data
-                    if (this.embedFriendlyBlueprintBaseUri === beforeLoadBlueprintBaseUri && callback) {
+                    if (this.blueprintType === beforeLoadBlueprintType && callback) {
                         callback();
                     }
                 })
@@ -261,17 +256,6 @@
             userCanCreateFlow() {
                 return this.user.hasAnyAction(permission.FLOW, action.CREATE);
             },
-            embedFriendlyBlueprintBaseUri() {
-                const tab = this.tab ?? this?.$route?.params?.tab ?? "community";
-                let base = this.blueprintBaseUri;
-
-                return base
-                    ? (base.endsWith("/undefined") ? base.replace("/undefined", `/${tab}`) : base)
-                    : `${apiUrl(this.$store)}/blueprints/${tab}`;
-            },
-            blueprintType() {
-                return this.tab ?? this?.$route?.params?.tab ?? "community";
-            }
         },
         watch: {
             $route(newValue, oldValue) {
@@ -307,10 +291,7 @@
                     this.selectedTag = 0;
                 }
             },
-            blueprintBaseUri() {
-                this.loadData();
-            },
-            tab() {
+            blueprintType() {
                 this.loadData();
             },
             blueprintKind() {

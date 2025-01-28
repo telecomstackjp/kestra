@@ -121,13 +121,9 @@
                 type: Boolean,
                 default: false
             },
-            tab: {
+            blueprintType: {
                 type: String,
                 default: "community"
-            },
-            blueprintBaseUri: {
-                type: String,
-                default: undefined,
             },
             kind: {
                 type: String,
@@ -204,9 +200,6 @@
                     ...YamlUtils.parse(this.blueprint.source),
                     source: this.blueprint.source
                 }
-            },
-            blueprintType() {
-                return this.tab ?? this?.$route?.params?.tab ?? "community";
             },
             blueprintKind() {
                 return this.blueprintType === "community" ? this.kind : undefined;

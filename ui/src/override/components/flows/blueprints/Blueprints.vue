@@ -8,13 +8,19 @@
         :image-dark="headerImageDark"
     >
         <section class="main-container" v-bind="$attrs">
-            <blueprint-detail v-if="selectedBlueprintId" :embed="embed" :blueprint-id="selectedBlueprintId" @back="selectedBlueprintId = undefined" :blueprint-base-uri="blueprintUri" />
+            <blueprint-detail
+                v-if="selectedBlueprintId"
+                :embed="embed"
+                :blueprint-id="selectedBlueprintId"
+                blueprint-type="community"
+                @back="selectedBlueprintId = undefined"
+            />
             <blueprints-browser
                 @loaded="$emit('loaded', $event)"
                 :class="{'d-none': !!selectedBlueprintId}"
                 :embed="embed"
-                :blueprint-base-uri="blueprintUri"
                 :blueprint-kind="kind"
+                blueprint-type="community"
                 @go-to-detail="blueprintId => selectedBlueprintId = blueprintId"
             />
         </section>
@@ -26,7 +32,6 @@
     import DottedLayout from "../../../../components/layout/DottedLayout.vue";
     import BlueprintDetail from "../../../../components/flows/blueprints/BlueprintDetail.vue";
     import BlueprintsBrowser from "./BlueprintsBrowser.vue";
-    import {apiUrl} from "override/utils/route";
 
     import headerImage from "../../../../assets/icons/blueprint.svg";
     import headerImageDark from "../../../../assets/icons/blueprint-dark.svg";
@@ -61,9 +66,6 @@
                 return {
                     title: this.$t("blueprints.title")
                 };
-            },
-            blueprintUri() {
-                return `${apiUrl(this.$store)}/blueprints/community`
             }
         }
     };
