@@ -53,7 +53,6 @@
     import Flows from "./Flows.vue";
     import EditorView from "../inputs/EditorView.vue";
     import BlueprintsBrowser from "../../override/components/flows/blueprints/BlueprintsBrowser.vue";
-    import {apiUrl} from "override/utils/route";
     import DemoNamespace from "../demo/Namespace.vue";
 
     export default {
@@ -104,10 +103,9 @@
                         component: BlueprintsBrowser,
                         title: this.$t("blueprints.title"),
                         props: {
-                            blueprintBaseUri: `${apiUrl(this.$store)}/blueprints/community`,
-                            tab: "community",
                             embed: this.embed,
-                            system: true
+                            system: true,
+                            tab: "community"
                         }
                     })
                 }
