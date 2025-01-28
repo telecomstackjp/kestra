@@ -1092,6 +1092,7 @@
     },
     "export_to_file": "Exporter vers un fichier",
     "change state current state": "Statut actuel :",
-    "create_dashboard": "Créer un tableau de bord"
+    "create_dashboard": "Créer un tableau de bord",
+    "instance": "Instance"
   }
 }

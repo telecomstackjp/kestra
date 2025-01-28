@@ -179,7 +179,7 @@ export function useLeftMenu() {
                         }
                     },
                     {
-                        title: t("cluster"),
+                        title: t("instance"),
                         icon: {
                             element: shallowRef(ServerOutline),
                             class: "menu-icon"

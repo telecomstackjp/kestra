@@ -1092,6 +1092,7 @@
     },
     "export_to_file": "Eksportuj do pliku",
     "change state current state": "Aktualny status to:",
-    "create_dashboard": "Utwórz Dashboard"
+    "create_dashboard": "Utwórz Dashboard",
+    "instance": "Instancja"
   }
 }
