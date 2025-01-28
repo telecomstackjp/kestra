@@ -122,7 +122,7 @@ export function useLeftMenu() {
                             element: shallowRef(FileTreeOutline),
                             class: "menu-icon"
                         },
-                        href: {name: "blueprints", params: {kind: "flow"}},
+                        href: {name: "blueprints", params: {kind: "flow", tab: "community"}},
                     },
                     {
                         title: t("homeDashboard.title"),
@@ -131,7 +131,7 @@ export function useLeftMenu() {
                             element: shallowRef(ViewDashboardVariantOutline),
                             class: "menu-icon"
                         },
-                        href: {name: "blueprints", params: {kind: "dashboard"}},
+                        href: {name: "blueprints", params: {kind: "dashboard", tab: "community"}},
                     },
                 ]
             },

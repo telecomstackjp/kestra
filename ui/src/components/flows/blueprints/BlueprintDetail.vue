@@ -93,7 +93,7 @@
     import {mapState} from "vuex";
     import permission from "../../../models/permission";
     import action from "../../../models/action";
-    
+
     export default {
         components: {Markdown, CopyToClipboard},
         emits: ["back"],
@@ -101,6 +101,7 @@
             return {
                 flowGraph: undefined,
                 blueprint: undefined,
+                tab: "",
                 breadcrumb: [
                     {
                         label: this.$t("blueprints.title"),
@@ -191,7 +192,6 @@
         computed: {
             ...mapState("auth", ["user"]),
             ...mapState("plugin", ["icons"]),
-            ...mapState("blueprints", ["blueprint"]),
             userCanCreateFlow() {
                 return this.user.hasAnyAction(permission.FLOW, action.CREATE);
             },

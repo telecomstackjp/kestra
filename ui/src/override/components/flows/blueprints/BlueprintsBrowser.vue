@@ -33,7 +33,7 @@
                     </nav>
                 </template>
                 <template #top>
-                    <KestraFilter :prefix="`blueprintsBrowser${tab}`" :placeholder="$t('search')" :decode="false" />
+                    <KestraFilter :prefix="`blueprintsBrowser${blueprintType}`" :placeholder="$t('search')" :decode="false" />
                 </template>
                 <template #table>
                     <el-alert type="info" v-if="ready && (!blueprints || blueprints.length === 0)" :closable="false">
@@ -145,8 +145,8 @@
                 q: undefined,
                 selectedTag: this.initSelectedTag(),
                 tags: undefined,
-                blueprints: undefined,
                 total: 0,
+                blueprints: undefined,
                 icon: {
                     ContentCopy: shallowRef(ContentCopy)
                 },
@@ -254,7 +254,6 @@
         computed: {
             ...mapState("auth", ["user"]),
             ...mapState("plugin", ["icons"]),
-            ...mapState("blueprint", ["blueprints"]),
             userCanCreateFlow() {
                 return this.user.hasAnyAction(permission.FLOW, action.CREATE);
             },
