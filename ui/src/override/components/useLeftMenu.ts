@@ -20,6 +20,7 @@ import AccountOutline from "vue-material-design-icons/AccountOutline.vue";
 import ShieldCheckOutline from "vue-material-design-icons/ShieldCheckOutline.vue";
 import ServerOutline from "vue-material-design-icons/ServerOutline.vue";
 import ShieldLockOutline from "vue-material-design-icons/ShieldLockOutline.vue"
+import FormatListGroupPlus from "vue-material-design-icons/FormatListGroupPlus.vue";
 
 export function useLeftMenu() {
     const {t} = useI18n({useScope: "global"});
@@ -143,6 +144,15 @@ export function useLeftMenu() {
                     element: shallowRef(Connection),
                     class: "menu-icon"
                 },
+            },
+            {
+                href: {name: "apps/list"},
+                routes: routeStartWith("apps"),
+                title: t("apps"),
+                icon: {
+                    element: shallowRef(FormatListGroupPlus),
+                    class: "menu-icon"
+                }
             },
             {
                 title: t("administration"),

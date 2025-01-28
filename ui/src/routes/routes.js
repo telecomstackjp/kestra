@@ -4,6 +4,7 @@ import DemoIAM from "../components/demo/IAM.vue"
 import DemoTenants from "../components/demo/Tenants.vue"
 import DemoAuditLogs from "../components/demo/AuditLogs.vue"
 import DemoInstance from "../components/demo/Instance.vue"
+import DemoApps from "../components/demo/Apps.vue"
 
 export default [
     //Initial
@@ -62,6 +63,7 @@ export default [
     {name: "errors/404-wildcard", path: "/:pathMatch(.*)", component: Errors, props: {code: 404}},
 
     //Demo Pages
+    {name: "apps/list", path: "/:tenant?/apps", component: DemoApps},
     {name: "admin/iam", path: "/:tenant?/admin/iam", component: DemoIAM},
     {name: "admin/tenants/list", path: "/:tenant?/admin/tenants", component: DemoTenants},
     {name: "admin/auditlogs/list", path: "/:tenant?/admin/auditlogs", component: DemoAuditLogs},

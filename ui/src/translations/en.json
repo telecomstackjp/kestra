@@ -789,9 +789,14 @@
         }
       }
     },
+    "apps": "Apps",
     "demos":{
       "enterprise_edition": "Enterprise Edition",
       "get_a_demo_button": "Get a Demo",
+      "apps": {
+        "title": "Apps are the future of Kestra",
+        "message": "Expose end user to custom layouts with apps"
+      },
       "IAM": {
         "title": "Upgrade Your IAM",
         "message": "the message for IAM"
