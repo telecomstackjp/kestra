@@ -4,8 +4,9 @@ Welcome to the Custom Dashboard! This feature allows you to create and manage pe
 
 ## Create a new Dashboard as code
 
-Below is an example of a dashboard definition that displays executions over time and a pie chart of execution states:
+Below is an example of a dashboard definition that displays executions over time, a table that uses metrics to display the sum of sales per namespace, and a table that shows the log count by level per namespace:
 
+::collapse{title="Expand for a example dashboard definition"}
 ```yaml
 title: Getting Started
 description: First custom dashboard
@@ -40,23 +41,50 @@ charts:
           agg: SUM
           graphStyle: LINES
 
-  - id: executions_pie
-    type: io.kestra.plugin.core.dashboard.chart.Pie
+  - id: table_metrics
+    type: io.kestra.plugin.core.dashboard.chart.Table
     chartOptions:
-      graphStyle: DONUT
-      displayName: Total Executions
-      description: Total executions per state
-      legend:
-        enabled: true
-      colorByColumn: state
+      displayName: Sum of sales per namespace
     data:
-      type: io.kestra.plugin.core.dashboard.data.Executions
+      type: io.kestra.plugin.core.dashboard.data.Metrics
       columns:
-        state:
-          field: STATE
-        total:
+        namespace:
+          field: NAMESPACE
+        value:
+          field: VALUE
+          agg: SUM
+      where:
+        - field: NAME
+          type: EQUAL_TO
+          value: sales_count
+        - field: NAMESPACE
+          type: IN
+          values:
+            - dev_graph
+            - prod_graph
+      orderBy:
+        - column: value
+          order: DESC
+
+    - id: table_logs
+    type: io.kestra.plugin.core.dashboard.chart.Table
+    chartOptions:
+      displayName: Log count by level for filtered namespace
+    data:
+      type: io.kestra.plugin.core.dashboard.data.Logs
+      columns:
+        level:
+          field: LEVEL
+        count:
           agg: COUNT
+      where:
+        - field: NAMESPACE
+          type: IN
+          values:
+            - dev_graph
+            - prod_graph
 ```
+::
 
 To see all available properties to configure a custom dashboard as code, see examples provided in the [Enterprise Edition Examples](https://github.com/kestra-io/enterprise-edition-examples) repository.
 
