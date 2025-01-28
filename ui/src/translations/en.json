@@ -791,11 +791,42 @@
       "enterprise_edition": "Enterprise Edition",
       "get_a_demo_button": "Get a Demo",
       "IAM": {
-        "message": "IAM"
+        "title": "Upgrade Your IAM",
+        "message": "the message for IAM"
       },
       "tenants": {
         "title": "Upgrade Your Tenants Management",
         "message": "With Kestra Enterprise Edition, you unlock advanced capabilities like multi-tenancy, team-level isolation, and enhanced security to meet the needs of your organization."
+      },
+      "audit-logs": {
+        "title": "Upgrade Your Audit Logs",
+        "message": "With Kestra Enterprise Edition, and nice audit logs"
+      },
+      "instance": {
+        "title": "Upgrade Your Concurrency",
+        "message": "With Kestra Enterprise Edition, you unlock advanced capabilities like multi-tenancy"
+      },
+      "namespace": {
+        "edit": {
+          "title": "Upgrade Your Namespace (edit title)",
+          "message": "With Kestra Enterprise Edition, you unlock advanced capabilities like multi-tenancy (edit message)"
+        },
+        "variables": {
+          "title": "Upgrade Your Namespace (variables)",
+          "message": "With Kestra Enterprise Edition, you unlock advanced capabilities like multi-tenancy"
+        },
+        "plugin-defaults": {
+          "title": "Upgrade Your Namespace (plugin defaults)",
+          "message": "With Kestra Enterprise Edition, you unlock advanced capabilities like multi-tenancy"
+        },
+        "secrets": {
+          "title": "Upgrade Your Namespace (secrets)",
+          "message": "With Kestra Enterprise Edition, you unlock advanced capabilities like multi-tenancy"
+        },
+        "audit-logs": {
+          "title": "Upgrade Your Namespace (audit-logs)",
+          "message": "With Kestra Enterprise Edition, you unlock advanced capabilities like multi-tenancy"
+        }
       }
     },
     "onboarding": {

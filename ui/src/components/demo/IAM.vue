@@ -1,7 +1,7 @@
 <template>
     <top-nav-bar :title="routeInfo.title" v-if="!isFullScreen()" />
     <Layout
-        title="IAM"
+        :title="$t('demos.IAM.title')"
         :image="{source: sourceImg, alt: t('demos.IAM.title')}"
     >
         <template #message>
