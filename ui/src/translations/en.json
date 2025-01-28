@@ -789,7 +789,7 @@
     },
     "demos":{
       "enterprise_edition": "Enterprise Edition",
-      "get_a_demo_button": "Get a demo",
+      "get_a_demo_button": "Get a Demo",
       "IAM": {
         "message": "IAM"
       },

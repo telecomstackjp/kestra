@@ -13,14 +13,18 @@
 </template>
 
 <script lang="ts" setup>
-    import {onMounted} from "vue";
+    import {onMounted, nextTick} from "vue";
     import {useStore} from "vuex";
     import EmptyTemplate from "../layout/EmptyTemplate.vue";
 
     const store = useStore();
 
     onMounted(() => {
-        store.commit("misc/setContextInfoBarOpenTab", "docs")
+        store.commit("doc/setDocPath", "<reset>")
+        nextTick(() => {
+            store.commit("doc/setDocPath", "")
+            store.commit("misc/setContextInfoBarOpenTab", "docs")
+        })
     });
 
     defineProps<{

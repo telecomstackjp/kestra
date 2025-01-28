@@ -2,6 +2,8 @@ import OnlyLeftMenuLayout from "../components/layout/OnlyLeftMenuLayout.vue"
 import Errors from "../components/errors/Errors.vue"
 import DemoIAM from "../components/demo/IAM.vue"
 import DemoTenants from "../components/demo/Tenants.vue"
+import DemoAuditLogs from "../components/demo/AuditLogs.vue"
+import DemoInstance from "../components/demo/Instance.vue"
 
 export default [
     //Initial
@@ -62,4 +64,6 @@ export default [
     //Demo Pages
     {name: "admin/iam", path: "/:tenant?/admin/iam", component: DemoIAM},
     {name: "admin/tenants/list", path: "/:tenant?/admin/tenants", component: DemoTenants},
+    {name: "admin/auditlogs/list", path: "/:tenant?/admin/auditlogs", component: DemoAuditLogs},
+    {name: "admin/instance", path: "/:tenant?/admin/instance", component: DemoInstance},
 ];

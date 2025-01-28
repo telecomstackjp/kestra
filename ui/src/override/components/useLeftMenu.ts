@@ -162,14 +162,12 @@ export function useLeftMenu() {
                         },
                     },
                     {
+                        href: {name: "admin/auditlogs/list"},
+                        routes: routeStartWith("admin/auditlogs"),
                         title: t("auditlogs"),
                         icon: {
                             element: shallowRef(ShieldCheckOutline),
                             class: "menu-icon"
-                        },
-                        disabled: true,
-                        attributes: {
-                            locked: true
                         }
                     },
                     {
@@ -182,14 +180,12 @@ export function useLeftMenu() {
                         }
                     },
                     {
+                        href: {name: "admin/instance"},
+                        routes: routeStartWith("admin/instance"),
                         title: t("cluster"),
                         icon: {
                             element: shallowRef(ServerOutline),
                             class: "menu-icon"
-                        },
-                        disabled: true,
-                        attributes: {
-                            locked: true
                         }
                     },
                     {
