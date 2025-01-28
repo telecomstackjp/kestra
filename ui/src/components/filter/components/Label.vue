@@ -47,7 +47,7 @@
 
     margin: 0 0.5rem;
     padding: 0.3rem 0.35rem;
-
-    background: var(--ks-background-paused);
+    border-left: 3px solid var(--ks-background-input);
+    border-right: 3px solid var(--ks-background-input);
 }
 </style>

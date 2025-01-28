@@ -850,11 +850,18 @@ $dashboards: 52px;
             0 1px 0 0 $filters-border-color inset;
 
         & .el-tag {
-            background: $filters-border-color !important;
-            color: $filters-gray-900;
+            background: var(--ks-tag-background);
+            color: var(--ks-tag-content);
+            span span span:hover{
+                background: var(--ks-tag-background-hover);
+            }
 
             & .el-tag__close {
-                color: $filters-gray-900;
+                color: var(--ks-tag-content);
+                background: none;
+                &:hover{
+                    color: var(--ks-content-link-hover);
+                }
             }
         }
     }
