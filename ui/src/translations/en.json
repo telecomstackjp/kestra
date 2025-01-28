@@ -592,7 +592,6 @@
     "worker group fallback": "Worker Group fallback",
     "version": "Version",
     "services": "Services",
-    "cluster": "Cluster",
     "server type": "Server type",
     "hostname": "Hostname",
     "port": "Port",
