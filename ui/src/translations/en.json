@@ -790,53 +790,53 @@
       }
     },
     "apps": "Apps",
-    "demos":{
+    "demos": {
       "enterprise_edition": "Enterprise Edition",
       "get_a_demo_button": "Get a Demo",
       "apps": {
-        "title": "Apps are the future of Kestra",
-        "message": "Expose end user to custom layouts with apps"
+        "title": "Build custom Apps with Kestra",
+        "message": "Apps in Kestra Enterprise Edition allow you to build custom UIs that interact with Kestra workflows from outside the platform. This feature lets you use your workflows as a backend for custom applications, enabling non-technical users to submit data through forms or resume paused workflows awaiting approval."
       },
       "IAM": {
-        "title": "Upgrade Your IAM",
-        "message": "the message for IAM"
+        "title": "Manage Users through IAM with SSO, SCIM and RBAC",
+        "message": "Kestra Enterprise Edition has built-in IAM capabilities with a single sign-on (SSO), SCIM directory sync, and role-based access control (RBAC), integrating with multiple identity providers and letting you assign fine-grained permissions for users and service accounts."
       },
       "tenants": {
-        "title": "Upgrade Your Tenants Management",
-        "message": "With Kestra Enterprise Edition, you unlock advanced capabilities like multi-tenancy, team-level isolation, and enhanced security to meet the needs of your organization."
+        "title": "Manage Workflows in Isolated Tenants",
+        "message": "Kestra Enterprise Edition supports multi-tenancy, giving you fully isolated environments for different teams or projects, each with its own resources such as dedicated worker groups or secrets and internal storage backends."
       },
       "audit-logs": {
-        "title": "Upgrade Your Audit Logs",
-        "message": "With Kestra Enterprise Edition, and nice audit logs"
+        "title": "Track Changes with Audit Logs",
+        "message": "Kestra Enterprise Edition logs every activity with robust, immutable records, making it easy to track changes, maintain compliance, and troubleshoot issues."
       },
       "instance": {
-        "title": "Upgrade Your Concurrency",
-        "message": "With Kestra Enterprise Edition, you unlock advanced capabilities like multi-tenancy"
+        "title": "Manage Infrastructure Across Your Instance",
+        "message": "Kestra Enterprise Edition provides an operational dashboard to help you observe the health of your platform and track the uptime metrics of all services such as a.o. Workers, Schedulers, and Executors. From the same page, you can also create Announcements to notify your users about planned downtime, and you can enter a maintenance mode which temporarily puts all services and workflow executions into a paused state to perform an upgrade."
       },
       "blueprints": {
-        "title": "Add your Private Blueprints",
-        "message": "in Kestra Enterprise edition you can add your private blueprints and keep them private in your own instances"
+        "title": "Add Custom Blueprints",
+        "message": "In Kestra Enterprise Edition, you can create custom Blueprints only available to your organization. You can use them as best-practices templates to share, centralize, and document commonly used workflows in your team."
       },
       "namespace": {
         "edit": {
-          "title": "Upgrade Your Namespace (edit title)",
-          "message": "With Kestra Enterprise Edition, you unlock advanced capabilities like multi-tenancy (edit message)"
-        },
+          "title": "Upgrade Your Namespace Management",
+          "message": "In Kestra Enterprise Edition, namespaces provide advanced isolation and governance of secrets, variables and plugin defaults at scale. Administrators can configure custom secrets managers, isolated storage backends, dedicated worker groups, and fine-grained permissions on a per-namespace basis. This ensures that secrets, variables and plugin configurations remain secure and easy to maintain across different teams and projects."
+      },
         "variables": {
-          "title": "Upgrade Your Namespace (variables)",
-          "message": "With Kestra Enterprise Edition, you unlock advanced capabilities like multi-tenancy"
-        },
-        "plugin-defaults": {
-          "title": "Upgrade Your Namespace (plugin defaults)",
-          "message": "With Kestra Enterprise Edition, you unlock advanced capabilities like multi-tenancy"
-        },
-        "secrets": {
-          "title": "Upgrade Your Namespace (secrets)",
-          "message": "With Kestra Enterprise Edition, you unlock advanced capabilities like multi-tenancy"
+        "title": "Centrally Govern Your Variables",
+        "message": "In Kestra Enterprise Edition, you can define and manage namespace-level variables to eliminate repetitive configurations across flows. These variables ensure consistency, simplify configuration updates, and can be easily referenced by any task or trigger for cleaner, more maintainable workflows."
+      },
+      "plugin-defaults": {
+        "title": "Standardize Configuration with Plugin Defaults",
+        "message": "In Kestra Enterprise Edition, you can set namespace-specific plugin defaults, reducing the need for duplicated setup in each flow. This central plugin governance enforces consistent configurations, allows secure referencing of secrets or variables, and simplifies maintenance of your workflows."
+      },
+      "secrets": {
+        "title": "Manage Secrets in a Secure Way",
+        "message": "In Kestra Enterprise Edition, you can store and control secrets at the namespace level, minimizing risk and ensuring each team's credentials remain isolated. Thanks to the nested hierarchy, you can also configure credentials in a parent namespace and they will be inherited by all child namespaces. Support for dedicated secrets managers and fine-grained namespace-level permission settings further strengthens security and compliance."
         },
         "audit-logs": {
-          "title": "Upgrade Your Namespace (audit-logs)",
-          "message": "With Kestra Enterprise Edition, you unlock advanced capabilities like multi-tenancy"
+          "title": "Track All Changes in One Place",
+          "message": "In Kestra Enterprise Edition, you can view namespace-level audit logs with detailed diffs, giving you a clear history of who changed what and when across all resources."
         }
       }
     },
