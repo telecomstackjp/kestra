@@ -1066,7 +1066,8 @@
         "triggers": "Disparadores",
         "main": "Propiedades principales",
         "error_handlers": "Manejadores de Errores",
-        "tasks": "Tareas"
+        "tasks": "Tareas",
+        "advanced": "Configuración avanzada"
       },
       "creation": {
         "select": "Seleccione una {section}",

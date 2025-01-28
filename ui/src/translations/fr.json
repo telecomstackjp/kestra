@@ -1066,7 +1066,8 @@
         "triggers": "Déclencheurs",
         "main": "Principales propriétés",
         "error_handlers": "Gestionnaires d'erreurs",
-        "tasks": "Tâches"
+        "tasks": "Tâches",
+        "advanced": "Configuration avancée"
       },
       "creation": {
         "select": "Sélectionnez une {section}",

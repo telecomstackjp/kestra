@@ -1066,7 +1066,8 @@
         "triggers": "触发器",
         "main": "主要属性",
         "error_handlers": "错误处理程序",
-        "tasks": "任务"
+        "tasks": "任务",
+        "advanced": "高级配置"
       },
       "creation": {
         "select": "选择一个{section}",

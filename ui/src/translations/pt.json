@@ -1066,7 +1066,8 @@
         "triggers": "Triggers",
         "main": "Propriedades principais",
         "error_handlers": "Manipuladores de Erros",
-        "tasks": "Tarefas"
+        "tasks": "Tarefas",
+        "advanced": "Configuração avançada"
       },
       "creation": {
         "select": "Selecione uma {section}",

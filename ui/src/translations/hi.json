@@ -1066,7 +1066,8 @@
         "triggers": "ट्रिगर्स",
         "main": "मुख्य गुणधर्म",
         "error_handlers": "त्रुटि हैंडलर",
-        "tasks": "कार्य"
+        "tasks": "कार्य",
+        "advanced": "उन्नत कॉन्फ़िगरेशन"
       },
       "creation": {
         "select": "किसी {section} का चयन करें",

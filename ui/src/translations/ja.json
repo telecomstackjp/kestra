@@ -1066,7 +1066,8 @@
         "triggers": "トリガー",
         "main": "メインプロパティ",
         "error_handlers": "エラーハンドラー",
-        "tasks": "タスク"
+        "tasks": "タスク",
+        "advanced": "高度な設定"
       },
       "creation": {
         "select": "{section}を選択してください",

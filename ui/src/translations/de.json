@@ -1066,7 +1066,8 @@
         "triggers": "Trigger",
         "main": "Haupteigenschaften",
         "error_handlers": "Fehlerbehandler",
-        "tasks": "Aufgaben"
+        "tasks": "Aufgaben",
+        "advanced": "Erweiterte Konfiguration"
       },
       "creation": {
         "select": "Wählen Sie einen {section} aus",

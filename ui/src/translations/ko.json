@@ -1066,7 +1066,8 @@
         "triggers": "트리거",
         "main": "주요 속성",
         "error_handlers": "오류 처리기",
-        "tasks": "작업"
+        "tasks": "작업",
+        "advanced": "고급 구성"
       },
       "creation": {
         "select": "{section}을 선택하십시오",

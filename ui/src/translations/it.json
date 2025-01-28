@@ -1066,7 +1066,8 @@
         "triggers": "Trigger",
         "main": "Proprietà principali",
         "error_handlers": "Gestori degli Errori",
-        "tasks": "Attività"
+        "tasks": "Attività",
+        "advanced": "Configurazione avanzata"
       },
       "creation": {
         "select": "Seleziona una {section}",
