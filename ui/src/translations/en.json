@@ -787,6 +787,17 @@
         }
       }
     },
+    "demos":{
+      "enterprise_edition": "Enterprise Edition",
+      "get_a_demo_button": "Get a demo",
+      "IAM": {
+        "message": "IAM"
+      },
+      "tenants": {
+        "title": "Upgrade Your Tenants Management",
+        "message": "With Kestra Enterprise Edition, you unlock advanced capabilities like multi-tenancy, team-level isolation, and enhanced security to meet the needs of your organization."
+      }
+    },
     "onboarding": {
       "next": "Next",
       "previous": "Previous",

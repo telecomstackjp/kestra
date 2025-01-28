@@ -1,9 +1,14 @@
 <template>
     <EmptyTemplate>
         <img :src="image.source" :alt="image.alt" class="img">
-        <h2>{{ title }}</h2>
-        <p><slot name="message" /></p>
-        <slot name="buttons" />
+        <div class="message-block">
+            <div class="enterprise-tag">
+                {{ $t('demos.enterprise_edition') }}
+            </div>
+            <h2>{{ title }}</h2>
+            <p><slot name="message" /></p>
+            <slot name="buttons" />
+        </div>
     </EmptyTemplate>
 </template>
 
@@ -20,18 +25,48 @@
 </script>
 
 <style lang="scss" scoped>
+    @import "@kestra-io/ui-libs/src/scss/color-palette.scss";
+
     .img {
-        max-height: 236px;
+        width: 400px;
     }
 
-    h2 {
-        line-height: 30px;
-        font-size: 20px;
-        font-weight: 600;
+    .message-block{
+        text-align: left;
+        width: 400px;
+        margin: 0 auto;
+        .enterprise-tag::before{
+            content: "";
+            display: block;
+            position: absolute;
+            z-index: -1;
+            background-image: linear-gradient(138.8deg, #CCE8FE 5.7%, #CDA0FF 27.03%, #8489F5 41.02%, #CDF1FF 68.68%, #B591E9 94%);
+            border-radius: 1rem;
+            top: -2px;
+            bottom: -2px;
+            left: -2px;
+            right: -2px;
+        }
+        .enterprise-tag{
+            position: relative;
+            background: $base-gray-200;
+            border: 1px solid transparent;
+            padding: 0 1rem;
+            border-radius: 1rem;
+            display: inline-block;
+        }
+
+        h2 {
+            margin-top: 1rem;
+            line-height: 30px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        p {
+            line-height: 22px;
+            font-size: 14px;
+        }
     }
 
-    p {
-        line-height: 22px;
-        font-size: 14px;
-    }
 </style>

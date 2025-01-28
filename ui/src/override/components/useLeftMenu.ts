@@ -193,14 +193,12 @@ export function useLeftMenu() {
                         }
                     },
                     {
+                        href: {name: "admin/tenants/list"},
+                        routes: routeStartWith("admin/tenants"),
                         title: t("tenants"),
                         icon: {
                             element: shallowRef(ShieldLockOutline),
                             class: "menu-icon"
-                        },
-                        disabled: true,
-                        attributes: {
-                            locked: true
                         }
                     },
                     {

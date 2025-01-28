@@ -1,11 +1,11 @@
 <template>
     <top-nav-bar :title="routeInfo.title" v-if="!isFullScreen()" />
     <Layout
-        title="IAM"
-        :image="{source: sourceImg, alt: t('demos.IAM.title')}"
+        :title="t('demos.tenants.title')"
+        :image="{source: sourceImg, alt: t('demos.tenants.title')}"
     >
         <template #message>
-            {{ $t('demos.IAM.message') }}
+            {{ $t('demos.tenants.message') }}
         </template>
         <template #buttons>
             <el-button v-if="!isFullScreen()" target="_blank" href="https://kestra.io/demo" type="primary" size="large">
@@ -21,13 +21,13 @@
     import Layout from "./Layout.vue";
     // @ts-expect-error no types in TopNavBar yet
     import TopNavBar from "../../components/layout/TopNavBar.vue";
-    import sourceImg from "../../assets/demo/IAM.png";
+    import sourceImg from "../../assets/demo/tenants.png";
     import useRouteContext from "../../mixins/useRouteContext";
 
     const {t} = useI18n();
 
     const routeInfo = ref({
-        title: t("demos.IAM.title"),
+        title: t("demos.tenants.title"),
     });
 
     useRouteContext(routeInfo);
