@@ -524,7 +524,7 @@
     "worker group": "Workerグループ",
     "version": "バージョン",
     "services": "サービス",
-        "server type": "サーバータイプ",
+    "server type": "サーバータイプ",
     "hostname": "ホスト名",
     "port": "ポート",
     "management port": "管理ポート",

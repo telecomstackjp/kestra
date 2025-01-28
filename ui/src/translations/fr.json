@@ -524,7 +524,7 @@
     "worker group": "Worker Group",
     "version": "Version",
     "services": "Services",
-        "server type": "Type de serveur",
+    "server type": "Type de serveur",
     "hostname": "Nom d'hôte",
     "port": "Port",
     "management port": "Port de gestion",

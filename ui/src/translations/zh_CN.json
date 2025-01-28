@@ -524,7 +524,7 @@
     "worker group": "工作组",
     "version": "版本",
     "services": "服务",
-        "server type": "服务器类型",
+    "server type": "服务器类型",
     "hostname": "主机名",
     "port": "端口",
     "management port": "管理端口",
