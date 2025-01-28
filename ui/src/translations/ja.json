@@ -1098,51 +1098,51 @@
     "demos": {
       "namespace": {
         "plugin-defaults": {
-          "title": "ネームスペースをアップグレードする（プラグインのデフォルト設定）",
-          "message": "Kestra Enterprise Editionを使用すると、マルチテナンシーのような高度な機能を利用できます。"
+          "title": "プラグインのデフォルトで設定を標準化する",
+          "message": "Kestra Enterprise Editionでは、namespaceごとにプラグインのデフォルト設定を行うことができ、各flowでの重複した設定の必要性を減らします。この中央プラグインガバナンスは、一貫した設定を強制し、秘密情報や変数の安全な参照を可能にし、ワークフローのメンテナンスを簡素化します。"
         },
         "audit-logs": {
-          "message": "Kestra Enterprise Editionを使用すると、multi-tenancyのような高度な機能を利用できます。",
-          "title": "Namespaceをアップグレードする (audit-logs)"
+          "message": "Kestra Enterprise Editionでは、namespaceレベルの監査Logを詳細な差分とともに表示でき、すべてのリソースにわたって誰が何をいつ変更したかの履歴を明確に確認できます。",
+          "title": "すべての変更を一箇所で追跡"
         },
         "secrets": {
-          "title": "Namespace（secrets）をアップグレードする",
-          "message": "Kestra Enterprise Editionを使用すると、マルチテナンシーのような高度な機能が利用可能になります。"
+          "title": "秘密を安全に管理する方法",
+          "message": "Kestra Enterprise Editionでは、namespaceレベルでシークレットを保存および管理することができ、リスクを最小限に抑え、各チームの認証情報を分離して保持します。ネストされた階層構造のおかげで、親namespaceで認証情報を設定すると、すべての子namespaceに継承されます。専用のシークレットマネージャーのサポートと、詳細なnamespaceレベルの権限設定により、セキュリティとコンプライアンスがさらに強化されます。"
         },
         "variables": {
-          "message": "Kestra Enterprise Editionを使用すると、マルチテナンシーのような高度な機能を利用できます。",
-          "title": "名前空間をアップグレードする（variables）"
+          "message": "Kestra Enterprise Editionでは、namespaceレベルの変数を定義および管理することで、flow全体での繰り返しの設定を排除できます。これらの変数は一貫性を確保し、設定の更新を簡素化し、どのtaskやtriggerからも簡単に参照できるため、よりクリーンで保守しやすいワークフローを実現します。",
+          "title": "変数を中央で管理する"
         },
         "edit": {
-          "message": "Kestra Enterprise Editionを使用すると、マルチテナンシーのような高度な機能を利用できます (メッセージを編集)",
-          "title": "Namespaceをアップグレード (タイトルを編集)"
+          "message": "Kestra Enterprise Editionでは、namespaceはシークレット、変数、プラグインのデフォルトを大規模に高度に分離し、ガバナンスを提供します。管理者は、カスタムシークレットマネージャー、分離されたストレージバックエンド、専用のworkerグループ、および詳細な権限をnamespaceごとに設定できます。これにより、シークレット、変数、およびプラグインの設定が異なるチームやプロジェクト間で安全かつ簡単に管理されることが保証されます。",
+          "title": "名前空間管理をアップグレードする"
         }
       },
       "instance": {
-        "title": "並行性をアップグレードする",
-        "message": "Kestra Enterprise Editionを使用すると、マルチテナンシーのような高度な機能を利用できます。"
+        "title": "インスタンス全体のインフラストラクチャを管理する",
+        "message": "Kestra Enterprise Editionは、プラットフォームの健康状態を観察し、Workers、Schedulers、Executorsなどのすべてのサービスの稼働時間メトリクスを追跡するための運用ダッシュボードを提供します。同じページから、計画されたダウンタイムについてユーザーに通知するためのアナウンスを作成することもでき、メンテナンスモードに入り、すべてのサービスとworkflow executionsを一時的にPAUSED状態にしてアップグレードを実行することができます。"
       },
       "audit-logs": {
-        "message": "Kestra Enterprise Editionでは、便利な監査ログがあります。",
-        "title": "監査ログをアップグレードする"
+        "message": "Kestra Enterprise Editionは、すべてのアクティビティを堅牢で不変の記録としてログに記録し、変更の追跡、コンプライアンスの維持、および問題のトラブルシューティングを容易にします。",
+        "title": "変更履歴をAudit Logsで追跡"
       },
       "blueprints": {
-        "message": "Kestra Enterpriseエディションでは、プライベートblueprintsを追加し、自分のインスタンス内でプライベートに保つことができます。",
-        "title": "プライベートBlueprintを追加"
+        "message": "Kestra Enterprise Editionでは、組織専用のカスタムBlueprintを作成できます。これらをベストプラクティスのテンプレートとして使用し、チーム内で一般的に使用されるworkflowを共有、集中化、文書化することができます。",
+        "title": "カスタムBlueprintの追加"
       },
       "enterprise_edition": "エンタープライズエディション",
       "IAM": {
-        "title": "IAMをアップグレードする",
-        "message": "IAMのメッセージ"
+        "title": "IAMを通じてSSO、SCIM、RBACでユーザーを管理する",
+        "message": "Kestra Enterprise Editionには、シングルサインオン (SSO)、SCIMディレクトリ同期、およびロールベースのアクセス制御 (RBAC) を備えたIAM機能が組み込まれており、複数のアイデンティティプロバイダーと統合し、ユーザーおよびサービスアカウントに対して詳細な権限を割り当てることができます。"
       },
       "tenants": {
-        "title": "テナント管理のアップグレード",
-        "message": "Kestra Enterprise Editionを使用すると、マルチテナンシー、チームレベルの分離、強化されたセキュリティなどの高度な機能を利用でき、組織のニーズに対応します。"
+        "title": "隔離されたTenantでワークフローを管理する",
+        "message": "Kestra Enterprise Editionはマルチテナンシーをサポートしており、異なるチームやプロジェクトのために完全に分離された環境を提供します。それぞれの環境には、専用のworkerグループやシークレット、内部ストレージバックエンドなどのリソースがあります。"
       },
       "get_a_demo_button": "デモを取得",
       "apps": {
-        "title": "アプリはKestraの未来です",
-        "message": "アプリでエンドユーザーにカスタムレイアウトを公開する"
+        "title": "Kestraでカスタムアプリを構築する",
+        "message": "Kestra Enterprise Editionのアプリは、プラットフォーム外からKestraのworkflowと連携するカスタムUIを構築することを可能にします。この機能により、workflowをカスタムアプリケーションのバックエンドとして使用でき、技術的でないユーザーがフォームを通じてデータを送信したり、承認待ちのPAUSED状態のworkflowを再開したりすることができます。"
       }
     },
     "apps": "アプリケーション"

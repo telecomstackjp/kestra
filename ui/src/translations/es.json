@@ -1098,51 +1098,51 @@
     "demos": {
       "namespace": {
         "plugin-defaults": {
-          "title": "Actualiza Tu Namespace (valores predeterminados del plugin)",
-          "message": "Con Kestra Enterprise Edition, desbloqueas capacidades avanzadas como la multi-tenancy."
+          "title": "Estandarizar la Configuración con Valores Predeterminados del Plugin",
+          "message": "En Kestra Enterprise Edition, puedes establecer valores predeterminados de plugins específicos para cada namespace, reduciendo la necesidad de configuraciones duplicadas en cada flow. Esta gobernanza central de plugins impone configuraciones consistentes, permite la referencia segura de secretos o variables y simplifica el mantenimiento de tus flujos de trabajo."
         },
         "audit-logs": {
-          "message": "Con Kestra Enterprise Edition, desbloqueas capacidades avanzadas como la multi-tenancy.",
-          "title": "Actualiza tu Namespace (audit-logs)"
+          "message": "En Kestra Enterprise Edition, puedes ver los logs de auditoría a nivel de namespace con diferencias detalladas, proporcionándote un historial claro de quién cambió qué y cuándo en todos los recursos.",
+          "title": "Rastrea Todos los Cambios en un Solo Lugar"
         },
         "secrets": {
-          "title": "Actualiza tu Namespace (secrets)",
-          "message": "Con Kestra Enterprise Edition, desbloqueas capacidades avanzadas como la multi-tenancy."
+          "title": "Gestionar Secretos de Forma Segura",
+          "message": "En Kestra Enterprise Edition, puedes almacenar y controlar secretos a nivel de namespace, minimizando el riesgo y asegurando que las credenciales de cada equipo permanezcan aisladas. Gracias a la jerarquía anidada, también puedes configurar credenciales en un namespace padre y serán heredadas por todos los namespaces hijos. El soporte para gestores de secretos dedicados y configuraciones de permisos detallados a nivel de namespace fortalece aún más la seguridad y el cumplimiento."
         },
         "variables": {
-          "message": "Con Kestra Enterprise Edition, desbloqueas capacidades avanzadas como la multi-tenancy.",
-          "title": "Actualiza tu Namespace (variables)"
+          "message": "En Kestra Enterprise Edition, puedes definir y gestionar variables a nivel de namespace para eliminar configuraciones repetitivas en los flows. Estas variables aseguran consistencia, simplifican las actualizaciones de configuración y pueden ser fácilmente referenciadas por cualquier task o trigger para lograr flujos de trabajo más limpios y mantenibles.",
+          "title": "Gobierne Centralmente Sus Variables"
         },
         "edit": {
-          "message": "Con Kestra Enterprise Edition, desbloqueas capacidades avanzadas como multi-tenancy (editar mensaje)",
-          "title": "Actualiza tu Namespace (editar título)"
+          "message": "En Kestra Enterprise Edition, los namespaces proporcionan aislamiento avanzado y gobernanza de secretos, variables y configuraciones predeterminadas de plugins a gran escala. Los administradores pueden configurar gestores de secretos personalizados, backends de almacenamiento aislados, grupos de workers dedicados y permisos detallados por cada namespace. Esto asegura que los secretos, variables y configuraciones de plugins permanezcan seguros y sean fáciles de mantener a través de diferentes equipos y proyectos.",
+          "title": "Mejora la Gestión de tu Namespace"
         }
       },
       "instance": {
-        "title": "Actualiza tu Concurrencia",
-        "message": "Con Kestra Enterprise Edition, desbloqueas capacidades avanzadas como la multi-tenancy."
+        "title": "Gestionar la Infraestructura en Toda su Instancia",
+        "message": "La Edición Enterprise de Kestra proporciona un panel de control operativo para ayudarte a observar la salud de tu plataforma y rastrear las métricas de tiempo de actividad de todos los servicios, como por ejemplo, Workers, Schedulers y Executors. Desde la misma página, también puedes crear Anuncios para notificar a tus usuarios sobre el tiempo de inactividad planificado, y puedes ingresar a un modo de mantenimiento que pone temporalmente todos los servicios y ejecuciones de workflow en un estado PAUSED para realizar una actualización."
       },
       "audit-logs": {
-        "message": "Con Kestra Enterprise Edition, y agradables audit logs",
-        "title": "Actualiza tus Audit Logs"
+        "message": "La Kestra Enterprise Edition registra cada actividad con registros robustos e inmutables, lo que facilita el seguimiento de cambios, el mantenimiento de la conformidad y la resolución de problemas.",
+        "title": "Rastrear Cambios con Audit Logs"
       },
       "blueprints": {
-        "message": "En la edición Enterprise de Kestra, puedes agregar tus propios blueprints y mantenerlos privados en tus propias instancias.",
-        "title": "Agrega tus Blueprints Privados"
+        "message": "En la Edición Enterprise de Kestra, puedes crear Blueprints personalizados disponibles solo para tu organización. Puedes usarlos como plantillas de mejores prácticas para compartir, centralizar y documentar flujos de trabajo comúnmente utilizados en tu equipo.",
+        "title": "Agregar Blueprints Personalizados"
       },
       "enterprise_edition": "Edición Enterprise",
       "IAM": {
-        "title": "Actualiza tu IAM",
-        "message": "el mensaje para IAM"
+        "title": "Administrar usuarios a través de IAM con SSO, SCIM y RBAC",
+        "message": "La Edición Enterprise de Kestra tiene capacidades IAM integradas con inicio de sesión único (SSO), sincronización de directorios SCIM y control de acceso basado en roles (RBAC), integrándose con múltiples proveedores de identidad y permitiéndote asignar permisos detallados para usuarios y cuentas de servicio."
       },
       "tenants": {
-        "title": "Mejora la Gestión de tus Tenants",
-        "message": "Con Kestra Enterprise Edition, desbloqueas capacidades avanzadas como multi-tenancy, aislamiento a nivel de equipo y seguridad mejorada para satisfacer las necesidades de tu organización."
+        "title": "Gestionar Flujos de Trabajo en Tenants Aislados",
+        "message": "La Edición Enterprise de Kestra admite la multi-tenancy, brindándote entornos completamente aislados para diferentes equipos o proyectos, cada uno con sus propios recursos, como grupos de worker dedicados o secretos y backends de almacenamiento interno."
       },
       "get_a_demo_button": "Obtener una Demostración",
       "apps": {
-        "title": "Las apps son el futuro de Kestra.",
-        "message": "Exponer al usuario final a diseños personalizados con aplicaciones"
+        "title": "Crea aplicaciones personalizadas con Kestra",
+        "message": "Las aplicaciones en Kestra Enterprise Edition te permiten construir interfaces de usuario personalizadas que interactúan con los workflows de Kestra desde fuera de la plataforma. Esta función te permite usar tus workflows como un backend para aplicaciones personalizadas, permitiendo a los usuarios no técnicos enviar datos a través de formularios o reanudar workflows PAUSED que esperan aprobación."
       }
     },
     "apps": "Aplicaciones"
