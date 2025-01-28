@@ -870,7 +870,8 @@
       "see_all": "Zobacz wszystkie",
       "success_ratio_tooltip": "Wskaźnik Sukcesu to suma wykonań w stanach SUCCESS, CANCELLED i WARNING podzielona przez całkowitą liczbę wykonań w stanie zakończonym.",
       "failure_ratio_tooltip": "Stosunek niepowodzeń to suma wykonań w stanach FAILED, KILLED i RETRIED podzielona przez całkowitą liczbę wykonań w stanie zakończonym.",
-      "preview": "Podgląd Dashboardu"
+      "preview": "Podgląd Dashboardu",
+      "click_chart_preview": "Kliknij kod źródłowy wykresu, aby zobaczyć podgląd"
     },
     "delete_log": "Czy na pewno chcesz usunąć log?",
     "docs": "Dokumentacja",
@@ -1089,6 +1090,7 @@
       "adding_default": "+ Dodaj nową wartość"
     },
     "export_to_file": "Eksportuj do pliku",
-    "change state current state": "Aktualny status to:"
+    "change state current state": "Aktualny status to:",
+    "create_dashboard": "Utwórz Dashboard"
   }
 }

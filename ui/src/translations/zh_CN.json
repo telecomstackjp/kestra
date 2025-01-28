@@ -870,7 +870,8 @@
       "see_all": "查看全部",
       "success_ratio_tooltip": "成功率是SUCCESS、CANCELLED和WARNING执行次数之和除以终止状态下执行总次数的结果。",
       "failure_ratio_tooltip": "失败率是FAILED、KILLED和RETRIED执行次数之和除以终止状态下执行总次数的结果。",
-      "preview": "仪表板预览"
+      "preview": "仪表板预览",
+      "click_chart_preview": "单击图表源代码以查看预览"
     },
     "delete_log": "您确定要删除这个log吗？",
     "docs": "文档",
@@ -1089,6 +1090,7 @@
       "adding_default": "+ 添加新value"
     },
     "export_to_file": "导出到文件",
-    "change state current state": "当前状态是："
+    "change state current state": "当前状态是：",
+    "create_dashboard": "创建仪表板"
   }
 }

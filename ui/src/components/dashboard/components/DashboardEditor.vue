@@ -139,6 +139,15 @@
                         <div v-else-if="chartError" class="text-container">
                             <span>{{ chartError }}</span>
                         </div>
+                        <div v-else>
+                            <el-empty :image="EmptyVisualDashboard" :image-size="200">
+                                <template #description>
+                                    <h5>
+                                        {{ $t('dashboard.click_chart_preview') }}
+                                    </h5>
+                                </template>
+                            </el-empty>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -152,6 +161,7 @@
     import ChartBar from "vue-material-design-icons/ChartBar.vue";
     import FileDocumentEditOutline from "vue-material-design-icons/FileDocumentEditOutline.vue";
     import ViewDashboard from "vue-material-design-icons/ViewDashboard.vue";
+    import EmptyVisualDashboard from "../../../assets/empty_visuals/Visuals_empty_dashboard.svg"
 
     // avoid an eslint warning about missing declaration
     defineEmits(["save"])
@@ -294,7 +304,7 @@
                     NONE: "none",
                     DASHBOARD: "dashboard"
                 },
-                currentView: "chart",
+                currentView: "documentation",
                 selectedChart: null,
                 charts: [],
                 chartError: null,
@@ -325,6 +335,14 @@
 <style scoped lang="scss">
     @import "@kestra-io/ui-libs/src/scss/variables";
     $spacing: 20px;
+
+    .el-empty {
+        background-color: transparent;
+
+        .el-empty__description {
+            font-size: var(--el-font-size-small);
+        }
+    }
 
     .custom {
         padding: 24px 32px;

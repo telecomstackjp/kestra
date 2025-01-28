@@ -500,6 +500,9 @@
     }
 
     const handleTopologyEditClick = (params) => {
+        if (viewType.value === editorViewTypes.TOPOLOGY) {
+            switchViewType(editorViewTypes.SOURCE_TOPOLOGY);
+        }
         editorViewType.value = "NO_CODE";
         nextTick(() => router.replace({query: {...route.query, ...params}}))
     }

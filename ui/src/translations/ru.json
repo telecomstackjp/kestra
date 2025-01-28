@@ -870,7 +870,8 @@
       "see_all": "Посмотреть все",
       "success_ratio_tooltip": "Коэффициент успеха — это сумма выполнений в состояниях SUCCESS, CANCELLED и WARNING, деленная на общее количество выполнений в завершенном состоянии.",
       "failure_ratio_tooltip": "Отношение Failed — это сумма выполнений в состояниях FAILED, KILLED и RETRIED, деленная на общее количество выполнений в завершенном состоянии.",
-      "preview": "Предварительный просмотр Dashboard"
+      "preview": "Предварительный просмотр Dashboard",
+      "click_chart_preview": "Нажмите на исходный код диаграммы, чтобы увидеть предварительный просмотр."
     },
     "delete_log": "Вы уверены, что хотите удалить log?",
     "docs": "Документы",
@@ -1089,6 +1090,7 @@
       "adding_default": "+ Добавить новое value"
     },
     "export_to_file": "Экспортировать в файл",
-    "change state current state": "Текущий статус:"
+    "change state current state": "Текущий статус:",
+    "create_dashboard": "Создать Dashboard"
   }
 }

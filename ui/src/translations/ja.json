@@ -870,7 +870,8 @@
       "see_all": "すべて表示",
       "success_ratio_tooltip": "成功率は、SUCCESS、CANCELLED、WARNINGの実行の合計を、終了状態にある実行の総数で割ったものです。",
       "failure_ratio_tooltip": "失敗率は、FAILED、KILLED、および RETRIED の実行の合計を、終了状態にある実行の総数で割ったものです。",
-      "preview": "ダッシュボードプレビュー"
+      "preview": "ダッシュボードプレビュー",
+      "click_chart_preview": "チャートのソースコードをクリックしてプレビューを表示"
     },
     "delete_log": "ログを削除してもよろしいですか？",
     "docs": "ドキュメント",
@@ -1089,6 +1090,7 @@
       "adding_default": "+ 新しいvalueを追加"
     },
     "export_to_file": "ファイルにエクスポート",
-    "change state current state": "現在のステータスは:"
+    "change state current state": "現在のステータスは:",
+    "create_dashboard": "ダッシュボードを作成"
   }
 }

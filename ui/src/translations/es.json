@@ -870,7 +870,8 @@
       "see_all": "Ver todo",
       "success_ratio_tooltip": "La Tasa de Éxito es la suma de ejecuciones en estado SUCCESS, CANCELLED y WARNING dividida por el número total de ejecuciones en un estado terminado.",
       "failure_ratio_tooltip": "La proporción de Failed es la suma de ejecuciones FAILED, KILLED y RETRIED dividida por el número total de ejecuciones en un estado terminado.",
-      "preview": "Vista previa del dashboard"
+      "preview": "Vista previa del dashboard",
+      "click_chart_preview": "Haz clic en un código fuente del gráfico para ver la vista previa."
     },
     "delete_log": "¿Está seguro de que desea eliminar el log?",
     "docs": "Documentos",
@@ -1089,6 +1090,7 @@
       "adding_default": "+ Añadir un nuevo value"
     },
     "export_to_file": "Exportar a archivo",
-    "change state current state": "Estado actual es:"
+    "change state current state": "Estado actual es:",
+    "create_dashboard": "Crear Dashboard"
   }
 }
