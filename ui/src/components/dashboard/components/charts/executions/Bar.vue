@@ -22,7 +22,7 @@
                     <span class="pe-2 fw-light small">{{ t("duration") }}</span>
                     <el-switch
                         v-model="duration"
-                        :active-icon="Check"
+                        :active-icon="CheckIcon"
                         inline-prompt
                     />
                 </div>
@@ -47,6 +47,7 @@
 <script setup>
     import {ref} from "vue";
     import {useI18n} from "vue-i18n";
+    import CheckIcon from "vue-material-design-icons/Check.vue";
 
     import {useMediaQuery} from "@vueuse/core";
 

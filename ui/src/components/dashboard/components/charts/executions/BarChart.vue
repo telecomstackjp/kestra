@@ -1,22 +1,37 @@
 <template>
-    <Bar
-        :data="parsedData"
-        :options="options"
-        :total="total"
-        :plugins="plugins"
-        :duration="duration"
-    />
+    <el-tooltip
+        effect="light"
+        placement="left"
+        :persistent="false"
+        :hide-after="0"
+        transition=""
+        :popper-class="tooltipContent === '' ? 'd-none' : 'tooltip-stats'"
+        :disabled="!externalTooltip"
+        :content="tooltipContent"
+        raw-content
+    >
+        <div>
+            <Bar
+                :class="small ? 'small' : ''"
+                :data="parsedData"
+                :options="options"
+                :total="total"
+                :plugins="plugins"
+                :duration="duration"
+            />
+        </div>
+    </el-tooltip>
 </template>
 
 <script setup>
-    import {computed} from "vue";
+    import {computed, ref} from "vue";
     import {useI18n} from "vue-i18n";
     import moment from "moment";
     import {Bar} from "vue-chartjs";
 
     import Utils from "../../../../../utils/utils.js";
     import {getScheme} from "../../../../../utils/scheme.js";
-    import {defaultConfig, getFormat} from "../../../../../utils/charts.js";
+    import {defaultConfig, tooltip, getFormat} from "../../../../../utils/charts.js";
 
     const {t} = useI18n({useScope: "global"});
 
@@ -27,32 +42,31 @@
         },
         plugins: {
             type: Array,
-            required: false,
             default: () => [],
         },
         total: {
             type: Number,
-            required: false,
             default: undefined,
         },
         duration: {
             type: Boolean,
-            required: false,
             default: true,
         },
         scales: {
             type: Boolean,
-            required: false,
             default: true,
         },
         small: {
             type: Boolean,
-            required: false,
             default: false,
-        }
+        },
+        externalTooltip: {
+            type: Boolean,
+            default: false,
+        },
     });
 
-
+    const tooltipContent = ref("")
 
     const parsedData = computed(() => {
         let datasets = props.data.reduce(function (accumulator, value) {
@@ -112,14 +126,18 @@
                     containerID: "executions",
                 },
                 tooltip: {
-                    enabled: props.scales,
+                    enabled: !props.externalTooltip,
                     filter: (value) => value.raw,
                     callbacks: {
-                        label: (value) => {
+                        label: function (value) {
                             const {label, yAxisID} = value.dataset;
                             return `${label.toLowerCase().capitalize()}: ${value.raw}${yAxisID === "yB" ? "s" : ""}`;
                         },
                     },
+                    external: props.externalTooltip ? function (context) {
+                        let content = tooltip(context.tooltip);
+                        tooltipContent.value = content;
+                    } : undefined,
                 },
             },
             scales: {
@@ -200,3 +218,9 @@
         }),
     );
 </script>
+
+<style>
+.small{
+    height: 50px;
+}
+</style>

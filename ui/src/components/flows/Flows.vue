@@ -172,6 +172,7 @@
                                         :scales="false"
                                         :data="chartData(scope.row)"
                                         small
+                                        external-tooltip
                                         @click="tableChartClick.bind(null, scope.row.namespace, scope.row.id)"
                                     />
                                 </template>
@@ -604,9 +605,5 @@
 
     .flows-table  .el-table__cell {
         vertical-align: middle;
-    }
-
-    .stats-chart{
-        height: 50px;
     }
 </style>
