@@ -166,6 +166,7 @@
                 :flow="flowYaml"
                 @update-metadata="(e) => onUpdateMetadata(e, true)"
                 @update-task="(e) => editorUpdate(e)"
+                @update-documentation="(task) => updatePluginDocumentation(undefined, task)"
             />
         </div>
         <div class="slider" @mousedown.prevent.stop="dragEditor" v-if="combinedEditor" />
@@ -740,9 +741,9 @@
         emit(type, event);
     };
 
-    const updatePluginDocumentation = (event) => {
+    const updatePluginDocumentation = (event, task) => {
         const pluginSingleList = store.getters["plugin/getPluginSingleList"];
-        const taskType = YamlUtils.getTaskType(
+        const taskType = task !== undefined ? task : YamlUtils.getTaskType(
             event.model.getValue(),
             event.position,
             pluginSingleList
