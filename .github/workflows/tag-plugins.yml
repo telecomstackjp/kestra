@@ -14,7 +14,7 @@ on:
 jobs:
   tag:
     name: Release plugins
-    runs-on: kestra-private-standard
+    runs-on: ubuntu-latest
     steps:
       # Checkout
       - uses: actions/checkout@v4
@@ -24,7 +24,6 @@ jobs:
       # Get Plugins List
       - name: Get Plugins List
         uses: ./.github/actions/plugins-list
-        if: "!startsWith(github.ref, 'refs/tags/v')"
         id: plugins-list
         with:
           plugin-version: 'LATEST'

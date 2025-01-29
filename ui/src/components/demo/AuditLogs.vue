@@ -1,5 +1,5 @@
 <template>
-    <top-nav-bar :title="routeInfo.title" v-if="!isFullScreen()" />
+    <top-nav-bar :title="routeInfo.title" v-if="!isFullScreen() && !embed" />
     <Layout
         :title="t('demos.audit-logs.title')"
         :image="{source: sourceImg, alt: t('demos.audit-logs.title')}"
@@ -25,6 +25,13 @@
     import useRouteContext from "../../mixins/useRouteContext";
 
     const {t} = useI18n();
+
+    defineProps({
+        embed: {
+            type:Boolean,
+            default: false
+        }
+    });
 
     const routeInfo = ref({
         title: t("demos.audit-logs.title"),
