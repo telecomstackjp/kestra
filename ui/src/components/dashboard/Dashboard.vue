@@ -504,12 +504,13 @@ $media-lg: 1200px;
 
 .dashboard{
     padding-bottom: 1rem;
-    display: grid;
     margin: 1rem 0;
     width: 100%;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
     @media (min-width: $media-md) {
+        display: grid;
         grid-template-columns: repeat(12, 1fr);
     }
 }
@@ -523,6 +524,7 @@ $media-lg: 1200px;
     border: 1px solid var(--ks-border-primary);
     border-radius: $border-radius;
     overflow: hidden;
+    flex-shrink: 0;
     @media (min-width: $media-md) {
         grid-column: span 6;
     }
