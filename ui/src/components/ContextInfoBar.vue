@@ -30,6 +30,10 @@
             </template>
             <span class="versionNumber">{{ configs?.version }}</span>
         </el-tooltip>
+        <el-button class="theme-switcher" @click="onSwitchTheme">
+            <WeatherNight v-if="themeIsDark" />
+            <WeatherSunny v-else />
+        </el-button>
     </div>
     <div class="panelWrapper" :class="{panelTabResizing: resizing}" :style="{width: activeTab?.length ? `${panelWidth}px` : 0}">
         <div :style="{overflow: 'hidden'}">
@@ -59,10 +63,13 @@
     import Calendar from "vue-material-design-icons/Calendar.vue"
     import Close from "vue-material-design-icons/Close.vue"
     import OpenInNew from "vue-material-design-icons/OpenInNew.vue"
+    import WeatherSunny from "vue-material-design-icons/WeatherSunny.vue"
+    import WeatherNight from "vue-material-design-icons/WeatherNight.vue"
 
     import {useStorage} from "@vueuse/core"
     import {useStore} from "vuex";
     import {useI18n} from "vue-i18n";
+    import Utils from "../utils/utils";
 
     const {t} = useI18n({useScope: "global"});
 
@@ -159,6 +166,13 @@
             store.commit("misc/setContextInfoBarOpenTab", tab)
         }
     }
+
+    const themeIsDark = ref(localStorage.getItem("theme") === "dark")
+
+    const onSwitchTheme = () => {
+        themeIsDark.value = !themeIsDark.value;
+        Utils.switchTheme(themeIsDark.value ? "dark" : "light");
+    }
 </script>
 
 <style lang="scss" scoped>
@@ -214,6 +228,10 @@
             color: var(--ks-content-tertiary);
             opacity: .4;
             margin-top: 1rem;
+        }
+
+        .theme-switcher {
+            transform: rotate(-90deg);
         }
 
         .context-button-icon {
