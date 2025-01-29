@@ -144,7 +144,7 @@
             component: shallowRef(MetadataInputs),
             value: props.metadata.inputs,
             label: t("no_code.fields.general.inputs"),
-            inputs: props.metadata.inputs,
+            inputs: props.metadata.inputs ?? [],
         },
         outputs: {
             component: shallowRef(Editor),
