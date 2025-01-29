@@ -45,6 +45,7 @@
 @import "@kestra-io/ui-libs/src/scss/variables";
 
 .card {
+    box-shadow: 0px 2px 4px 0px var(--ks-card-shadow, #ecebef);
     & .icons {
         color: $secondary;
 

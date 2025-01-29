@@ -494,7 +494,7 @@ $spacing: 20px;
 
 .dashboard-filters,
 .dashboard {
-    padding: 0 32px;
+    padding: 0 2rem;
     margin: 0;
 
     .description {
@@ -506,8 +506,12 @@ $spacing: 20px;
         }
     }
 }
+.dashboard{
+    padding-bottom: 1rem;
+}
 
 .card {
+    box-shadow: 0px 2px 4px 0px var(--ks-card-shadow, #ecebef);
     background: var(--ks-background-card);
     color: var(--ks-content-primary);
     border: 1px solid var(--ks-border-primary);
