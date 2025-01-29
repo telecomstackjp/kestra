@@ -11,6 +11,7 @@ import jakarta.inject.Singleton;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Singleton
 public class QueryFilterFormatBinder implements AnnotatedRequestArgumentBinder<QueryFilterFormat, List<QueryFilter>> {
@@ -61,7 +62,7 @@ public class QueryFilterFormatBinder implements AnnotatedRequestArgumentBinder<Q
                     throw new IllegalArgumentException("Invalid FlowScope value: " + valueStr, e);
                 }
             })
-            .toList();
+            .collect(Collectors.toList());
     }
 
     @Override
