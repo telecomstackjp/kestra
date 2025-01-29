@@ -20,13 +20,19 @@ import AccountOutline from "vue-material-design-icons/AccountOutline.vue";
 import ShieldCheckOutline from "vue-material-design-icons/ShieldCheckOutline.vue";
 import ServerOutline from "vue-material-design-icons/ServerOutline.vue";
 import ShieldLockOutline from "vue-material-design-icons/ShieldLockOutline.vue"
+import FormatListGroupPlus from "vue-material-design-icons/FormatListGroupPlus.vue";
 
 export function useLeftMenu() {
     const {t} = useI18n({useScope: "global"});
     const $router = useRouter()
     const store = useStore()
 
-    function routeStartWith(route) {
+    /**
+     * Returns all route names that start with the given route
+     * @param route
+     * @returns
+     */
+    function routeStartWith(route: string) {
         return $router?.getRoutes().filter(r => typeof r.name === "string" && r.name.startsWith(route)).map(r => r.name);
     }
 
@@ -117,7 +123,7 @@ export function useLeftMenu() {
                             element: shallowRef(FileTreeOutline),
                             class: "menu-icon"
                         },
-                        href: {name: "blueprints", params: {kind: "flow"}},
+                        href: {name: "blueprints", params: {kind: "flow", tab: "community"}},
                     },
                     {
                         title: t("homeDashboard.title"),
@@ -126,7 +132,7 @@ export function useLeftMenu() {
                             element: shallowRef(ViewDashboardVariantOutline),
                             class: "menu-icon"
                         },
-                        href: {name: "blueprints", params: {kind: "dashboard"}},
+                        href: {name: "blueprints", params: {kind: "dashboard", tab: "community"}},
                     },
                 ]
             },
@@ -140,6 +146,15 @@ export function useLeftMenu() {
                 },
             },
             {
+                href: {name: "apps/list"},
+                routes: routeStartWith("apps"),
+                title: t("apps"),
+                icon: {
+                    element: shallowRef(FormatListGroupPlus),
+                    class: "menu-icon"
+                }
+            },
+            {
                 title: t("administration"),
                 routes: routeStartWith("admin"),
                 icon: {
@@ -148,25 +163,21 @@ export function useLeftMenu() {
                 },
                 child: [
                     {
+                        href: {name: "admin/iam"},
+                        routes: routeStartWith("admin/iam"),
                         title: t("iam"),
                         icon: {
                             element: shallowRef(AccountOutline),
                             class: "menu-icon"
                         },
-                        disabled: true,
-                        attributes: {
-                            locked: true
-                        }
                     },
                     {
+                        href: {name: "admin/auditlogs/list"},
+                        routes: routeStartWith("admin/auditlogs"),
                         title: t("auditlogs"),
                         icon: {
                             element: shallowRef(ShieldCheckOutline),
                             class: "menu-icon"
-                        },
-                        disabled: true,
-                        attributes: {
-                            locked: true
                         }
                     },
                     {
@@ -179,25 +190,21 @@ export function useLeftMenu() {
                         }
                     },
                     {
-                        title: t("cluster"),
+                        href: {name: "admin/instance"},
+                        routes: routeStartWith("admin/instance"),
+                        title: t("instance"),
                         icon: {
                             element: shallowRef(ServerOutline),
                             class: "menu-icon"
-                        },
-                        disabled: true,
-                        attributes: {
-                            locked: true
                         }
                     },
                     {
+                        href: {name: "admin/tenants/list"},
+                        routes: routeStartWith("admin/tenants"),
                         title: t("tenants"),
                         icon: {
                             element: shallowRef(ShieldLockOutline),
                             class: "menu-icon"
-                        },
-                        disabled: true,
-                        attributes: {
-                            locked: true
                         }
                     },
                     {

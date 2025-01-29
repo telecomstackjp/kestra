@@ -191,7 +191,10 @@ export default class YamlUtils {
         }
     }
 
-    static extractFieldFromMaps(source, fieldName, parentPathPredicate = (_) => true) {
+    // Specify a source yaml doc, the field to extract recursively in every map of the doc and optionally a predicate to define which paths should be taken into account
+    // parentPathPredicate will take a single argument which is the path of each parent property starting from the root doc (joined with ".")
+    // "my.parent.task" will mean that the field was retrieved in my -> parent -> task path.
+    static extractFieldFromMaps(source, fieldName, parentPathPredicate = (_, __) => true, valuePredicate = (_) => true) {
         const yamlDoc = yaml.parseDocument(source);
         const maps = [];
         yaml.visit(yamlDoc, {
@@ -200,7 +203,9 @@ export default class YamlUtils {
                     for (const item of map.items) {
                         if (item.key.value === fieldName) {
                             const fieldValue = item.value?.value ?? item.value?.items;
-                            maps.push({[fieldName]: fieldValue, range: map.range});
+                            if (valuePredicate(fieldValue)) {
+                                maps.push({[fieldName]: fieldValue, range: map.range});
+                            }
                         }
                     }
                 }
@@ -245,12 +250,12 @@ export default class YamlUtils {
         return maps;
     }
 
-    static extractAllTypes(source) {
-        return this.extractFieldFromMaps(source, "type", (parentKey) => ["tasks", "triggers", "errors", "tasks.logExporters"].some(k => k === parentKey))
+    static extractAllTypes(source, validTypes = []) {
+        return this.extractFieldFromMaps(source, "type", undefined, value => validTypes.some(t => t === value));
     }
 
-    static getTaskType(source, position) {
-        const types = this.extractAllTypes(source);
+    static getTaskType(source, position, validTypes) {
+        const types = this.extractAllTypes(source, validTypes);
 
         const lineCounter = new LineCounter();
         yaml.parseDocument(source, {lineCounter});
@@ -262,66 +267,6 @@ export default class YamlUtils {
             }
         }
         return null;
-    }
-
-    static extractAllGraphTypes(source) {
-        const yamlDoc = yaml.parseDocument(source);
-        const types = [];
-        if (yamlDoc.contents && yamlDoc.contents.items && yamlDoc.contents.items.find(e => ["charts", "data"].includes(e.key.value))) {
-            yaml.visit(yamlDoc, {
-                Map(_, map) {
-                    if (map.items) {
-                        for (const item of map.items) {
-                            if (item.key.value === "type") {
-                                const type = item.value?.value;
-                                types.push({type, range: map.range});
-                            }
-                        }
-                    }
-                }
-            })
-        }
-        return types;
-    }
-
-    static getGraphType(source, position) {
-        const types = this.extractAllGraphTypes(source)
-        const lineCounter = new LineCounter();
-        yaml.parseDocument(source, {lineCounter});
-        const cursorIndex = lineCounter.lineStarts[position.lineNumber - 1] + position.column;
-
-        for(const type of types.reverse()) {
-            if (cursorIndex > type.range[1]) {
-                return type.type;
-            }
-            if (cursorIndex >= type.range[0] && cursorIndex <= type.range[1]) {
-                return type.type;
-            }
-        }
-        return null;
-    }
-
-    static swapTasks(source, taskId1, taskId2) {
-        const yamlDoc = yaml.parseDocument(source);
-
-        const task1 = YamlUtils._extractTask(yamlDoc, taskId1);
-        const task2 = YamlUtils._extractTask(yamlDoc, taskId2);
-
-        yaml.visit(yamlDoc, {
-            Pair(_, pair) {
-                if (pair.key.value === "dependsOn" && pair.value.items.map(e => e.value).includes(taskId2)) {
-                    throw {
-                        message: "dependency task",
-                        messageOptions: {taskId: taskId2}
-                    };
-                }
-            }
-        });
-
-        YamlUtils._extractTask(yamlDoc, taskId1, () => task2);
-        YamlUtils._extractTask(yamlDoc, taskId2, () => task1);
-
-        return yamlDoc.toString(TOSTRING_OPTIONS);
     }
 
     static insertTask(source, taskId, newTask, insertPosition) {

@@ -166,6 +166,7 @@
                 :flow="flowYaml"
                 @update-metadata="(e) => onUpdateMetadata(e, true)"
                 @update-task="(e) => editorUpdate(e)"
+                @update-documentation="(task) => updatePluginDocumentation(undefined, task)"
             />
         </div>
         <div class="slider" @mousedown.prevent.stop="dragEditor" v-if="combinedEditor" />
@@ -497,6 +498,10 @@
     const editorViewType = ref("YAML");
     const changeEditorViewType = (value) => {
         localStorage.setItem(storageKeys.EDITOR_VIEW_TYPE, value);
+
+        if(value === "NO_CODE") {
+            editorWidth.value = editorWidth.value > 33.3 ? 33.3 : editorWidth.value;
+        }
     }
 
     const handleTopologyEditClick = (params) => {
@@ -736,13 +741,14 @@
         emit(type, event);
     };
 
-    const updatePluginDocumentation = (event) => {
-        const taskType = YamlUtils.getTaskType(
-            event.model.getValue(),
-            event.position
-        );
+    const updatePluginDocumentation = (event, task) => {
         const pluginSingleList = store.getters["plugin/getPluginSingleList"];
-        if (taskType && pluginSingleList && pluginSingleList.includes(taskType)) {
+        const taskType = task !== undefined ? task : YamlUtils.getTaskType(
+            event.model.getValue(),
+            event.position,
+            pluginSingleList
+        );
+        if (taskType) {
             store.dispatch("plugin/load", {cls: taskType}).then((plugin) => {
                 store.commit("plugin/setEditorPlugin", {cls: taskType, ...plugin});
             });
@@ -918,7 +924,7 @@
 
     const validateFlow = (flow) => {
         if(!flow) return;
-        
+
         return store
             .dispatch("flow/validateFlow", {flow})
             .then((value) => {
@@ -1202,10 +1208,13 @@
         const {offsetWidth, parentNode} = document.getElementById("editorWrapper");
         let blockWidthPercent = (offsetWidth / parentNode.offsetWidth) * 100;
 
+        const isNoCode = localStorage.getItem(storageKeys.EDITOR_VIEW_TYPE) === "NO_CODE";
+        const maxWidth = isNoCode ? 33.3 : 75;
+
         document.onmousemove = function onMouseMove(e) {
             let percent = blockWidthPercent + ((e.clientX - dragX) / parentNode.offsetWidth) * 100;
 
-            editorWidth.value = percent > 75 ? 75 : percent < 25 ? 25 : percent;
+            editorWidth.value = percent > maxWidth ? maxWidth : percent < 25 ? 25 : percent;
             validationDomElement.value.onResize((percent * parentNode.offsetWidth) / 100);
         };
 

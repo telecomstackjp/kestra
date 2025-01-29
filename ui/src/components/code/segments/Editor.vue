@@ -49,12 +49,13 @@
             :flow
             :creation
             @update-task="(yaml) => emits('updateTask', yaml)"
+            @update-documentation="(task) => emits('updateDocumentation', task)"
         />
     </div>
 </template>
 
 <script setup lang="ts">
-    import {ref, shallowRef, computed} from "vue";
+    import {watch, ref, shallowRef, computed} from "vue";
 
     import {Field, Fields, CollapseItem} from "../utils/types";
 
@@ -72,6 +73,16 @@
     import {useRoute} from "vue-router";
     const route = useRoute();
 
+    watch(
+        () => route.query,
+        async (newQuery) => {
+            if (!newQuery?.section && !newQuery?.identifier) {
+                emits("updateDocumentation", null);
+            }
+        },
+        {deep: true},
+    );
+
     import {useI18n} from "vue-i18n";
     const {t} = useI18n({useScope: "global"});
 
@@ -80,7 +91,12 @@
 
     const panel = computed(() => store.state.code.panel);
 
-    const emits = defineEmits(["save", "updateTask", "updateMetadata"]);
+    const emits = defineEmits([
+        "save",
+        "updateTask",
+        "updateMetadata",
+        "updateDocumentation",
+    ]);
 
     const saveEvent = (e: KeyboardEvent) => {
         if (e.type === "keydown" && e.key === "s" && e.ctrlKey) {
@@ -144,7 +160,7 @@
             component: shallowRef(MetadataInputs),
             value: props.metadata.inputs,
             label: t("no_code.fields.general.inputs"),
-            inputs: props.metadata.inputs,
+            inputs: props.metadata.inputs ?? [],
         },
         outputs: {
             component: shallowRef(Editor),

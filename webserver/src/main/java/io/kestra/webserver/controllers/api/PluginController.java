@@ -1,6 +1,15 @@
 package io.kestra.webserver.controllers.api;
 
-import io.kestra.core.docs.*;
+import io.kestra.core.docs.ClassInputDocumentation;
+import io.kestra.core.docs.ClassPluginDocumentation;
+import io.kestra.core.docs.DocumentationGenerator;
+import io.kestra.core.docs.DocumentationWithSchema;
+import io.kestra.core.docs.InputType;
+import io.kestra.core.docs.JsonSchemaGenerator;
+import io.kestra.core.docs.Plugin;
+import io.kestra.core.docs.PluginIcon;
+import io.kestra.core.docs.Schema;
+import io.kestra.core.docs.SchemaType;
 import io.kestra.core.models.dashboards.Dashboard;
 import io.kestra.core.models.flows.Flow;
 import io.kestra.core.models.flows.Input;
@@ -30,7 +39,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.inject.Inject;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -146,7 +159,9 @@ public class PluginController {
                     plugin.getTriggers().stream(),
                     plugin.getConditions().stream(),
                     plugin.getTaskRunners().stream(),
-                    plugin.getLogExporters().stream()
+                    plugin.getLogExporters().stream(),
+                    plugin.getApps().stream(),
+                    plugin.getAppBlocks().stream()
                 )
                 .flatMap(i -> i)
                 .map(e -> new AbstractMap.SimpleEntry<>(

@@ -20,8 +20,6 @@
                     @remove-element="removeElement(item.title, elementIndex)"
                 />
             </template>
-
-            <slot name="content" />
         </el-collapse-item>
     </el-collapse>
 </template>
@@ -73,29 +71,4 @@
 
 <style scoped lang="scss">
 @import "../../styles/code.scss";
-
-.collapse {
-    & * {
-        font-size: $code-font-sm;
-    }
-
-    :deep(*) {
-        --el-collapse-header-bg-color: initial;
-        --el-collapse-header-text-color: #{$code-gray-700};
-        --el-collapse-content-bg-color: initial;
-
-        .el-collapse-item__header,
-        .el-collapse-item__content {
-            padding: 0.5rem 0;
-        }
-
-        .el-collapse-item__header {
-            justify-content: space-between;
-
-            &.is-active {
-                color: $code-primary;
-            }
-        }
-    }
-}
 </style>
