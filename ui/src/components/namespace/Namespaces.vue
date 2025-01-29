@@ -170,6 +170,7 @@
 
     .tree {
         --el-tree-node-hover-bg-color: transparent;
+        --el-fill-color-blank: var(--ks-background-card);
     }
 
     .rounded-full {
