@@ -157,20 +157,21 @@ public class DashboardController {
         @Parameter(description = "The chart id") @PathVariable String chartId,
         @Parameter(description = "The filters to apply, some can override chart definition like labels & namespace") @Body GlobalFilter globalFilter
     ) throws IOException {
-        ZonedDateTime startDate = globalFilter.getStartDate();
-        ZonedDateTime endDate = globalFilter.getEndDate();
-        if (startDate == null || endDate == null) {
-            throw new IllegalArgumentException("`startDate` and `endDate` filters are required.");
-        }
-
-        if (endDate.isBefore(startDate)) {
-            throw new IllegalArgumentException("`endDate` must be after `startDate`.");
-        }
-
         String tenantId = tenantService.resolveTenant();
         Dashboard dashboard = dashboardRepository.get(tenantId, id).orElse(null);
         if (dashboard == null) {
             return null;
+        }
+
+        ZonedDateTime endDate = globalFilter.getEndDate();
+        ZonedDateTime startDate = globalFilter.getStartDate();
+        if (startDate == null || endDate == null) {
+            endDate = ZonedDateTime.now();
+            startDate = endDate.minus(dashboard.getTimeWindow().getDefaultDuration());
+        }
+
+        if (endDate.isBefore(startDate)) {
+            throw new IllegalArgumentException("`endDate` must be after `startDate`.");
         }
 
         Duration windowDuration = Duration.ofSeconds(endDate.minus(Duration.ofSeconds(startDate.toEpochSecond())).toEpochSecond());
