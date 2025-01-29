@@ -60,8 +60,7 @@
             </template>
             <template v-else-if="dropdowns.second.shown">
                 <el-option
-                    v-for="(comparator, index) in dropdowns.first.value
-                        .comparators"
+                    v-for="(comparator, index) in dropdowns.first.value.comparators"
                     :key="comparator.value"
                     :value="comparator"
                     :label="comparator.label"
@@ -79,19 +78,26 @@
                     v-for="(filter, index) in valueOptions"
                     :key="filter.value"
                     :value="filter"
-                    :label="filter.label"
                     :disabled="isOptionDisabled(filter)"
                     :class="{
                         selected: current.some((c) =>
                             c.value.includes(filter.value),
                         ),
                         disabled: isOptionDisabled(filter),
+                        'level-3': true
                     }"
                     @click="
                         () => !isOptionDisabled(filter) && valueCallback(filter)
                     "
                     :data-test-id="`KestraFilter__value__${index}`"
-                />
+                >
+                    <template v-if="filter.label.component">
+                        <component :is="filter.label.component" v-bind="filter.label.props" />
+                    </template>
+                    <template v-else>
+                        {{ filter.label }}
+                    </template>
+                </el-option>
             </template>
         </el-select>
 
@@ -139,7 +145,7 @@
 </template>
 
 <script setup lang="ts">
-    import {ref, computed, onMounted, watch, nextTick} from "vue";
+    import {ref, computed, onMounted, watch, nextTick, shallowRef} from "vue";
     import {ElSelect} from "element-plus";
 
     import {Shown, Buttons, CurrentItem} from "./utils/types";
@@ -152,6 +158,7 @@
     import Dashboards from "./segments/Dashboards.vue";
     import KestraIcon from "../Kicon.vue";
     import DateRange from "../layout/DateRange.vue";
+    import Status from "../../components/Status.vue";
 
     import {Magnify} from "./utils/icons";
 
@@ -455,7 +462,18 @@
             break;
 
         case "state":
-            valueOptions.value = props.values?.state || VALUES.EXECUTION_STATES;
+            valueOptions.value = (props.values?.state || VALUES.EXECUTION_STATES).
+                map(value => {
+                    value.label = {
+                        "component": shallowRef(Status),
+                        "props": {
+                            "class": "justify-content-center",
+                            "status": value.value,
+                            "size": "small"
+                        }
+                    }
+                    return value;
+                });
             break;
 
         case "trigger_state":
@@ -588,7 +606,7 @@
     onMounted(() => {
         if (props.decode) {
             const decodedParams = decodeParams(route.query, props.include, OPTIONS);
-            current.value = decodedParams.map((item) => {
+            current.value = decodedParams.map((item: any) => {
                 if (item.label === "absolute_date") {
                     return {
                         ...item,
@@ -853,11 +871,16 @@ $dashboards: 52px;
 
 .filters-select {
     & .el-select-dropdown {
-        width: 300px !important;
+        width: auto !important;
 
         &:has(.el-select-dropdown__empty) {
-            width: 500px !important;
+            width: auto !important;
         }
+    }
+
+    .el-select-dropdown__empty span {
+        padding: 0 1rem;
+        color: var(--ks-content-inactive);
     }
 
     & .el-date-editor.el-input__wrapper {
