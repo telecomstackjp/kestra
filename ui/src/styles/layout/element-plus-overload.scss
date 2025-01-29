@@ -370,9 +370,10 @@ form.ks-horizontal {
     --el-table-border: 1px solid var(--ks-border-primary);
 
     --el-table-header-text-color: var(--ks-content-primary);
-    --el-table-row-hover-bg-color: var(--bs-gray-200);
     --el-table-header-bg-color: var(--ks-background-table-header);
-    --el-table-tr-bg-color: var(--ks-background-card);
+    --el-table-row-hover-bg-color: var(--ks-background-table-row-hover);
+    --el-table-header-bg-color: var(--ks-background-table-header);
+    --el-table-tr-bg-color: var(--ks-background-table-row);
 
     outline: 1px solid var(--ks-border-primary);
     border-radius: var(--bs-border-radius-lg);
