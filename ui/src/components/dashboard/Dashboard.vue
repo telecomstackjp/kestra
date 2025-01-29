@@ -72,138 +72,130 @@
         </el-row>
     </div>
     <div v-else class="dashboard">
-        <div class="card-grid">
-            <Card
-                :icon="CheckBold"
-                :label="t('dashboard.success_ratio')"
-                :tooltip="t('dashboard.success_ratio_tooltip')"
-                :value="stats.success"
-                :redirect="{
-                    name: 'executions/list',
-                    query: {
-                        state: State.SUCCESS,
-                        scope: 'USER',
-                        size: 100,
-                        page: 1,
-                    },
-                }"
-            />
+        <Card
+            :icon="CheckBold"
+            :label="t('dashboard.success_ratio')"
+            :tooltip="t('dashboard.success_ratio_tooltip')"
+            :value="stats.success"
+            :redirect="{
+                name: 'executions/list',
+                query: {
+                    state: State.SUCCESS,
+                    scope: 'USER',
+                    size: 100,
+                    page: 1,
+                },
+            }"
+        />
 
-            <Card
-                :icon="Alert"
-                :label="t('dashboard.failure_ratio')"
-                :tooltip="t('dashboard.failure_ratio_tooltip')"
-                :value="stats.failed"
-                :redirect="{
-                    name: 'executions/list',
-                    query: {
-                        state: State.FAILED,
-                        scope: 'USER',
-                        size: 100,
-                        page: 1,
-                    },
-                }"
-            />
+        <Card
+            :icon="Alert"
+            :label="t('dashboard.failure_ratio')"
+            :tooltip="t('dashboard.failure_ratio_tooltip')"
+            :value="stats.failed"
+            :redirect="{
+                name: 'executions/list',
+                query: {
+                    state: State.FAILED,
+                    scope: 'USER',
+                    size: 100,
+                    page: 1,
+                },
+            }"
+        />
 
-            <Card
-                :icon="FileTree"
-                :label="t('flows')"
-                :value="numbers.flows"
-                :redirect="{
-                    name: 'flows/list',
-                    query: {scope: 'USER', size: 100, page: 1},
-                }"
-            />
+        <Card
+            :icon="FileTree"
+            :label="t('flows')"
+            :value="numbers.flows"
+            :redirect="{
+                name: 'flows/list',
+                query: {scope: 'USER', size: 100, page: 1},
+            }"
+        />
 
-            <Card
-                :icon="LightningBolt"
-                :label="t('triggers')"
-                :value="numbers.triggers"
-                :redirect="{
-                    name: 'admin/triggers',
-                    query: {size: 100, page: 1},
-                }"
-            />
-        </div>
+        <Card
+            :icon="LightningBolt"
+            :label="t('triggers')"
+            :value="numbers.triggers"
+            :redirect="{
+                name: 'admin/triggers',
+                query: {size: 100, page: 1},
+            }"
+        />
 
-        <div class="card-grid-2">
-            <ExecutionsBar
-                :data="graphData"
-                :total="stats.total"
-                class="card"
-            />
+        <ExecutionsBar
+            :data="graphData"
+            :total="stats.total"
+            class="card card-2/3"
+        />
 
-            <ExecutionsDoughnut
-                :data="graphData"
-                :total="stats.total"
-                class="card"
-            />
-        </div>
+        <ExecutionsDoughnut
+            :data="graphData"
+            :total="stats.total"
+            class="card card-1/3"
+        />
 
-        <div class="card-grid-3">
-            <div v-if="props.flow" class="h-100 p-4 card">
-                <span class="d-flex justify-content-between">
-                    <span class="fs-6 fw-bold">
-                        {{ t("dashboard.description") }}
-                    </span>
-                    <el-button
-                        :icon="BookOpenOutline"
-                        @click="descriptionDialog = true"
-                    >
-                        {{ t("open") }}
-                    </el-button>
-
-                    <el-dialog
-                        v-model="descriptionDialog"
-                        :title="$t('description')"
-                    >
-                        <Markdown
-                            :source="description"
-                            class="p-4 description"
-                        />
-                    </el-dialog>
+        <div v-if="props.flow" class="h-100 p-4 card card-1/2">
+            <span class="d-flex justify-content-between">
+                <span class="fs-6 fw-bold">
+                    {{ t("dashboard.description") }}
                 </span>
+                <el-button
+                    :icon="BookOpenOutline"
+                    @click="descriptionDialog = true"
+                >
+                    {{ t("open") }}
+                </el-button>
 
-                <Markdown :source="description" class="p-4 description" />
-            </div>
-            <ExecutionsInProgress
-                v-else
-                :flow="props.flowId"
-                :namespace="props.namespace"
-                class="card"
-            />
+                <el-dialog
+                    v-model="descriptionDialog"
+                    :title="$t('description')"
+                >
+                    <Markdown
+                        :source="description"
+                        class="p-4 description"
+                    />
+                </el-dialog>
+            </span>
 
-            <ExecutionsNextScheduled
-                v-if="props.flow"
-                :flow="props.flowId"
-                :namespace="props.namespace"
-                class="card"
-            />
-
-            <ExecutionsDoughnut
-                v-if="props.flow"
-                :data="graphData"
-                :total="stats.total"
-                class="card"
-            />
-            <ExecutionsNextScheduled
-                v-else-if="isAllowedTriggers"
-                :flow="props.flowId"
-                :namespace="props.namespace"
-                class="card"
-            />
-
-            <ExecutionsEmptyNextScheduled v-else class="card" />
+            <Markdown :source="description" class="p-4 description" />
         </div>
-        <div style="display:flex; flex-direction:column; gap:1rem;">
-            <ExecutionsNamespace
-                v-if="!props.flow"
-                class="card"
-                :data="namespaceExecutions"
-                :total="stats.total"
-            />
-            <Logs v-if="!props.flow" :data="logs" class="card" />
-        </div>
+        <ExecutionsInProgress
+            v-else
+            :flow="props.flowId"
+            :namespace="props.namespace"
+            class="card card-1/2"
+        />
+
+        <ExecutionsNextScheduled
+            v-if="props.flow"
+            :flow="props.flowId"
+            :namespace="props.namespace"
+            class="card card-1/2"
+        />
+
+        <ExecutionsDoughnut
+            v-if="props.flow"
+            :data="graphData"
+            :total="stats.total"
+            class="card card-1/2"
+        />
+        <ExecutionsNextScheduled
+            v-else-if="isAllowedTriggers"
+            :flow="props.flowId"
+            :namespace="props.namespace"
+            class="card card-1/2"
+        />
+
+        <ExecutionsEmptyNextScheduled v-else class="card card-1/2" />
+        <ExecutionsNamespace
+            v-if="!props.flow"
+            class="card card-1"
+            :data="namespaceExecutions"
+            :total="stats.total"
+        />
+        <Logs v-if="!props.flow" :data="logs" class="card card-1" />
     </div>
 </template>
 
@@ -506,9 +498,23 @@ $spacing: 20px;
         }
     }
 }
+
+$media-md: 600px;
+$media-lg: 1200px;
+
 .dashboard{
     padding-bottom: 1rem;
+    display: grid;
+    margin: 1rem 0;
+    width: 100%;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    @media (min-width: $media-md) {
+        grid-template-columns: repeat(12, 1fr);
+    }
 }
+
+
 
 .card {
     box-shadow: 0px 2px 4px 0px var(--ks-card-shadow, #ecebef);
@@ -517,34 +523,41 @@ $spacing: 20px;
     border: 1px solid var(--ks-border-primary);
     border-radius: $border-radius;
     overflow: hidden;
-}
-
-.card-grid, .card-grid-2, .card-grid-3 {
-    display: grid;
-    margin: 1rem 0;
-    width: 100%;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-}
-
-.card-grid {
-    @media (min-width: 600px) {
-        grid-template-columns: repeat(2, 1fr);
+    @media (min-width: $media-md) {
+        grid-column: span 6;
     }
-    @media (min-width: 1200px) {
-        grid-template-columns: repeat(4, 1fr);
+    @media (min-width: $media-lg) {
+        grid-column: span 3;
     }
 }
 
-.card-grid-2 {
-    @media (min-width: 1200px) {
-        grid-template-columns: 2fr 1fr;
+@media (min-width: $media-md) {
+    .card-1\/2, .card-2\/3, .card-1\/3 {
+        grid-column: span 12;
     }
 }
 
-.card-grid-3 {
-    @media (min-width: 1200px) {
-        grid-template-columns: repeat(2, 1fr);
+.card-1\/2{
+    @media (min-width: $media-lg) {
+        grid-column: span 6;
+    }
+}
+
+.card-2\/3{
+    @media (min-width: $media-lg) {
+        grid-column: span 8;
+    }
+}
+
+.card-1\/3{
+    @media (min-width: $media-lg) {
+        grid-column: span 4;
+    }
+}
+
+.card-1{
+    @media (min-width: $media-md) {
+        grid-column: span 12;
     }
 }
 
