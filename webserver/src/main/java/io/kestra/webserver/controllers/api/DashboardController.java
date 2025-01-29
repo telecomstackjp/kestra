@@ -205,7 +205,7 @@ public class DashboardController {
     ) throws IOException {
         Chart<?> parsed = YAML_PARSER.parse(chart, Chart.class);
 
-        return PagedResults.of(this.dashboardRepository.generate(tenantService.resolveTenant(), (DataChart) parsed, ZonedDateTime.now(), ZonedDateTime.now().minusDays(7), null));
+        return PagedResults.of(this.dashboardRepository.generate(tenantService.resolveTenant(), (DataChart) parsed, ZonedDateTime.now().minusDays(8), ZonedDateTime.now(), null));
     }
 
     @ExecuteOn(TaskExecutors.IO)
