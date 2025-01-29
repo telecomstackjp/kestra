@@ -974,12 +974,12 @@ form.ks-horizontal {
 
 // tags
 .el-tag {
-    --el-tag-bg-color: var(--ks-background-tag);
-    --el-tag-text-color: var(--ks-content-primary);
+    --el-tag-bg-color: var(--ks-tag-background);
+    --el-tag-text-color: var(--ks-tag-content);
     border: 0;
 
     a{
-        color: var(--ks-content-primary);
+        color: var(--ks-tag-content);
     }
 
     @each $i in ($types) {
