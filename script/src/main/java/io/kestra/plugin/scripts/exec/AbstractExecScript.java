@@ -122,6 +122,14 @@ public abstract class AbstractExecScript extends Task implements RunnableTask<Sc
     public abstract Property<String> getContainerImage();
 
     /**
+     * @deprecated use {@link #injectDefaults(RunContext, DockerOptions)}
+     */
+    @Deprecated(forRemoval = true, since = "0.21")
+    protected DockerOptions injectDefaults(@NotNull DockerOptions original) {
+        return original;
+    }
+
+    /**
      * Allow setting Docker options defaults values.
      * To make it work, it is advised to set the 'docker' field like:
      *
@@ -135,8 +143,9 @@ public abstract class AbstractExecScript extends Task implements RunnableTask<Sc
      *     protected DockerOptions docker = DockerOptions.builder().build();
      * }</pre>
      */
-    protected DockerOptions injectDefaults(@NotNull DockerOptions original) {
-        return original;
+    protected DockerOptions injectDefaults(RunContext runContext, @NotNull DockerOptions original) {
+        // FIXME to keep backward compatibility, we call the old method from the new one by default
+        return injectDefaults(original);
     }
 
     protected CommandsWrapper commands(RunContext runContext) throws IllegalVariableEvaluationException {
@@ -151,7 +160,7 @@ public abstract class AbstractExecScript extends Task implements RunnableTask<Sc
             .withRunnerType(this.getRunner())
             .withContainerImage(runContext.render(this.getContainerImage()).as(String.class).orElse(null))
             .withTaskRunner(this.getTaskRunner())
-            .withDockerOptions(this.getDocker() != null ? this.injectDefaults(this.getDocker()) : null)
+            .withDockerOptions(this.getDocker() != null ? this.injectDefaults(runContext, this.getDocker()) : null)
             .withNamespaceFiles(this.getNamespaceFiles())
             .withInputFiles(this.getInputFiles())
             .withOutputFiles(runContext.render(this.getOutputFiles()).asList(String.class))
