@@ -1,7 +1,6 @@
 package io.kestra.plugin.core.http;
 
 import com.devskiller.friendly_id.FriendlyId;
-import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
 import io.kestra.core.http.client.HttpClientRequestException;
 import io.kestra.core.http.client.HttpClientResponseException;
@@ -328,7 +327,7 @@ class RequestTest {
 
             Request.Output output = task.run(runContext);
 
-            assertThat(output.getBody(), is("world > " + IOUtils.toString(new FileInputStream(file), Charsets.UTF_8)));
+            assertThat(output.getBody(), is("world > " + IOUtils.toString(new FileInputStream(file), StandardCharsets.UTF_8)));
             assertThat(output.getCode(), is(200));
         }
     }
@@ -362,7 +361,7 @@ class RequestTest {
 
             Request.Output output = task.run(runContext);
 
-            assertThat(output.getBody(), is("world > " + IOUtils.toString(new FileInputStream(file), Charsets.UTF_8)));
+            assertThat(output.getBody(), is("world > " + IOUtils.toString(new FileInputStream(file), StandardCharsets.UTF_8)));
             assertThat(output.getCode(), is(200));
         }
     }
