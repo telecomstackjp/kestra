@@ -5,7 +5,7 @@
         :section
         @update:model-value="validateTask"
     />
-    
+
     <component
         v-else
         :is="lastBreadcumb.component.type"
@@ -28,9 +28,9 @@
 </template>
 
 <script setup lang="ts">
-    import {ref, watch, computed} from "vue";
+    import {onBeforeMount, ref, watch, computed} from "vue";
 
-    const emits = defineEmits(["updateTask"]);
+    const emits = defineEmits(["updateTask", "updateDocumentation"]);
     const props = defineProps({
         flow: {type: String, required: true},
         creation: {type: Boolean, default: false},
@@ -63,6 +63,11 @@
     const yaml = ref(
         YamlUtils.extractTask(props.flow, route.query.identifier)?.toString() || "",
     );
+
+    onBeforeMount(() => {
+        const type = YamlUtils.parse(yaml.value)?.type ?? null;
+        emits("updateDocumentation", type);
+    });
 
     watch(
         () => route.query.section,

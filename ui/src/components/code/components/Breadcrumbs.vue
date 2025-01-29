@@ -4,7 +4,10 @@
             v-for="(breadcrumb, index) in breadcrumbs"
             :key="index"
             class="item"
-            @click="store.commit('code/removeBreadcrumb', {position: index})"
+            @click="
+                (store.commit('code/removeBreadcrumb', {position: index}),
+                 store.commit('code/unsetPanel'))
+            "
         >
             <router-link :to="breadcrumb.to">
                 {{ breadcrumb.label }}
