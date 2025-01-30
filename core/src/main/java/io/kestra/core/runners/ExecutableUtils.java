@@ -12,6 +12,7 @@ import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.ExecutableTask;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.storages.Storage;
+import io.kestra.core.utils.ListUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.stream.Streams;
 
@@ -88,7 +89,7 @@ public final class ExecutableUtils {
             throw new IllegalStateException("Cannot execute an invalid flow: " + fwe.getException());
         }
 
-        List<Label> newLabels = inheritLabels ? new ArrayList<>(currentExecution.getLabels()) : new ArrayList<>(systemLabels(currentExecution));
+        List<Label> newLabels = inheritLabels ? new ArrayList<>(filterLabels(currentExecution.getLabels(), flow)) : new ArrayList<>(systemLabels(currentExecution));
         if (labels != null) {
             labels.forEach(throwConsumer(label -> newLabels.add(new Label(runContext.render(label.key()), runContext.render(label.value())))));
         }
@@ -120,6 +121,16 @@ public final class ExecutableUtils {
             .parentTaskRun(currentTaskRun.withState(State.Type.RUNNING))
             .execution(execution)
             .build();
+    }
+
+    private static List<Label> filterLabels(List<Label> labels, Flow flow) {
+        if (ListUtils.isEmpty(flow.getLabels())) {
+            return labels;
+        }
+
+        return labels.stream()
+            .filter(label -> flow.getLabels().stream().noneMatch(flowLabel -> flowLabel.key().equals(label.key())))
+            .toList();
     }
 
     private static List<Label> systemLabels(Execution execution) {
