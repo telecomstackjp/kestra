@@ -50,6 +50,7 @@ import java.util.stream.Stream;
 @ToString
 @EqualsAndHashCode
 @FlowValidation
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Flow extends AbstractFlow implements HasUID {
     private static final ObjectMapper NON_DEFAULT_OBJECT_MAPPER = JacksonMapper.ofYaml()
         .copy()
@@ -60,8 +61,8 @@ public class Flow extends AbstractFlow implements HasUID {
         .setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
             @Override
             public boolean hasIgnoreMarker(final AnnotatedMember m) {
-                List<String> exclusions = Arrays.asList("revision", "deleted", "source");
-                return exclusions.contains(m.getName()) || super.hasIgnoreMarker(m);
+                List<String> exclusions = Arrays.asList("revision", "deleted", "source", "extend");
+                return exclusions.contains(m.getName()) || m.getName().startsWith("extend.") || super.hasIgnoreMarker(m);
             }
         });
 
@@ -132,11 +133,12 @@ public class Flow extends AbstractFlow implements HasUID {
     @PluginProperty(beta = true)
     List<SLA> sla;
 
+    @JsonIgnore
+    private Map<String, Object> extend;
 
     public Logger logger() {
         return LoggerFactory.getLogger("flow." + this.id);
     }
-
 
     /** {@inheritDoc **/
     @Override
