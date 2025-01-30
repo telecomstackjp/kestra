@@ -258,10 +258,14 @@
             color: var(--ks-content-primary);
             box-shadow: none;
 
-            &_active, body &_active:hover, &:hover, &.vsm--link_hover, &.vsm--link_open {
+            &_active, body &_active:hover {
                 background-color: var(--ks-button-background-primary);
                 color: var(--ks-button-content-primary);
                 font-weight: normal;
+            }
+
+            &.vsm--link_open {
+                background-color: var(--ks-background-left-menu);
             }
 
             &_disabled {
@@ -269,11 +273,40 @@
             }
 
             &:hover, body &_hover {
-                background-color: var(--ks-button-background-primary);
+                background-color: var(--ks-button-background-secondary-hover);
             }
 
             .el-tooltip__trigger {
                 display: flex;
+            }
+        }
+
+        .vsm--link_open{
+            position:relative !important;
+            z-index: 3;
+        }
+
+        .vsm--child .vsm--link{
+            position: relative!important;
+            font-size: 14px;
+            margin-left: 1.5rem;
+            .vsm--icon{
+                margin-right:4px
+            }
+            &:before{
+                content: "";
+                position: absolute;
+                left: -.5rem;
+                top: -2.4rem;
+                border-radius: 8px;
+                width: 2rem;
+                height: 140%;
+                border: 2px solid var(--ks-border-primary);
+                border-top:0;
+                border-right:0;
+                z-index: 2;
+                // mask the right half of the object and the top border
+                clip-path: polygon(50% 8px, 50% 100%, 0 100%, 0 8px);
             }
         }
 
