@@ -49,7 +49,13 @@ export default {
             }
         },
         onSort(sortItem) {
+            // derived columns will throw sql error if column to be sorted is not present in db,instead sort them in Vue itself
+            const excludeSortColumns = ["state.startDate"];
+            if(excludeSortColumns.includes(sortItem.prop)){
+                this.internalSort = null;
+            }else{
             this.internalSort = this.sortString(sortItem);
+            }
 
             if (!this.embed && this.internalSort) {
                 const sort = this.internalSort;

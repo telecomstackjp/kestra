@@ -142,6 +142,9 @@
                                 prop="state.startDate"
                                 :label="$t('last execution date')"
                                 v-if="user.hasAny(permission.EXECUTION)"
+                                sortable
+                                :sort-orders="['ascending', 'descending']"
+                                :sort-method="sortStartDate"
                             >
                                 <template #default="scope">
                                     <date-ago v-if="lastExecutionByFlowReady" :inverted="true" :date="getLastExecution(scope.row).startDate" />
@@ -567,8 +570,24 @@
             },
             rowClasses(row) {
                 return row && row.row && row.row.disabled ? "disabled" : "";
-            }
-        }
+            },
+            sortStartDate(a,b){
+                // In descending order, null values are displayed at the end
+                const startDateA = this.getLastExecution(a).startDate;
+                const startDateB = this.getLastExecution(b).startDate;
+                if (startDateA == null && startDateB == null) {
+                    return 0;
+                }
+                else if (startDateA == null) {
+                    return -1;
+                }
+                else if (startDateB == null) {
+                    return 1;
+                }
+  
+                return new Date(startDateA) - new Date(startDateB);
+
+            }}
     };
 </script>
 
