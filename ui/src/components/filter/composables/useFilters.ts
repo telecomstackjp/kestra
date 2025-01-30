@@ -159,7 +159,7 @@ export function useFilters(prefix: string) {
             icon: ICONS.CalendarRangeOutline,
             label: t("filters.options.relative_date"),
             value: {label: "relative_date", comparator: undefined, value: []},
-            comparators: [COMPARATORS.BETWEEN, COMPARATORS.IN, COMPARATORS.NOT_IN]
+            comparators: [COMPARATORS.EQUALS, COMPARATORS.NOT_EQUALS]
         },
         {
             key: "date",

@@ -129,8 +129,8 @@ export const encodeSearchParams = (filters, OPTIONS) => {
                 Object.assign(query, encode(filter.value, key, operation));
             } else if (filter.value?.length > 0) {
                 const {startDate, endDate} = filter.value[0];
-                query["filters[absolute_date][$gte]"] = startDate;
-                query["filters[absolute_date][$lte]"] = endDate;
+                query["filters[startDate][$gte]"] = startDate;
+                query["filters[endDate][$lte]"] = endDate;
             }
         }
         return query;
@@ -159,12 +159,12 @@ export const decodeSearchParams = (query, include, OPTIONS) => {
         .filter(Boolean);
 
     // Handle date filter
-    if (query["filters[absolute_date][$gte]"] && query["filters[absolute_date][$lte]"]) {
+    if (query["filters[startDate][$gte]"] && query["filters[endDate][$lte]"]) {
         params.push({
             label: "absolute_date",
             value: [{
-                startDate: query["filters[absolute_date][$gte]"],
-                endDate: query["filters[absolute_date][$lte]"]
+                startDate: query["filters[startDate][$gte]"],
+                endDate: query["filters[endDate][$lte]"]
             }],
             operation: "$range"
         });
@@ -173,4 +173,4 @@ export const decodeSearchParams = (query, include, OPTIONS) => {
     return params;
 };
 
-export const isSearchPath = (path: string) =>["/flows", "/executions", "/logs", "/dashboard"].includes(path);
+export const isSearchPath = (path: string) =>["/dashboards/default", "/flows", "/executions", "/logs", "/dashboard"].includes(path);
