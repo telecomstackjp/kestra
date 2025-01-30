@@ -8,7 +8,9 @@
             </div>
             <h2>{{ title }}</h2>
             <p><slot name="message" /></p>
-            <slot name="buttons" />
+            <a class="el-button el-button--large el-button--primary" target="_blank" :href="`https://kestra.io/demo?utm=${encodeURIComponent(route.query.utm)}`">
+                {{ $t("demos.get_a_demo_button") }}
+            </a>
         </div>
     </EmptyTemplate>
 </template>
@@ -16,9 +18,11 @@
 <script lang="ts" setup>
     import {onMounted, nextTick} from "vue";
     import {useStore} from "vuex";
+    import {useRoute} from "vue-router";
     import EmptyTemplate from "../layout/EmptyTemplate.vue";
 
     const store = useStore();
+    const route = useRoute();
 
     onMounted(() => {
         store.commit("doc/setDocPath", "<reset>")
