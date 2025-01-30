@@ -1,5 +1,6 @@
 package io.kestra.core.schedulers;
 
+import io.kestra.core.models.property.Property;
 import io.kestra.core.utils.TestsUtils;
 import io.kestra.jdbc.runner.JdbcScheduler;
 import io.kestra.plugin.core.condition.DayWeekInMonth;
