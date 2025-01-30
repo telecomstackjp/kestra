@@ -62,6 +62,15 @@ export function useLeftMenu() {
                 exact: false,
             },
             {
+                href: {name: "apps/list"},
+                routes: routeStartWith("apps"),
+                title: t("apps"),
+                icon: {
+                    element: shallowRef(FormatListGroupPlus),
+                    class: "menu-icon"
+                }
+            },
+            {
                 href: {name: "templates/list"},
                 routes: routeStartWith("templates"),
                 title: t("templates"),
@@ -144,15 +153,6 @@ export function useLeftMenu() {
                     element: shallowRef(Connection),
                     class: "menu-icon"
                 },
-            },
-            {
-                href: {name: "apps/list"},
-                routes: routeStartWith("apps"),
-                title: t("apps"),
-                icon: {
-                    element: shallowRef(FormatListGroupPlus),
-                    class: "menu-icon"
-                }
             },
             {
                 title: t("administration"),
