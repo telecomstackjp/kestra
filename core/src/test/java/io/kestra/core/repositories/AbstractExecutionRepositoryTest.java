@@ -286,8 +286,8 @@ public abstract class AbstractExecutionRepositoryTest {
             null,
             ZonedDateTime.now().minusDays(10),
             ZonedDateTime.now(),
-            false
-        );
+            false,
+            null, null);
 
         assertThat(result.size(), is(1));
         assertThat(result.get("io.kestra.unittest").size(), is(2));
@@ -315,8 +315,8 @@ public abstract class AbstractExecutionRepositoryTest {
             null,
             ZonedDateTime.now().minusDays(10),
             ZonedDateTime.now(),
-            true
-        );
+            true,
+            null, null);
 
         assertThat(result.size(), is(1));
         assertThat(result.get("io.kestra.unittest").size(), is(1));
@@ -336,8 +336,8 @@ public abstract class AbstractExecutionRepositoryTest {
             List.of(ExecutionRepositoryInterface.FlowFilter.builder().namespace("io.kestra.unittest").id(FLOW).build()),
             ZonedDateTime.now().minusDays(10),
             ZonedDateTime.now(),
-            false
-        );
+            false,
+            null, null);
 
         assertThat(result.size(), is(1));
         assertThat(result.get("io.kestra.unittest").size(), is(1));
@@ -444,7 +444,7 @@ public abstract class AbstractExecutionRepositoryTest {
             ZonedDateTime.now(),
             null,
             null,
-            false);
+            false, null, null);
 
         assertThat(result.size(), is(11));
         assertThat(result.get(10).getExecutionCounts().size(), is(11));
@@ -464,7 +464,7 @@ public abstract class AbstractExecutionRepositoryTest {
             ZonedDateTime.now(),
             null,
             null,
-            false);
+            false, null, null);
 
         assertThat(result.size(), is(11));
         assertThat(result.get(10).getExecutionCounts().get(State.Type.SUCCESS), is(21L));
@@ -479,7 +479,7 @@ public abstract class AbstractExecutionRepositoryTest {
             ZonedDateTime.now(),
             null,
             null,
-            false);
+            false, null, null);
         assertThat(result.size(), is(11));
         assertThat(result.get(10).getExecutionCounts().get(State.Type.SUCCESS), is(20L));
 
@@ -493,7 +493,7 @@ public abstract class AbstractExecutionRepositoryTest {
             ZonedDateTime.now(),
             null,
             null,
-            false);
+            false, null, null);
         assertThat(result.size(), is(11));
         assertThat(result.get(10).getExecutionCounts().get(State.Type.SUCCESS), is(1L));
     }
@@ -522,7 +522,7 @@ public abstract class AbstractExecutionRepositoryTest {
             ZonedDateTime.now(),
             null,
             null,
-            true);
+            true, null, null);
 
         assertThat(result.size(), is(11));
         assertThat(result.get(10).getExecutionCounts().size(), is(11));
@@ -542,7 +542,7 @@ public abstract class AbstractExecutionRepositoryTest {
             ZonedDateTime.now(),
             null,
             null,
-            true);
+            true, null, null);
 
         assertThat(result.size(), is(11));
         assertThat(result.get(10).getExecutionCounts().get(State.Type.SUCCESS), is(57L));
@@ -557,7 +557,7 @@ public abstract class AbstractExecutionRepositoryTest {
             ZonedDateTime.now(),
             null,
             null,
-            true);
+            true, null, null);
         assertThat(result.size(), is(11));
         assertThat(result.get(10).getExecutionCounts().get(State.Type.SUCCESS), is(55L));
 
@@ -571,7 +571,7 @@ public abstract class AbstractExecutionRepositoryTest {
             ZonedDateTime.now(),
             null,
             null,
-            true);
+            true, null, null);
         assertThat(result.size(), is(11));
         assertThat(result.get(10).getExecutionCounts().get(State.Type.SUCCESS), is(2L));
     }

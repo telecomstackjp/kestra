@@ -373,7 +373,9 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
         @Nullable ZonedDateTime startDate,
         @Nullable ZonedDateTime endDate,
         @Nullable DateUtils.GroupType groupBy,
-        boolean isTaskRun
+        boolean isTaskRun,
+        @Nullable Map<String, String> labels,
+        @Nullable ChildFilter childFilter
     ) {
         if (isTaskRun) {
             throw new UnsupportedOperationException();
@@ -393,7 +395,10 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
             finalStartDate,
             finalEndDate,
             groupBy,
-            null
+            null,
+            labels,
+            childFilter
+
         );
 
         return dailyStatisticsQueryMapRecord(
@@ -417,8 +422,9 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
         @Nullable ZonedDateTime endDate,
         @Nullable DateUtils.GroupType groupBy,
         @Nullable List<State.Type> states,
-        boolean isTaskRun
-    ) {
+        boolean isTaskRun,
+        @Nullable Map<String, String> labels,
+        @Nullable ChildFilter childFilter) {
         if (isTaskRun) {
             throw new UnsupportedOperationException();
         }
@@ -439,7 +445,9 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
             finalStartDate,
             finalEndDate,
             groupBy,
-            states
+            states,
+            labels,
+            childFilter
         );
 
         return dailyStatisticsQueryMapRecord(
@@ -489,7 +497,9 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
         ZonedDateTime startDate,
         ZonedDateTime endDate,
         @Nullable DateUtils.GroupType groupBy,
-        @Nullable List<State.Type> state
+        @Nullable List<State.Type> state,
+        @Nullable Map<String, String> labels,
+        @Nullable ChildFilter childFilter
     ) {
         return dailyStatisticsQuery(
             this.defaultFilter(),
@@ -502,7 +512,9 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
             startDate,
             endDate,
             groupBy,
-            state
+            state,
+            labels,
+            childFilter
         );
     }
 
@@ -517,7 +529,9 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
         ZonedDateTime startDate,
         ZonedDateTime endDate,
         @Nullable DateUtils.GroupType groupBy,
-        @Nullable List<State.Type> state
+        @Nullable List<State.Type> state,
+        @Nullable Map<String, String> labels,
+        @Nullable ChildFilter childFilter
     ) {
         return dailyStatisticsQuery(
             this.defaultFilter(tenantId),
@@ -530,7 +544,9 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
             startDate,
             endDate,
             groupBy,
-            state
+            state,
+            labels,
+            childFilter
         );
     }
 
@@ -545,7 +561,10 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
         ZonedDateTime startDate,
         ZonedDateTime endDate,
         @Nullable DateUtils.GroupType groupBy,
-        @Nullable List<State.Type> state
+        @Nullable List<State.Type> state,
+        @Nullable Map<String, String> labels,
+        @Nullable ChildFilter childFilter
+
     ) {
         List<Field<?>> dateFields = new ArrayList<>(groupByFields(Duration.between(startDate, endDate), "start_date", groupBy));
         List<Field<?>> selectFields = new ArrayList<>(fields);
@@ -569,7 +588,7 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
                     .and(START_DATE_FIELD.greaterOrEqual(startDate.toOffsetDateTime()))
                     .and(START_DATE_FIELD.lessOrEqual(endDate.toOffsetDateTime()));
 
-                select = filteringQuery(select, scope, namespace, flowId, flows, query, null, null, null);
+                select = filteringQuery(select, scope, namespace, flowId, flows, query, labels, null, childFilter);
 
                 if (state != null) {
                     select = select.and(this.statesFilter(state));
@@ -702,7 +721,9 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
         @Nullable List<FlowFilter> flows,
         @Nullable ZonedDateTime startDate,
         @Nullable ZonedDateTime endDate,
-        boolean groupByNamespaceOnly
+        boolean groupByNamespaceOnly,
+        @Nullable Map<String, String> labels,
+        @Nullable ChildFilter childFilter
     ) {
         List<Field<?>> fields = new ArrayList<>();
 
@@ -727,7 +748,9 @@ public abstract class AbstractJdbcExecutionRepository extends AbstractJdbcReposi
             finalStartDate,
             finalEndDate,
             null,
-            null
+            null,
+            labels,
+            childFilter
         );
 
         return results

@@ -33,7 +33,7 @@ class StatsControllerTest {
     void dailyStatistics() {
         var dailyStatistics = client.toBlocking().retrieve(
             HttpRequest
-                .POST("/api/v1/stats/executions/daily", new StatsController.StatisticRequest(null, null, null, null, ZonedDateTime.now().minusDays(1), ZonedDateTime.now(), null))
+                .POST("/api/v1/stats/executions/daily", new StatsController.StatisticRequest(null, null, null, null, ZonedDateTime.now().minusDays(1), ZonedDateTime.now(), null,null,null))
                 .contentType(MediaType.APPLICATION_JSON),
             Argument.listOf(DailyExecutionStatistics.class)
         );
@@ -57,7 +57,7 @@ class StatsControllerTest {
     void logDailyExecutions() {
         var dailyStatistics = client.toBlocking().retrieve(
             HttpRequest
-                .POST("/api/v1/stats/executions/latest/group-by-flow", new StatsController.LastExecutionsRequest(List.of(ExecutionRepositoryInterface.FlowFilter.builder().namespace("io.kestra.test").id("logs").build())))
+                .POST("/api/v1/stats/executions/latest/group-by-flow", new StatsController.LastExecutionsRequest(List.of(ExecutionRepositoryInterface.FlowFilter.builder().namespace("io.kestra.test").id("logs").build()),null,null))
                 .contentType(MediaType.APPLICATION_JSON),
             Argument.listOf(Execution.class)
         );
