@@ -13,10 +13,10 @@
                     <el-tooltip v-if="tab.disabled && tab.props && tab.props.showTooltip" :content="$t('add-trigger-in-editor')" placement="top">
                         <span><strong>{{ tab.title }}</strong></span>
                     </el-tooltip>
-                    <span v-if="!tab.hideTitle">
+                    <enterprise-badge :enable="tab.locked">
                         {{ tab.title }}
-                        <LockIcon v-if="tab.locked" />
-                    </span>
+                        <el-badge :type="tab.count > 0 ? 'danger' : 'primary'" :value="tab.count" v-if="tab.count !== undefined" />
+                    </enterprise-badge>
                 </component>
             </template>
         </el-tab-pane>
@@ -49,10 +49,10 @@
     import {mapState, mapMutations} from "vuex";
 
     import EditorSidebar from "./inputs/EditorSidebar.vue";
-    import LockIcon from "vue-material-design-icons/Lock.vue";
+    import EnterpriseBadge from "./EnterpriseBadge.vue";
 
     export default {
-        components: {EditorSidebar, LockIcon},
+        components: {EditorSidebar, EnterpriseBadge},
         props: {
             tabs: {
                 type: Array,

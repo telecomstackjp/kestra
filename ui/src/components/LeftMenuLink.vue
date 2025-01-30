@@ -4,8 +4,9 @@
     </a>
     <router-link v-else :to="$attrs.href" custom v-slot="{href:linkHref, navigate}">
         <a v-bind="$attrs" :href="linkHref" @click="navigate">
-            <slot />
-            <Lock v-if="isLocked" />
+            <enterprise-badge :enable="isLocked">
+                <slot />
+            </enterprise-badge>
         </a>
     </router-link>
 </template>
@@ -13,7 +14,7 @@
 <script setup>
     import {computed, ref, onMounted} from "vue"
     import {useRouter} from "vue-router";
-    import Lock from "vue-material-design-icons/Lock.vue";
+    import EnterpriseBadge from "./EnterpriseBadge.vue";
 
     defineOptions({
         name: "LeftMenuLink",
