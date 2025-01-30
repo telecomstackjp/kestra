@@ -16,8 +16,8 @@ public record QueryFilter(
     public enum Op {
         EQUALS("$eq"),
         NOT_EQUALS("$ne"),
-        GREATER_THAN("$gt"),
-        LESS_THAN("$lt"),
+        GREATER_THAN("$gte"),
+        LESS_THAN("$lte"),
         IN("$in"),
         NOT_IN("$notIn"),
         STARTS_WITH("$startsWith"),
@@ -129,7 +129,7 @@ public record QueryFilter(
                 return List.of(Op.EQUALS, Op.NOT_EQUALS);
             }
         },
-        MIN_LEVEL("minLevel") {
+        MIN_LEVEL("level") {
             @Override
             public List<Op> supportedOp() {
                 return List.of(Op.EQUALS, Op.NOT_EQUALS);

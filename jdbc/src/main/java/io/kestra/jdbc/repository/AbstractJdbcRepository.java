@@ -5,13 +5,16 @@ import io.kestra.core.models.dashboards.ColumnDescriptor;
 import io.kestra.core.models.dashboards.DataFilter;
 import io.kestra.core.models.dashboards.Order;
 import io.kestra.core.models.executions.LogEntry;
+import io.kestra.core.models.flows.FlowScope;
 import io.kestra.core.models.flows.State;
 import io.kestra.core.repositories.ExecutionRepositoryInterface.ChildFilter;
 import io.kestra.core.utils.DateUtils;
 import io.kestra.core.utils.ListUtils;
 import io.kestra.jdbc.services.JdbcFilterService;
+import io.micronaut.context.annotation.Value;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.model.Pageable;
+import lombok.Getter;
 import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
@@ -23,7 +26,13 @@ import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+import static io.kestra.core.utils.NamespaceUtils.SYSTEM_FLOWS_DEFAULT_NAMESPACE;
+
 public abstract class AbstractJdbcRepository {
+
+    @Getter
+    @Value("${kestra.system-flows.namespace:" + SYSTEM_FLOWS_DEFAULT_NAMESPACE + "}")
+    private String systemFlowNamespace;
 
     protected Condition defaultFilter() {
         return field("deleted", Boolean.class).eq(false);
@@ -249,6 +258,10 @@ public abstract class AbstractJdbcRepository {
             return applyDateCondition(select, dateTime, operation);
         }
 
+        if (field == QueryFilter.Field.SCOPE) {
+            return applyScopeCondition(select, value, operation);
+        }
+
         // Convert the field name to lowercase and quote it
         Name columnName = DSL.quotedName(field.name().toLowerCase());
 
@@ -309,9 +322,7 @@ public abstract class AbstractJdbcRepository {
 
     // Handle CHILD_FILTER field logic
     private <T extends Record> SelectConditionStep<T> handleChildFilter(SelectConditionStep<T> select, Object value) {
-        if (!(value instanceof ChildFilter childFilter)) {
-            throw new IllegalArgumentException("Field 'childFilter' requires a ChildFilter value");
-        }
+        ChildFilter childFilter = ChildFilter.valueOf((String) value);
 
         return switch (childFilter) {
             case CHILD -> select.and(DSL.field(DSL.quotedName("trigger_execution_id")).isNotNull());
@@ -362,5 +373,39 @@ public abstract class AbstractJdbcRepository {
             .map(filter -> filter.value().toString())
             .findFirst()
             .orElse(null);
+    }
+    private <T extends Record> SelectConditionStep<T> applyScopeCondition(
+        SelectConditionStep<T> select, Object value, QueryFilter.Op operation) {
+
+        if (!(value instanceof List<?> scopeValues)) {
+            throw new IllegalArgumentException("Invalid value for SCOPE filtering");
+        }
+
+        List<FlowScope> validScopes = Arrays.stream(FlowScope.values()).toList();
+        if (!validScopes.containsAll(scopeValues)) {
+            throw new IllegalArgumentException("Scope values must be a subset of FlowScope");
+        }
+        if (operation != QueryFilter.Op.EQUALS && operation != QueryFilter.Op.NOT_EQUALS) {
+            throw new UnsupportedOperationException("Unsupported operation for SCOPE: " + operation);
+        }
+
+        boolean isEqualsOperation = (operation == QueryFilter.Op.EQUALS);
+        String systemNamespace = this.getSystemFlowNamespace();
+
+        if (scopeValues.contains(FlowScope.USER)) {
+            Condition userCondition = isEqualsOperation
+                ? DSL.field("namespace").ne(systemNamespace)
+                : DSL.field("namespace").eq(systemNamespace);
+            select = select.and(userCondition);
+        }
+
+        if (scopeValues.contains(FlowScope.SYSTEM)) {
+            Condition systemCondition = isEqualsOperation
+                ? DSL.field("namespace").eq(systemNamespace)
+                : DSL.field("namespace").ne(systemNamespace);
+            select = select.and(systemCondition);
+        }
+
+        return select;
     }
 }

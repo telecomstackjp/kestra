@@ -32,7 +32,6 @@ public record TimeLineSearchUtils(
         try {
            return Duration.parse(duration);
         } catch (DateTimeParseException e){
-            System.out.println("hello");
             throw new IllegalArgumentException("Invalid duration: " + duration);
         }
     }
