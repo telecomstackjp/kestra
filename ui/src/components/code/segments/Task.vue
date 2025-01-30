@@ -146,9 +146,9 @@
             const action = props.creation
                 ? YamlUtils.insertTask(
                     source,
-                    YamlUtils.getLastTask(source),
+                    route.query.target ?? YamlUtils.getLastTask(source),
                     task,
-                    "after",
+                    route.query.position ?? "after",
                 )
                 : YamlUtils.replaceTaskInDocument(
                     source,
