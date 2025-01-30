@@ -161,7 +161,8 @@
                         name: "auditlogs",
                         component: DemoAuditLogs,
                         title: title("auditlogs"),
-                        maximized: true
+                        maximized: true,
+                        locked: true
                     }
                 ];
             },

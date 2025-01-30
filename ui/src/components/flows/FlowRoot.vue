@@ -272,7 +272,8 @@
                     maximize: true,
                     props:{
                         embed: true
-                    }
+                    },
+                    locked: true
                 });
 
                 return tabs;

@@ -176,7 +176,8 @@
                         maximize: true,
                         props: {
                             tab: "edit",
-                        }
+                        },
+                        locked: true
                     },
                     {
                         name: "variables",
@@ -185,7 +186,8 @@
                         maximize: true,
                         props: {
                             tab: "variables",
-                        }
+                        },
+                        locked: true
                     },
                     {
                         name: "plugin-defaults",
@@ -194,7 +196,8 @@
                         maximize: true,
                         props: {
                             tab: "plugin-defaults",
-                        }
+                        },
+                        locked: true
                     },
                     {
                         name: "secrets",
@@ -203,7 +206,8 @@
                         maximize: true,
                         props: {
                             tab: "secrets",
-                        }
+                        },
+                        locked: true
                     },
                     {
                         name: "audit-logs",
@@ -212,7 +216,8 @@
                         maximize: true,
                         props: {
                             tab: "audit-logs",
-                        }
+                        },
+                        locked: true
                     }
                 ])
 
