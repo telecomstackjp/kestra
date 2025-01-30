@@ -264,8 +264,9 @@
                 font-weight: normal;
             }
 
-            &.vsm--link_open {
+            &.vsm--link_open, &.vsm--link_open:hover {
                 background-color: var(--ks-background-left-menu);
+                color: var(--ks-content-primary);
             }
 
             &_disabled {
@@ -287,20 +288,25 @@
         }
 
         .vsm--child .vsm--link{
+            padding: 0 0.2rem;
             position: relative!important;
             font-size: 14px;
-            margin-left: 1.5rem;
-            .vsm--icon{
-                margin-right:4px
+            margin-left: 1.8rem;
+            .vsm--icon {
+                margin-right:4px;
+                color: var(--ks-content-secondary);
+            }
+            &.vsm--link_active .vsm--icon{
+                color: var(--ks-button-content-primary);
             }
             &:before{
                 content: "";
                 position: absolute;
-                left: -.5rem;
-                top: -2.4rem;
+                left: -.8rem;
+                top: -2.5rem;
                 border-radius: 8px;
-                width: 2rem;
-                height: 140%;
+                width: 1.6rem;
+                height: 170%;
                 border: 2px solid var(--ks-border-primary);
                 border-top:0;
                 border-right:0;
