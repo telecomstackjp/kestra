@@ -142,18 +142,20 @@
             emits("updateTask", YamlUtils.insertTrigger(source, CURRENT.value));
             CURRENT.value = null;
         } else {
-            const action = props.creation
-                ? YamlUtils.insertTask(
-                    source,
-                    route.query.target ?? YamlUtils.getLastTask(source),
-                    task,
-                    route.query.position ?? "after",
-                )
-                : YamlUtils.replaceTaskInDocument(
-                    source,
-                    route.query.identifier,
-                    task,
-                );
+            const action =
+                props.creation &&
+                (!route.query.identifier || route.query.identifier === "new")
+                    ? YamlUtils.insertTask(
+                        source,
+                        route.query.target ?? YamlUtils.getLastTask(source),
+                        task,
+                        route.query.position ?? "after",
+                    )
+                    : YamlUtils.replaceTaskInDocument(
+                        source,
+                        route.query.identifier,
+                        task,
+                    );
 
             emits("updateTask", action);
         }
