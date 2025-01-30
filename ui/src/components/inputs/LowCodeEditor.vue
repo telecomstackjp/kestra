@@ -293,10 +293,12 @@
         );
     };
 
-    const onCreateNewTask = () => {
+    const onCreateNewTask = (details) => {
         emit("openNoCode", {
             section: SECTIONS.TASKS.toLowerCase(),
             identifier: "new",
+            target: details[0],
+            position: details[1],
         });
     };
 
@@ -444,6 +446,7 @@
     };
 
     const onSwappedTask = (event) => {
+        console.log("onSwappedTask", event);
         emit("swapped-task", event.swappedTasks);
         emit("on-edit", event.newSource, true);
     };
