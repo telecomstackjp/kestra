@@ -81,7 +81,7 @@ class TriggerControllerTest {
         jdbcTriggerRepository.save(trigger);
         jdbcTriggerRepository.save(trigger.toBuilder().triggerId("trigger-nextexec-polling").build());
 
-        PagedResults<TriggerController.Triggers> triggers = client.toBlocking().retrieve(HttpRequest.GET("/api/v1/triggers/search?q=schedule-trigger-search&namespace=io.kestra.tests&sort=triggerId:asc"), Argument.of(PagedResults.class, TriggerController.Triggers.class));
+        PagedResults<TriggerController.Triggers> triggers = client.toBlocking().retrieve(HttpRequest.GET("/api/v1/triggers/search?filters[q][$eq]=schedule-trigger-search&filters[namespace][$startsWith]=io.kestra.tests&sort=triggerId:asc"), Argument.of(PagedResults.class, TriggerController.Triggers.class));
         assertThat(triggers.getTotal(), greaterThanOrEqualTo(2L));
 
         assertThat(triggers.getResults().stream().map(TriggerController.Triggers::getTriggerContext).toList(), Matchers.hasItems(
@@ -348,11 +348,11 @@ class TriggerControllerTest {
         Flow flow = generateFlow("flow-with-triggers");
         jdbcFlowRepository.create(flow, flow.generateSource(), flow);
         Await.until(
-            () -> client.toBlocking().retrieve(HttpRequest.GET("/api/v1/triggers/search?q=trigger-nextexec"), Argument.of(PagedResults.class, Trigger.class)).getTotal() >= 2,
+            () -> client.toBlocking().retrieve(HttpRequest.GET("/api/v1/triggers/search?filters[q][$eq]=trigger-nextexec"), Argument.of(PagedResults.class, Trigger.class)).getTotal() >= 2,
             Duration.ofMillis(100),
             Duration.ofMinutes(2)
         );
-        PagedResults<TriggerController.Triggers> triggers = client.toBlocking().retrieve(HttpRequest.GET("/api/v1/triggers/search?q=trigger-nextexec"), Argument.of(PagedResults.class, TriggerController.Triggers.class));
+        PagedResults<TriggerController.Triggers> triggers = client.toBlocking().retrieve(HttpRequest.GET("/api/v1/triggers/search?filters[q][$eq]=trigger-nextexec"), Argument.of(PagedResults.class, TriggerController.Triggers.class));
         assertThat(triggers.getResults().getFirst().getTriggerContext().getNextExecutionDate(), notNullValue());
         assertThat(triggers.getResults().get(1).getTriggerContext().getNextExecutionDate(), notNullValue());
     }

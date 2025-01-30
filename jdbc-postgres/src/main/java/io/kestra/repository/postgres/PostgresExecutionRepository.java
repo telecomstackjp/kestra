@@ -1,5 +1,6 @@
 package io.kestra.repository.postgres;
 
+import io.kestra.core.models.QueryFilter;
 import io.kestra.core.models.executions.Execution;
 import io.kestra.core.models.flows.State;
 import io.kestra.core.utils.DateUtils;
@@ -63,5 +64,10 @@ public class PostgresExecutionRepository extends AbstractJdbcExecutionRepository
             default:
                 throw new IllegalArgumentException("Unsupported GroupType: " + groupType);
         }
+    }
+
+    @Override
+    protected Condition findCondition(Map<?, ?> value, QueryFilter.Op operation) {
+        return PostgresExecutionRepositoryService.findCondition(value, operation);
     }
 }

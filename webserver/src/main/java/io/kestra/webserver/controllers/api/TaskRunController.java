@@ -1,5 +1,8 @@
 package io.kestra.webserver.controllers.api;
 
+import io.kestra.core.converters.QueryFilterFormat;
+import io.kestra.core.models.QueryFilter;
+import io.kestra.core.models.executions.LogEntry;
 import com.google.common.annotations.VisibleForTesting;
 import io.kestra.core.models.executions.TaskRun;
 import io.kestra.core.models.flows.State;
@@ -8,12 +11,14 @@ import io.kestra.core.tenant.TenantService;
 import io.kestra.webserver.responses.PagedResults;
 import io.kestra.webserver.utils.PageableUtils;
 import io.kestra.webserver.utils.RequestUtils;
+import io.kestra.webserver.utils.TimeLineSearchUtils;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.format.Format;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.QueryValue;
+import io.micronaut.http.exceptions.HttpStatusException;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -45,36 +50,25 @@ public class TaskRunController {
         @Parameter(description = "The current page") @QueryValue(defaultValue = "1") @Min(1) int page,
         @Parameter(description = "The current page size") @QueryValue(defaultValue = "10") @Min(1) int size,
         @Parameter(description = "The sort of current page") @Nullable @QueryValue List<String> sort,
-        @Parameter(description = "A string filter") @Nullable @QueryValue(value = "q") String query,
-        @Parameter(description = "A namespace filter prefix") @Nullable @QueryValue String namespace,
-        @Parameter(description = "A flow id filter") @Nullable @QueryValue String flowId,
-        @Parameter(description = "The start datetime") @Nullable @Format("yyyy-MM-dd'T'HH:mm[:ss][.SSS][XXX]") @QueryValue ZonedDateTime startDate,
-        @Parameter(description = "The end datetime") @Nullable @Format("yyyy-MM-dd'T'HH:mm[:ss][.SSS][XXX]") @QueryValue ZonedDateTime endDate,
-        @Parameter(description = "A time range filter relative to the current time", examples = {
-            @ExampleObject(name = "Filter last 5 minutes", value = "PT5M"),
-            @ExampleObject(name = "Filter last 24 hours", value = "P1D")
-        }) @Nullable @QueryValue Duration timeRange,
-        @Parameter(description = "A state filter") @Nullable @QueryValue List<State.Type> state,
-        @Parameter(description = "A labels filter as a list of 'key:value'") @Nullable @QueryValue @Format("MULTI") List<String> labels,
-        @Parameter(description = "The trigger execution id") @Nullable @QueryValue String triggerExecutionId,
-        @Parameter(description = "A execution child filter") @Nullable @QueryValue ExecutionRepositoryInterface.ChildFilter childFilter
-    ) {
-        validateTimeline(startDate, endDate);
+        @Parameter(description = "Filters") @QueryFilterFormat List<QueryFilter> filters
+    ) throws HttpStatusException {
 
         final ZonedDateTime now = ZonedDateTime.now();
 
+        TimeLineSearchUtils timeLineSearchUtils = TimeLineSearchUtils.extractFrom(filters);
+        validateTimeline(timeLineSearchUtils.startDate(), timeLineSearchUtils.endDate());
+
+        ZonedDateTime resolvedStartDate = resolveAbsoluteDateTime(timeLineSearchUtils.startDate(),
+            timeLineSearchUtils.timeRange(),
+            now);
+
+        // Update filters with the resolved startDate
+        filters = timeLineSearchUtils.updateFilters(filters, resolvedStartDate);
+
         return PagedResults.of(executionRepository.findTaskRun(
-            PageableUtils.from(page, size, sort, executionRepository.sortMapping()),
-            query,
+            PageableUtils.from(page, size, sort),
             tenantService.resolveTenant(),
-            namespace,
-            flowId,
-            resolveAbsoluteDateTime(startDate, timeRange, now),
-            endDate,
-            state,
-            RequestUtils.toMap(labels),
-            triggerExecutionId,
-            childFilter
+            filters
         ));
     }
 

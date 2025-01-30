@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.kestra.core.events.CrudEvent;
 import io.kestra.core.events.CrudEventType;
 import io.kestra.core.exceptions.DeserializationException;
+import io.kestra.core.models.QueryFilter;
 import io.kestra.core.models.SearchResult;
 import io.kestra.core.models.flows.*;
 import io.kestra.core.models.triggers.Trigger;
@@ -32,6 +33,7 @@ import org.jooq.impl.DSL;
 
 import java.util.*;
 
+import static io.kestra.core.models.QueryFilter.Op.EQUALS;
 import static io.kestra.core.utils.Rethrow.throwConsumer;
 
 @Slf4j
@@ -479,6 +481,68 @@ public abstract class AbstractJdbcFlowRepository extends AbstractJdbcRepository 
     }
 
     abstract protected Condition findCondition(String query, Map<String, String> labels);
+    abstract protected Condition findCondition(Object value, QueryFilter.Op operation);
+
+    @Override
+    public ArrayListTotal<Flow> find(Pageable pageable, @Nullable String tenantId, @Nullable List<QueryFilter> filters) {
+        return this.jdbcRepository
+            .getDslContextWrapper()
+            .transactionResult(configuration -> {
+                DSLContext context = DSL.using(configuration);
+
+                SelectConditionStep<Record1<Object>> select = this.fullTextSelect(tenantId, context, Collections.emptyList());
+
+
+                if (filters != null) {
+                    for (QueryFilter filter : filters) {
+                        QueryFilter.Field field = filter.field();
+                        QueryFilter.Op operation = filter.operation();
+                        Object value = filter.value();
+
+                        switch (field) {
+                            case QUERY -> {
+                                if (value instanceof String query) {
+                                    if (operation.equals(EQUALS)) {
+                                        select.and(jdbcRepository.fullTextCondition(Collections.singletonList("fulltext"), query));
+                                    } else {
+                                        select.and(DSL.not(jdbcRepository.fullTextCondition(Collections.singletonList("fulltext"), query)));
+                                    }
+                                }
+
+                            }
+                            case SCOPE -> {
+                                if (value instanceof List<?> scopeValues && !scopeValues.containsAll(Arrays.stream(FlowScope.values()).toList())) {
+                                    if (scopeValues.contains(FlowScope.USER)) {
+                                        select.and(field("namespace").ne(namespaceUtils.getSystemFlowNamespace()));
+                                    }
+                                    if (scopeValues.contains(FlowScope.SYSTEM)) {
+                                        select.and(field("namespace").eq(namespaceUtils.getSystemFlowNamespace()));
+                                    }
+                                }
+                            }
+                            case NAMESPACE -> {
+                                if (value instanceof String namespace) {
+                                    switch (operation) {
+                                        case EQUALS -> select.and(NAMESPACE_FIELD.eq(namespace));
+                                        case NOT_EQUALS -> select.and(NAMESPACE_FIELD.ne(namespace));
+                                        case CONTAINS -> select.and(NAMESPACE_FIELD.like("%" + namespace + "%"));
+                                        case STARTS_WITH -> select.and(NAMESPACE_FIELD.like(namespace + "%"));
+                                        case ENDS_WITH -> select.and(NAMESPACE_FIELD.like("%" + namespace));
+                                        default ->
+                                            throw new UnsupportedOperationException("Unsupported operation '%s' for field 'namespace'.".formatted(operation));
+                                    }
+                                }
+                            }
+                            case LABELS -> {
+                                select.and(findCondition(value, operation));
+                            }
+                            default -> throw new UnsupportedOperationException("Unsupported field '%s'.".formatted(field));
+                        }
+                    }
+                }
+                return this.jdbcRepository.fetchPage(context, select, pageable);
+            });
+    }
 
     public ArrayListTotal<Flow> find(
         Pageable pageable,
