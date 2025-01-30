@@ -8,7 +8,9 @@
             </div>
             <h2>{{ title }}</h2>
             <p><slot name="message" /></p>
-            <slot name="buttons" />
+            <a class="el-button el-button--primary el-button--large" target="_blank" href="https://kestra.io/demo">
+                {{ $t("demos.get_a_demo_button") }}
+            </a>
         </div>
     </EmptyTemplate>
 </template>
