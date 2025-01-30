@@ -68,6 +68,9 @@ export function useLeftMenu() {
                 icon: {
                     element: shallowRef(FormatListGroupPlus),
                     class: "menu-icon"
+                },
+                attributes: {
+                    locked: true
                 }
             },
             {
@@ -115,9 +118,6 @@ export function useLeftMenu() {
                 icon: {
                     element: shallowRef(DotsSquare),
                     class: "menu-icon"
-                },
-                attributes: {
-                    locked: true
                 }
             },
             {
