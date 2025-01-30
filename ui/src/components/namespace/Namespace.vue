@@ -173,7 +173,7 @@
                         name: "edit",
                         component: DemoNamespace,
                         title: this.$t("edit"),
-                        containerClass: "demo-container",
+                        maximize: true,
                         props: {
                             tab: "edit",
                         }
@@ -182,7 +182,7 @@
                         name: "variables",
                         component: DemoNamespace,
                         title: this.$t("variables"),
-                        containerClass: "demo-container",
+                        maximize: true,
                         props: {
                             tab: "variables",
                         }
@@ -191,7 +191,7 @@
                         name: "plugin-defaults",
                         component: DemoNamespace,
                         title: this.$t("plugin defaults"),
-                        containerClass: "demo-container",
+                        maximize: true,
                         props: {
                             tab: "plugin-defaults",
                         }
@@ -200,7 +200,7 @@
                         name: "secrets",
                         component: DemoNamespace,
                         title: this.$t("secret.names"),
-                        containerClass: "demo-container",
+                        maximize: true,
                         props: {
                             tab: "secrets",
                         }
@@ -209,7 +209,7 @@
                         name: "audit-logs",
                         component: DemoNamespace,
                         title: this.$t("auditlogs"),
-                        containerClass: "demo-container",
+                        maximize: true,
                         props: {
                             tab: "audit-logs",
                         }

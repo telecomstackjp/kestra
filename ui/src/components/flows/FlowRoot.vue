@@ -269,7 +269,7 @@
                     name: "auditlogs",
                     title: this.$t("auditlogs"),
                     component: DemoAuditLogs,
-                    containerClass: "demo-container",
+                    maximize: true,
                     props:{
                         embed: true
                     }
