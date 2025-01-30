@@ -799,7 +799,7 @@
         }
 
         haveChange.value = true;
-        store.dispatch("core/isUnsaved", true);
+        if(editorViewType.value === "YAML") store.dispatch("core/isUnsaved", true);
 
         if(!props.isCreating){
             store.commit("editor/changeOpenedTabs", {
