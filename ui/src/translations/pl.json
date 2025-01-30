@@ -1022,8 +1022,8 @@
         "is_one_of": "jest jednym z",
         "between": "pomiędzy",
         "greater_than": "większy niż",
-        "less_than": "mniejszy niż",
-        "ends_with": "kończy się na"
+        "less_than": "mniej niż",
+        "ends_with": "kończy się"
       },
       "save": {
         "label": "Zapisane wyszukiwania",

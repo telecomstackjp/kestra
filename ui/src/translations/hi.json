@@ -1021,9 +1021,9 @@
         "is_not_one_off": "नहीं है उनमें से एक",
         "is_one_of": "में से एक है",
         "between": "के बीच",
-        "greater_than": "से बड़ा",
-        "less_than": "से छोटा",
-        "ends_with": "से समाप्त होता है"
+        "greater_than": "से अधिक",
+        "less_than": "से कम",
+        "ends_with": "समाप्त होता है"
       },
       "save": {
         "label": "सहेजे गए खोजें",

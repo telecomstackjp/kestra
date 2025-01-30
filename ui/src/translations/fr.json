@@ -1021,8 +1021,8 @@
         "is_not_one_off": "n'est pas l'un de",
         "is_one_of": "est l'un de",
         "between": "entre",
-        "greater_than": "plus grand que",
-        "less_than": "plus petit que",
+        "greater_than": "supérieur à",
+        "less_than": "moins de",
         "ends_with": "se termine par"
       },
       "save": {
