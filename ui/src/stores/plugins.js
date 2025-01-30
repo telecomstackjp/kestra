@@ -21,8 +21,10 @@ export default {
                 return response.data;
             })
         },
-        listWithSubgroup({commit}) {
-            return this.$http.get(`${apiUrl(this)}/plugins/groups/subgroups`, {}).then(response => {
+        listWithSubgroup({commit}, options) {
+            return this.$http.get(`${apiUrl(this)}/plugins/groups/subgroups`, {
+                params: options
+            }).then(response => {
                 commit("setPlugins", response.data)
                 commit("setPluginSingleList", response.data.map(plugin => plugin.tasks.concat(plugin.triggers, plugin.conditions, plugin.controllers, plugin.storages, plugin.taskRunners, plugin.charts, plugin.dataFilters, plugin.aliases, plugin.logExporters)).flat())
                 return response.data;

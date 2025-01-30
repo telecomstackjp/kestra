@@ -1,15 +1,6 @@
 package io.kestra.webserver.controllers.api;
 
-import io.kestra.core.docs.ClassInputDocumentation;
-import io.kestra.core.docs.ClassPluginDocumentation;
-import io.kestra.core.docs.DocumentationGenerator;
-import io.kestra.core.docs.DocumentationWithSchema;
-import io.kestra.core.docs.InputType;
-import io.kestra.core.docs.JsonSchemaGenerator;
-import io.kestra.core.docs.Plugin;
-import io.kestra.core.docs.PluginIcon;
-import io.kestra.core.docs.Schema;
-import io.kestra.core.docs.SchemaType;
+import io.kestra.core.docs.*;
 import io.kestra.core.models.dashboards.Dashboard;
 import io.kestra.core.models.flows.Flow;
 import io.kestra.core.models.flows.Input;
@@ -39,11 +30,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.inject.Inject;
 
 import java.io.IOException;
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -252,16 +239,18 @@ public class PluginController {
     @Get("/groups/subgroups")
     @ExecuteOn(TaskExecutors.IO)
     @Operation(tags = {"Plugins"}, summary = "Get plugins group by subgroups")
-    public List<Plugin> subgroups() {
+    public List<Plugin> subgroups(
+        @Parameter(description = "Whether to include deprecated plugins") @QueryValue(value = "includeDeprecated", defaultValue = "true") boolean includeDeprecated
+    ) {
         return Stream.concat(
                 pluginRegistry.plugins()
                     .stream()
-                    .map(p -> Plugin.of(p, null)),
+                    .map(p -> Plugin.of(p, null, includeDeprecated)),
                 pluginRegistry.plugins()
                     .stream()
                     .flatMap(p -> p.subGroupNames()
                         .stream()
-                        .map(subgroup -> Plugin.of(p, subgroup))
+                        .map(subgroup -> Plugin.of(p, subgroup, includeDeprecated))
                     )
             )
             .distinct()
