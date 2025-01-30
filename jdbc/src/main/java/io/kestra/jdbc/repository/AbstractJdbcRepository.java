@@ -335,7 +335,7 @@ public abstract class AbstractJdbcRepository {
 
     // Handle CHILD_FILTER field logic
     private <T extends Record> SelectConditionStep<T> handleChildFilter(SelectConditionStep<T> select, Object value) {
-        ChildFilter childFilter = ChildFilter.valueOf((String) value);
+        ChildFilter childFilter = (value instanceof String val)? ChildFilter.valueOf(val) : (ChildFilter) value;
 
         return switch (childFilter) {
             case CHILD -> select.and(DSL.field(DSL.quotedName("trigger_execution_id")).isNotNull());
