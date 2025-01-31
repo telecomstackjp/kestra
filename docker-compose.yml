@@ -58,7 +58,7 @@ services:
               path: /tmp/kestra-wd/tmp
           url: http://localhost:9980/
     ports:
-      - "9980:9880"
+      - "9980:9980"
       - "9981:9981"
     depends_on:
       postgres:
