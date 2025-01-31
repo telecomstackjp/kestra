@@ -56,10 +56,10 @@ services:
           tasks:
             tmpDir:
               path: /tmp/kestra-wd/tmp
-          url: http://localhost:8080/
+          url: http://localhost:8980/
     ports:
-      - "8080:8980"
-      - "8081:8981"
+      - "8980:8980"
+      - "8981:8981"
     depends_on:
       postgres:
         condition: service_started
