@@ -118,7 +118,7 @@
     "@rollup/rollup-linux-x64-gnu": "^4.32.0",
     "@swc/core-darwin-arm64": "^1.10.9",
     "@swc/core-darwin-x64": "^1.10.9",
-    "@swc/core-linux-x64-gnu": "^1.10.11"
+    "@swc/core-linux-x64-gnu": "^1.11.21"
   },
   "overrides": {
     "bootstrap": {
